@@ -1,8 +1,11 @@
-package com.gofetch;
+package com.gofetch.controllers;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
+
+import com.gofetch.seomoz.Constants;
+import com.gofetch.seomoz.SEOMoz;
 
 @SuppressWarnings("serial")
 public class GoFetchServlet extends HttpServlet {
@@ -40,11 +43,27 @@ public class GoFetchServlet extends HttpServlet {
 		//
 		//////////////
 		
-		//////////////
-		// save the bean to the session object
-			//req.getSession().setAttribute("dataBean", goFetchBean);
-		//
-		//////////////
+		
+		//TODO: check if url is already added to DB here....
+		// research...
+		
+		//TODO: if yes, just return index page/ fwd to error page.
+		
+		
+		//TODO: no - add url to DB.
+		
+		
+		// set up the SEOMoz object...
+		SEOMoz seoMoz = new SEOMoz(Constants.ACCESS_ID, Constants.SECRET_KEY);
+		
+		/*
+		 * until we pay for the API - set this true here - speeds up queries... 
+         *   we will only ever get the top (by PA) 1000 links to any URL target...
+		 */
+		seoMoz.usingSEOMozFreeAPI(true); 
+		
+		
+		
 		
 		try {
 			getServletContext().getRequestDispatcher("/index.html").forward(req,resp);
@@ -53,6 +72,8 @@ public class GoFetchServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
+		
+		
 
 	}
 	
@@ -60,5 +81,13 @@ public class GoFetchServlet extends HttpServlet {
 		
 		doGet(req, resp); // just direct to doGet(...)
 	}
+//	
+//	@ButtonMethod(buttonName="confirmButton")
+//	public void testMethod(){
+//		
+//	}
+//	
+
+
 	
 }

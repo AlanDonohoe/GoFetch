@@ -6,7 +6,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
 		<servlet-name>GoFetch</servlet-name>
-		<servlet-class>com.gofetch.GoFetchServlet</servlet-class>
+		<servlet-class>com.gofetch.controllers.GoFetchServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>GoFetch</servlet-name>

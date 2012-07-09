@@ -1,4 +1,4 @@
-package com.gofetch;
+package com.gofetch.controllers;
 
 public class GoFetchRequestBean {
 	protected String url;
