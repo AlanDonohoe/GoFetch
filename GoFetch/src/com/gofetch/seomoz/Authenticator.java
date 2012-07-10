@@ -94,6 +94,7 @@ public class Authenticator
 		// compute the hmac on input data bytes
 		byte[] rawHmac = mac.doFinal(stringToSign.getBytes());
 
+		//TODO: replace depreciated method - http://stackoverflow.com/questions/213506/java-net-urlencoder-encodestring-is-deprecated-what-should-i-use-instead
 		// base64-encode the hmac
 		String urlSafeSignature = URLEncoder.encode(EncodeBase64(rawHmac));
 		

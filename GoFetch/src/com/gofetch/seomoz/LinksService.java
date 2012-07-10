@@ -49,6 +49,7 @@ public class LinksService
 	 */
 	public String getLinks(String objectURL, String scope, String filters, String sort, long colSource, long colTarget, long colLink,int offset, int limit)
 	{
+		//TODO: replace depreciated method - http://stackoverflow.com/questions/213506/java-net-urlencoder-encodestring-is-deprecated-what-should-i-use-instead
 		String urlToFetch = "http://lsapi.seomoz.com/linkscape/links/" + URLEncoder.encode(objectURL) + "?" + authenticator.getAuthenticationStr();
 		
                 

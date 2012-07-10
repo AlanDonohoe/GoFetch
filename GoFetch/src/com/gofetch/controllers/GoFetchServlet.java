@@ -5,7 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import com.gofetch.seomoz.Constants;
-import com.gofetch.seomoz.SEOMoz;
+import com.gofetch.seomoz.SEOMozWrapper;
 
 @SuppressWarnings("serial")
 public class GoFetchServlet extends HttpServlet {
@@ -54,7 +54,7 @@ public class GoFetchServlet extends HttpServlet {
 		
 		
 		// set up the SEOMoz object...
-		SEOMoz seoMoz = new SEOMoz(Constants.ACCESS_ID, Constants.SECRET_KEY);
+		SEOMozWrapper seoMoz = new SEOMozWrapper(Constants.ACCESS_ID, Constants.SECRET_KEY);
 		
 		/*
 		 * until we pay for the API - set this true here - speeds up queries... 

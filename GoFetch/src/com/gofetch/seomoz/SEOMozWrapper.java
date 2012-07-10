@@ -1,23 +1,30 @@
 /**
- * This class encapsulates the java code provided by SEOMoz. Handles the
- * following capabilities of the SEOMoz API:
+ * This class encapsulates the services and data provided by SEOMoz. 
+ * 
+ * Member data - allLinksList - a list of all the links pointing to the target url, as returned by SEOMoz API.
+ * 			   - selectLinksList - a list of select links pointing to the target url, typically..used...???
+ * 			   - uniqueDomainsList - a list of links that represent at least 1 link from every unique domain from the allLinksDAPA
+ * 
+ * Handles the following capabilities of the SEOMoz API:
  *
  * Authentication - this occurs automatically when the object is constructed The
  * access ID and Secret key must be passed to the constructor.
- *
- * Would typically construct using constants found in KastleSquareConstants
- *
+ * Would typically construct using constants found in Constants class.
+ * 
+ * getTotalLinksData - Returns all the links pointing to target url, and places them as list
+ *  in member data - allLinksList - for further use...
+ *  
+ * getSelectURLLinkData - more select version of above - fills data returned from SEOMoz in 
+ *  member data  -  selectLinksList
+ *  
+ * extractUniqueDoms - this loops through allLinksList and extracts 1 link from each unique domain
+ * 	- places these links in member data - uniqueDomainsList
+ *  
  */
 package com.gofetch.seomoz;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-//import com.seomoz.api.authentication.Authenticator;
-//import com.seomoz.api.constants.URLMetricsConstants;
-//import com.seomoz.api.response.URLPlusDataPoints;
-//import com.seomoz.api.response.UrlResponse;
-//import com.seomoz.api.service.LinksService;
-//import com.seomoz.api.service.URLMetricsService;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,33 +34,34 @@ import java.util.logging.Logger;
  *
  * @author alandonohoe
  */
-public class SEOMoz {
+public class SEOMozWrapper {
 
-    public static final String TAG = "SEOMoz object";          // used for logging errors
+    public static final String TAG = "SEOMoz object";   // used for logging errors
     private Logger log = Logger.getLogger(TAG);         // used for logging errors
     private String errorMsg;                            // used for logging errors
-    private String accessID;
-    private String secretKey;
-    private Authenticator authenticator;
-    private final int LINK_QUERY_MAX = 1000; // max no of links to query at one time SEOMoz server
-    private final int SEOMOZ_SERVER_DELAY = 6000; // - time in msecs allowed btwn requests to the SEOMoz server, this can be removed/reduced when we pay for SEOMoz pro services....
-    private boolean usingSEOMozFreeAPI;
-    //TODO: remove the selectLinksDAPA - and just set the DA and PA of those links that have not been scored to 0
-    private ArrayList<URLPlusDataPoints> selectLinksDAPA = new ArrayList<URLPlusDataPoints>();          // array of selected backlinks with Page Auth and Domain Auth.
-    private ArrayList<URLPlusDataPoints> allLinksDAPA = new ArrayList<URLPlusDataPoints>();       // array of all links to target URL.
-    private ArrayList<URLPlusDataPoints> uniqueDomains = new ArrayList<URLPlusDataPoints>();           // array of unique linking domains 
-    private int noOfTotalLinks;
-    private int noOfUniqueDomains;
-    private static String targetUrlPA;
-    private static String targetUrlDA;
+    private String accessID;							// SEOMoz server authentication
+    private String secretKey;							// SEOMoz server authentication
+    private Authenticator authenticator;				// SEOMoz server authentication
+    private boolean usingSEOMozFreeAPI;					// if this is set to true, then the limitations of free API are used - eg: we can ONLY ever get 1000 links
+    
+    
+    private ArrayList<URLPlusDataPoints> allLinksList = new ArrayList<URLPlusDataPoints>();       // array of all links to target URL.
+    //TODO: look into whether selectLinksDAPA is used.... seems superceded by uniqueDomains...
+    private ArrayList<URLPlusDataPoints> selectLinksList = new ArrayList<URLPlusDataPoints>();    // array of selected backlinks with Page Auth and Domain Auth.
+    private ArrayList<URLPlusDataPoints> uniqueDomainsList = new ArrayList<URLPlusDataPoints>();      // array of unique linking domains 
+    
+    private int noOfTotalLinks;							// total no of links pointing to the target, accessible via SEOMoz API
+    private int noOfUniqueDomains;						// total no of unique domains, as determined by this app - not SEOMoz API.
+    private static String targetUrlPA;					// target url's PA
+    private static String targetUrlDA;					// target url's DA
+    
 
-    public SEOMoz(String accessID, String secretKey) {
+    public SEOMozWrapper(String accessID, String secretKey) {
 
         this.accessID = accessID;
         this.secretKey = secretKey;
 
         Authenticate();
-
     }
 
     /**
@@ -74,19 +82,23 @@ public class SEOMoz {
 
     public ArrayList<URLPlusDataPoints> getUniqueDomainLinks() {
 
-        return uniqueDomains;
+        return uniqueDomainsList;
     }
 
     public ArrayList<URLPlusDataPoints> getAllLinks() {
 
-        return allLinksDAPA;
+        return allLinksList;
     }
 
     public ArrayList<URLPlusDataPoints> getSelectLinks() {
 
-        return selectLinksDAPA;
+        return selectLinksList;
     }
-
+    
+    public ArrayList<URLPlusDataPoints> getUniqueDomains() {
+        return uniqueDomainsList;
+    }
+    
     private void Authenticate() {
 
         authenticator = new Authenticator();
@@ -99,9 +111,10 @@ public class SEOMoz {
     }
 
     /**
-     *
-     * @param url
-     * @return
+     * Queries the SEOMoz server for the no of external links to the target url,
+     * if called before just returns this value - saves unnec. hitting the server 
+     * @param url - target url
+     * @return - no of external links to target url.
      */
     public int getNoOfExternalLinks(String url) {
 
@@ -138,32 +151,29 @@ public class SEOMoz {
      * @return an array of links
      */
     public ArrayList<URLPlusDataPoints> getSelectURLLinkData(String url, String scope, String filters, String sort, long sourceCols, long targetCols, long linkCols, int offset, int noOfLinks) {
-        //TODO: make linksservice private member and only call this if null? - call in constructor
+
         LinksService linksService = new LinksService();
         linksService.setAuthenticator(authenticator);
 
         // check we're not asking for above limit:
-        if (noOfLinks > LINK_QUERY_MAX) {
-            noOfLinks = LINK_QUERY_MAX;
+        if (noOfLinks > Constants.LINK_QUERY_MAX) {
+            noOfLinks = Constants.LINK_QUERY_MAX;
         }
-
-
 
         String response = linksService.getLinks(url, scope, filters, sort, sourceCols, targetCols, linkCols, offset, noOfLinks);
 
         if (response.length() > 2) { // check for "[]" = empty reponse
-
 
             Type linksListType = new TypeToken<ArrayList<URLPlusDataPoints>>() {
             }.getType(); // get type for GSON
 
             Gson gson = new Gson();
 
-            selectLinksDAPA = gson.fromJson(response, linksListType);
+            selectLinksList = gson.fromJson(response, linksListType);
 
-            tidyLinkText(selectLinksDAPA);
+            tidyLinkText(selectLinksList);
         }
-        return selectLinksDAPA;
+        return selectLinksList;
 
     }
 
@@ -178,26 +188,20 @@ public class SEOMoz {
      * @param linkCols
      * @return an ArrayList of ALL the backlinks to the target URL.
      *
-     * Fills and returns ref to member data- allLinksDAPA - array of backlinks
+     * Fills and returns ref to member data- allLinksList - array of backlinks
      * to target "url", with associated datapoints - makes a clean copy of the
      * url (minus any commas) in the cleanURL member data for each url.
      */
     public ArrayList<URLPlusDataPoints> getTotalLinksData(String url, String scope, String filters, String sort, long sourceCols, long targetCols, long linkCols) {
 
-        // check we have total no of links in class member: noOfTotalLinks
-        //if (0 == getNoOfExternalLinks(url)) {
-        //    // throw error here....
-        //    return null;
-        // }
 
         int offset = 0;
-        //int noOfLinks = 200; // temp for testing...
         boolean calledOnce = false; // used in timer delay to hit SEOMoz server multiple times....
         boolean moreLinksLeft = true; // flag set to false when SEOMoz not sending back any more links...
 
         ArrayList<URLPlusDataPoints> tempLinks;
 
-        allLinksDAPA.clear(); // make sure we are starting with empty list to avoid duplication
+        allLinksList.clear(); // make sure we are starting with empty list to avoid duplication
 
         while (moreLinksLeft) {
 
@@ -205,13 +209,13 @@ public class SEOMoz {
             if (calledOnce) /// no need to call the first time.. 
             {
                 try {
-                    Thread.sleep(SEOMOZ_SERVER_DELAY);     // every 5 calls for ex..???? speed it up...
+                    Thread.sleep(Constants.SEOMOZ_SERVER_DELAY);  
                 } catch (InterruptedException ex) {
 
                     // from: http://stackoverflow.com/questions/9139128/a-sleeping-thread-is-getting-interrupted-causing-loss-of-connection-to-db
                     Thread.currentThread().interrupt(); // restore interrupted status
 
-                    errorMsg = SEOMoz.TAG + " threw " + ex.getMessage();
+                    errorMsg = SEOMozWrapper.TAG + " threw " + ex.getMessage();
                     log.info(errorMsg);
                     ex.printStackTrace();
                 }
@@ -219,33 +223,33 @@ public class SEOMoz {
             }
             calledOnce = true;
 
-            tempLinks = getSelectURLLinkData(url, scope, filters, sort, sourceCols, targetCols, linkCols, offset, LINK_QUERY_MAX);
+            tempLinks = getSelectURLLinkData(url, scope, filters, sort, sourceCols, targetCols, linkCols, offset, Constants.LINK_QUERY_MAX);
 
 
             if (tempLinks.isEmpty()) { //if no_more_links 
 
                 moreLinksLeft = false; //No more links from SEOMoz  - set flag
-                noOfTotalLinks = allLinksDAPA.size();
+                noOfTotalLinks = allLinksList.size();
 
             } // if we have got back less than the max amount allowed, indicates we have all the links SEOMoz has to offer
             //OR we're using free API - we can ONLY ever get 1000 links
-            else if ((tempLinks.size() < LINK_QUERY_MAX) || usingSEOMozFreeAPI) {
+            else if ((tempLinks.size() < Constants.LINK_QUERY_MAX) || usingSEOMozFreeAPI) {
 
                 moreLinksLeft = false; //No more links from SEOMoz  - set flag
                 noOfTotalLinks = tempLinks.size();
-                allLinksDAPA.addAll(tempLinks); //append templinks to allLinksDAPA
+                allLinksList.addAll(tempLinks); //append templinks to allLinksDAPA
             } else { /// still more links to get.... so...
-                allLinksDAPA.addAll(tempLinks); //append templinks to allLinksDAPA
+                allLinksList.addAll(tempLinks); //append templinks to allLinksDAPA
 
-                offset = allLinksDAPA.size(); // move along to query next links...  and go back for more backlinks
+                offset = allLinksList.size(); // move along to query next links...  and go back for more backlinks
             }
 
         }
 
-        tidyLinkText(allLinksDAPA);
+        tidyLinkText(allLinksList);
         extractDomNameFromURL();
 
-        return allLinksDAPA;
+        return allLinksList;
     }
 
     /**
@@ -260,7 +264,6 @@ public class SEOMoz {
 
         String cleanAnchorText;
         String cleanURLText;
-        String cleanDomaintext;
 
         for (int i = 0; i < linkListToClean.size(); i++) {
 
@@ -275,15 +278,19 @@ public class SEOMoz {
         }
     }
 
+    /**
+     * Runs through all the links in current profile and extracts their domain name,
+     * then assigns this name to each links member data DomainName
+     */
     private void extractDomNameFromURL() {
 
         String domName;
 
-        for (int i = 0; i < allLinksDAPA.size(); i++) {
+        for (int i = 0; i < allLinksList.size(); i++) {
 
-            domName = TextParser.getDomainNameFromURL(allLinksDAPA.get(i).getBackLinkURL());
+            domName = TextParser.getDomainNameFromURL(allLinksList.get(i).getBackLinkURL());
 
-            allLinksDAPA.get(i).setDomainName(domName);
+            allLinksList.get(i).setDomainName(domName);
 
         }
     }
@@ -297,7 +304,8 @@ public class SEOMoz {
     public void extractUniqueDoms() {
 
         //TODO: work through the algo of getting all unique domains, plus no of links each has pointing to target here
-        if (allLinksDAPA.isEmpty() || (allLinksDAPA.get(0).getDomainName().isEmpty())) {
+    	//	that is - need to accommodate multiple wordpress domains... etc - speak to Gary and check...
+        if (allLinksList.isEmpty() || (allLinksList.get(0).getDomainName().isEmpty())) {
             return; // throw error??
         }
 
@@ -305,20 +313,19 @@ public class SEOMoz {
         boolean containsDomName = false;
 
         // set up the initial case - so list is not empty:
-        uniqueDomains.add(allLinksDAPA.get(0));
-
+        uniqueDomainsList.add(allLinksList.get(0));
 
         try {
 
 
-            for (int i = 1; i < allLinksDAPA.size(); i++) {
+            for (int i = 1; i < allLinksList.size(); i++) {
                 //run through all links for each dom name....
-                currentDomName = allLinksDAPA.get(i).getDomainName();
+                currentDomName = allLinksList.get(i).getDomainName();
 
                 // now run through current list of domian names and check if above name is not in there, add if so
-                for (int b = 0; b < uniqueDomains.size(); b++) {
+                for (int b = 0; b < uniqueDomainsList.size(); b++) {
 
-                    if (uniqueDomains.get(b).getDomainName().equals(currentDomName)) {
+                    if (uniqueDomainsList.get(b).getDomainName().equals(currentDomName)) {
                         // if the dom name is NOT already in unique dom name list, add and return...
                         containsDomName = true;
                     }
@@ -326,7 +333,7 @@ public class SEOMoz {
                 }
 
                 if (!containsDomName) {
-                    uniqueDomains.add(allLinksDAPA.get(i));
+                    uniqueDomainsList.add(allLinksList.get(i));
                 }
                 //reset flag at end of each loop:
                 containsDomName = false;
@@ -334,41 +341,38 @@ public class SEOMoz {
             }
 
         } catch (Exception e) {
-            errorMsg = SEOMoz.TAG + " threw " + e.getMessage();
+            errorMsg = SEOMozWrapper.TAG + " threw " + e.getMessage();
             log.info(errorMsg);
             e.printStackTrace();
         }
 
-        noOfUniqueDomains = uniqueDomains.size();
+        noOfUniqueDomains = uniqueDomainsList.size();
 
     }
 
-    public ArrayList<URLPlusDataPoints> getUniqueDomains() {
-        return uniqueDomains;
-    }
+
     /*
      * calls the URL metric SEOMoz API on each of the backlink URLs.
+     * 
      */
 
     @SuppressWarnings("SleepWhileInLoop")
     public void retrieveAuthorityData(ArrayList<URLPlusDataPoints> urlList) {
-
-        URLMetricsService urlMetricsService = new URLMetricsService(authenticator);
-        Gson gson = new Gson();
-        String response;
-        String tempString, stringDA, stringPA;
-        int indexOfDecPoint;
-        UrlResponse res; //TODO: check responses here....
-        long authorityBitMask = URLMetricsConstants.URLMETRICS_COL_ALL; //URLMetricsConstants.URLMETRICS_COL_DOMAIN_AUTHORITY 
-        // | URLMetricsConstants.URLMETRICS_COL_PAGE_AUTHORITY;
-
-        // need to update SEOMoz authentification here....??? occasionally get exceptions...
+    	
 
         // logging stuff
         String logString; // used to write to log, the long countdown of getting PA and DA data for each link from SEOMoz server...
         String currentURL;
         int urlListSize = urlList.size();
         //... end logging
+
+        URLMetricsService urlMetricsService = new URLMetricsService(authenticator);
+        Gson gson = new Gson();
+        String response;
+        String stringDA, stringPA;
+        UrlResponse res; 
+        long authorityBitMask = URLMetricsConstants.URLMETRICS_COL_ALL; //URLMetricsConstants.URLMETRICS_COL_DOMAIN_AUTHORITY 
+        																// | URLMetricsConstants.URLMETRICS_COL_PAGE_AUTHORITY;
 
         // first set the target URL's DA and PA:
         response = urlMetricsService.getUrlMetrics(urlList.get(0).getLuuu(), authorityBitMask);
@@ -395,18 +399,17 @@ public class SEOMoz {
                 //////////////////////
 
                 //////////////////////
-                //TODO: fix for teh SEOMoz throttle limit. need to cache! 
+                //TODO: fix for teh SEOMoz throttle limit. need to cache....
                 //  see: https://seomoz.zendesk.com/entries/459198-rate-limiting-throttling-and-avoiding-time-outs
 
                 // for bug fix: see: http://forums.java.net/node/808052 - need to adjust timeout....
-                Thread.sleep(SEOMOZ_SERVER_DELAY);     // every 5 calls for ex..???? speed it up...
+                Thread.sleep(Constants.SEOMOZ_SERVER_DELAY);    
 
                 response = urlMetricsService.getUrlMetrics(urlList.get(i).getUu(), authorityBitMask);
 
                 if (!response.isEmpty()) {// replace below if clause with this, to make more efficient... 
                     res = gson.fromJson(response, UrlResponse.class);
 
-                    //if (null != res) {}
 
                     // remove the digits after the decimal point
                     stringPA = removepostDecimalDigits(res.getUpa());
@@ -424,7 +427,7 @@ public class SEOMoz {
                     //////////////////
                     
                     /////////
-                    // to prevent loss of all data, write to disk every time we have another 10 rows
+                    //TODO: to prevent loss of all data, write to disk every time we have another 10 rows
                     if(0== i%10){
                         
                     }
@@ -452,17 +455,23 @@ public class SEOMoz {
             }
         } catch (InterruptedException ex) { // from: http://stackoverflow.com/questions/9139128/a-sleeping-thread-is-getting-interrupted-causing-loss-of-connection-to-db
             Thread.currentThread().interrupt(); // restore interrupted status
-            errorMsg = SEOMoz.TAG + " threw " + ex.getMessage();
+            errorMsg = SEOMozWrapper.TAG + " threw " + ex.getMessage();
             log.info(errorMsg);
             ex.printStackTrace();
         } catch (Exception e) {
-            errorMsg = SEOMoz.TAG + " threw " + e.getMessage();
+            errorMsg = SEOMozWrapper.TAG + " threw " + e.getMessage();
             log.info(errorMsg);
             e.printStackTrace();
         }
 
     }
 
+  
+    /**
+     * 
+     * @param stringToClean - decimal number as a string.
+     * @return integer version of the number passed - as string.
+     */
     private String removepostDecimalDigits(String stringToClean) {
 
         String cleanString;
@@ -478,12 +487,17 @@ public class SEOMoz {
         return cleanString;
     }
 
-    /*
+    /**
+     *   
      * assigns red green or amber to backlink - at the moment, based on its DA
      * proxy for algo scoring - move this functionality out of this class, and
      * set up something clever based on server scalping and APIing backlinks for
      * a page rank like score..????
      *
+     * @param urlList - ArrayList of URLs to be assigned a RGA score.
+     * @param setAllColoursAsAmber - if true, then all links will be scored Amber, else if false - they will be scored green if their DA > 66, 
+     * 																							 - amber if DA < 66 && > 33
+     * 																							 - red if DA < 33.
      */
     public void performScoring(ArrayList<URLPlusDataPoints> urlList, boolean setAllColoursAsAmber) {
 
@@ -493,9 +507,6 @@ public class SEOMoz {
 
             for (; i < urlList.size(); i++) {
 
-                //TODO: this is a temp fix to give the node a colour... need to implement Link Audit here....
-                // if current link's Domain Auth in top 1/3, colour = Green, etc....
-                // inject the decision tree at later date....
                 if (setAllColoursAsAmber) {
                     urlList.get(i).setScore("amber");
                 } else {
@@ -513,7 +524,7 @@ public class SEOMoz {
                 }
             }
         } catch (Exception e) {
-            errorMsg = SEOMoz.TAG + " threw " + e.getMessage();
+            errorMsg = SEOMozWrapper.TAG + " threw " + e.getMessage();
             errorMsg += "\n No: " + i + " URL that caused the error: " + urlList.get(i).getBackLinkURL();
             log.info(errorMsg);
             e.printStackTrace();
@@ -532,10 +543,10 @@ public class SEOMoz {
         // sets the width of ranges / no of frames that we divide the array into to get 
         //  equally dispersed selection of links from....
 
-        noOfUniqueDomains = uniqueDomains.size(); // make sure we're up to date
+        noOfUniqueDomains = uniqueDomainsList.size(); // make sure we're up to date
 
         if (0 == noOfUniqueDomains) {
-            noOfUniqueDomains = uniqueDomains.size();
+            noOfUniqueDomains = uniqueDomainsList.size();
         }
 
         if (noOfUniqueDomains < noOfUniqDomRequired) {
@@ -549,13 +560,11 @@ public class SEOMoz {
 
         count = 0;
 
-
-
         // sort by ascending DA.... 
-        Collections.sort(uniqueDomains);
+        Collections.sort(uniqueDomainsList);
 
         //clear out selected links array
-        selectLinksDAPA.clear();
+        selectLinksList.clear();
 
         // run though the unique domains, selecting a link from each "frame"
         for (int i = 0; i < noOfUniqDomRequired; i++) {
@@ -563,15 +572,15 @@ public class SEOMoz {
             index = Math.round(count);
 
             //check for array out of bounds with the rounding up of last count
-            if (index > uniqueDomains.size()) {
-                index = uniqueDomains.size();
+            if (index > uniqueDomainsList.size()) {
+                index = uniqueDomainsList.size();
             }
-            selectLinksDAPA.add(uniqueDomains.get(Math.round(index)));
-
+            selectLinksList.add(uniqueDomainsList.get(Math.round(index)));
+ 
             count += step;
         }
 
-        return selectLinksDAPA;
+        return selectLinksList;
 
     }
 }

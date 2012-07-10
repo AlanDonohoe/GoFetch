@@ -18,8 +18,8 @@ public class URLPlusDataPoints implements Comparable<URLPlusDataPoints> {
     private String lt; // anchor text
     private String luuu; // target URL
     private String domainName; // domain....
-    private static String targetUrlDA;
-    private static String targetUrlPA;
+    private static String targetUrlDA; //class wide member - this backlink's target's DA
+    private static String targetUrlPA; //class wide member - this backlink's target's PA
 
     public static String getTargetUrlDA() {
         return targetUrlDA;
