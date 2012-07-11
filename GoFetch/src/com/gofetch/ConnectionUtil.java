@@ -1,4 +1,4 @@
-package com.gofetch.seomoz;
+package com.gofetch;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -20,9 +20,9 @@ import java.net.URL;
 /**
  *
  * Utility Class to make a GET HTTP connection to the given url and pass the
- * output
+ * output - GAE friendly version
  *
- * @author Radeep Solutions
+ * @author Alan Donohoe
  *
  */
 public class ConnectionUtil {

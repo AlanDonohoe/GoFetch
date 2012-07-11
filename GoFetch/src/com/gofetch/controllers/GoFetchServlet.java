@@ -4,6 +4,8 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
+import com.gofetch.entities.URL;
+import com.gofetch.entities.URLService;
 import com.gofetch.seomoz.Constants;
 import com.gofetch.seomoz.SEOMozWrapper;
 
@@ -45,7 +47,13 @@ public class GoFetchServlet extends HttpServlet {
 		
 		
 		//TODO: check if url is already added to DB here....
-		// research...
+		// 
+		URL url = new URL();
+		
+		url.setUrl_address(goFetchBean.getUrl());
+		URLService urlDBUnit = new URLService();
+		
+		urlDBUnit.createURL(url);
 		
 		//TODO: if yes, just return index page/ fwd to error page.
 		
