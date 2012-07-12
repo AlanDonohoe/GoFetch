@@ -94,7 +94,7 @@ button {  width: auto; overflow: visible; }
 
 
 /* Fonts */
-
+/*
 @font-face {
     font-family: 'VectoraLTStd75Bold';
     src: url('../fonts/vectoraltstd-bold-webfont.eot');
@@ -140,8 +140,7 @@ button {  width: auto; overflow: visible; }
     font-weight: normal;
     font-style: normal;
 
-}
-
+}*/
 
 body {
     font-family:  Helvetica, Arial,  sans-serif;
@@ -210,7 +209,7 @@ header {
     position: absolute;
     top:0px;
     width: 858px;
-    background: url(../images/nav-shadow.jpg) repeat-x bottom left;
+/*    background: url(../images/nav-shadow.jpg) repeat-x bottom left;*/
     padding: 20px 0 26px 0;
 }
 
@@ -861,7 +860,7 @@ a.submit-button {
 /* HOME PAGE */
 
 .home #main {
-    background: url(../images/home/searchgirl.jpg) no-repeat 190px 215px;
+/*    background: url(../images/home/searchgirl.jpg) no-repeat 190px 215px;*/
     
 }
 .home .button {

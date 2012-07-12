@@ -9,6 +9,8 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 
+import com.google.appengine.api.rdbms.AppEngineDriver;
+
 /**
  * Service class for CRUD operations on URL bean
  * @author alandonohoe
@@ -40,7 +42,7 @@ public class URLService {
         } finally {
             mgr.close();
         }
-        logger.info("Exiting createContact");
+        logger.info("Exiting createURL");
 	}
 	
 	/**
