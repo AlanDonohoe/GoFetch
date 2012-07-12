@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Entity
 @Table(name="keywords")
 public class Keywords implements Serializable {
-
 	   
 	@Id
 	private String keyword;

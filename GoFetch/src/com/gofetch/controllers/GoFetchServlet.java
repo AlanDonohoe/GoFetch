@@ -23,9 +23,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
-
-
-
 @SuppressWarnings("serial")
 public class GoFetchServlet extends HttpServlet {
 	
@@ -69,55 +66,64 @@ public class GoFetchServlet extends HttpServlet {
 		
 		//TODO: check if url is already added to DB here....
 		// 
-		String urlAddress = goFetchBean.getUrl();
-		boolean getFBData = goFetchBean.isFacebookData(); 
-		boolean getTwitterData = goFetchBean.isTwitterData();
-		boolean getBackLinks = goFetchBean.isBackLinkData();
-		
-		Connection c = null;
-	    try {
-	      DriverManager.registerDriver(new AppEngineDriver());
-	      c = DriverManager.getConnection("jdbc:google:rdbms://kastle2gofetch/url");
-	      
-	      String statement ="INSERT INTO url (url_address, get_fb_data, get_twitter_data, get_backlinks) VALUES(?,?,?,?)";
-	      PreparedStatement stmt = c.prepareStatement(statement);
-	      stmt.setString (1, urlAddress);
-	      stmt.setBoolean(2, getFBData);
-	      stmt.setBoolean(3, getTwitterData);
-	      stmt.setBoolean(4, getBackLinks);
-	      
-	      int success;
-	      success = stmt.executeUpdate();
-	      if(1 == success){
-	    	  logger.info(urlAddress + " added successfully");
-	      }else{
-	    	  logger.info(urlAddress + " FAILED to be added to url");
-	      }
-
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        if (c != null) 
-	          try {
-	            c.close();
-	            } catch (SQLException ignore) {
-	         }
-	      } 
+//		String urlAddress = goFetchBean.getUrl();
+//		boolean getFBData = goFetchBean.isFacebookData(); 
+//		boolean getTwitterData = goFetchBean.isTwitterData();
+//		boolean getBackLinks = goFetchBean.isBackLinkData();
+//		
+//		Connection c = null;
+//	    try {
+//	      DriverManager.registerDriver(new AppEngineDriver());
+//	      c = DriverManager.getConnection("jdbc:google:rdbms://kastle2gofetch:url/url");
+//	      
+//	      //String statement = "INSERT INTO keywords (keyword, search_volume, vertical) VAlUES ('trousers3010',1002,'alan')";   
+//      String statement ="INSERT INTO url (url_address, get_fb_data, get_twitter_data, get_backlinks) VALUES(?,?,?,?)";
+//      
+//	      PreparedStatement stmt = c.prepareStatement(statement);
+//	     
+//	      stmt.setString (1, urlAddress);
+//	      stmt.setBoolean(2, getFBData);
+//	      stmt.setBoolean(3, getTwitterData);
+//	      stmt.setBoolean(4, getBackLinks);
+//	      
+//	      int success;
+//	      success = stmt.executeUpdate();
+//	      stmt.close();
+//	      if(1 == success){
+//	    	  logger.info(urlAddress + " added successfully");
+//	      }else{
+//	    	  logger.info(urlAddress + " FAILED to be added to url");
+//	      }
+//	      
+//
+//	    } catch (SQLException e) {
+//	        e.printStackTrace();
+//	    } finally {
+//	        if (c != null) 
+//	          try {
+//	            c.close();
+//	            } catch (SQLException ignore) {
+//	         }
+//	      } 
 	    
 		// JPA version - preferable....
-//		URL url = new URL();
-//		
-//		url.setUrl_address(goFetchBean.getUrl());
-//		
-//		
+		URL url = new URL();
+		
+		url.setUrl_address(goFetchBean.getUrl());
+		
+		url.setGet_backlinks(goFetchBean.isBackLinkData());
+		url.setGet_fb_Data(goFetchBean.isFacebookData());
+		url.setGet_twitter_data(goFetchBean.isTwitterData());
+		
+		
 //		String urlAddress = url.getUrl_address();
-//		boolean getFBData =true; // url.isGet_fb_Data();
+//		boolean getFBData = url.isGet_fb_Data();
 //		boolean getTwitterData = url.isGet_twitter_data();
 //		boolean getBackLinks = url.isGet_backlinks();
-	    
-		//URLService urlDBUnit = new URLService();
+//	    
+		URLService urlDBUnit = new URLService();
 		
-		//urlDBUnit.createURL(url);
+		urlDBUnit.createURL(url);
 		
 	    //
 	    ///////////////
@@ -136,9 +142,7 @@ public class GoFetchServlet extends HttpServlet {
          *   we will only ever get the top (by PA) 1000 links to any URL target...
 		 */
 		//seoMoz.usingSEOMozFreeAPI(true); 
-		
-		
-		
+	
 		
 		try {
 			getServletContext().getRequestDispatcher("/index.html").forward(req,resp);
