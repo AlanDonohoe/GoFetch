@@ -20,6 +20,7 @@ public class URL implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String url_address;
+	private String user_id;
 	private String category;
 	private String domain;
 	private String doc_title;
@@ -40,6 +41,19 @@ public class URL implements Serializable {
 	}   
 	
 	
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+
+
 	public String getCategory() {
 		return category;
 	}

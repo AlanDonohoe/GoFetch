@@ -9,6 +9,7 @@ package com.gofetch.controllers;
 //import com.google.appengine.api.rdbms.AppEngineDriver;
 //import com.google.cloud.sql.jdbc.Connection;
 
+import com.gofetch.beans.GoFetchRequestBean;
 import com.gofetch.entities.URL;
 import com.gofetch.entities.URLService;
 
@@ -32,16 +33,16 @@ public class GoFetchServlet extends HttpServlet {
 
 		resp.setContentType("text/plain");
 		
-		
 		//////////
 		// get data from page and fill bean....
 		GoFetchRequestBean goFetchBean = new GoFetchRequestBean();
 		
 		goFetchBean.setUrl(req.getParameter("target_url"));
+		goFetchBean.setUser_id(req.getParameter("user_id"));
 		
 		String backlink_data = req.getParameter("backlink_data");
 		String facebook_data = req.getParameter("facebook_data");
-		String twitter_data = req.getParameter("twitter_data");
+		String twitter_data =  req.getParameter("twitter_data");
 		
 		if(null == backlink_data){
 			goFetchBean.setBackLinkData(false);
@@ -65,7 +66,9 @@ public class GoFetchServlet extends HttpServlet {
 		
 		
 		//TODO: check if url is already added to DB here....
-		// 
+		
+		/////////////
+		// version - using jdbc - not JPA
 //		String urlAddress = goFetchBean.getUrl();
 //		boolean getFBData = goFetchBean.isFacebookData(); 
 //		boolean getTwitterData = goFetchBean.isTwitterData();
@@ -106,26 +109,22 @@ public class GoFetchServlet extends HttpServlet {
 //	         }
 //	      } 
 	    
+		/////////////
 		// JPA version - preferable....
 		URL url = new URL();
 		
 		url.setUrl_address(goFetchBean.getUrl());
+		url.setUser_id(goFetchBean.getUser_id());
 		
 		url.setGet_backlinks(goFetchBean.isBackLinkData());
 		url.setGet_fb_Data(goFetchBean.isFacebookData());
 		url.setGet_twitter_data(goFetchBean.isTwitterData());
 		
-		
-//		String urlAddress = url.getUrl_address();
-//		boolean getFBData = url.isGet_fb_Data();
-//		boolean getTwitterData = url.isGet_twitter_data();
-//		boolean getBackLinks = url.isGet_backlinks();
-//	    
 		URLService urlDBUnit = new URLService();
 		
 		urlDBUnit.createURL(url);
 		
-	    //
+	    // end JPA persistence...
 	    ///////////////
 	    
 		//TODO: if yes, just return index page/ fwd to error page.
@@ -140,6 +139,7 @@ public class GoFetchServlet extends HttpServlet {
 		/*
 		 * until we pay for the API - set this true here - speeds up queries... 
          *   we will only ever get the top (by PA) 1000 links to any URL target...
+         *   all SEOMoz API stuff, can be dealt with in quiet periods using backend/cron jobs...
 		 */
 		//seoMoz.usingSEOMozFreeAPI(true); 
 	
@@ -151,9 +151,6 @@ public class GoFetchServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		
-		
-
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {

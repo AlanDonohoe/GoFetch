@@ -1,11 +1,19 @@
-package com.gofetch.controllers;
+package com.gofetch.beans;
 
 public class GoFetchRequestBean {
 	protected String url;
+	protected String user_id;
 	protected boolean facebookData;
 	protected boolean twitterData;
 	protected boolean backLinkData;
 	
+	
+	public String getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
 	public String getUrl() {
 		return url;
 	}
