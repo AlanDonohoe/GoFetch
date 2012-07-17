@@ -64,53 +64,12 @@ public class GoFetchServlet extends HttpServlet {
 		//
 		//////////////
 		
-		
+		///////////////
 		//TODO: check if url is already added to DB here....
 		
+	
 		/////////////
-		// version - using jdbc - not JPA
-//		String urlAddress = goFetchBean.getUrl();
-//		boolean getFBData = goFetchBean.isFacebookData(); 
-//		boolean getTwitterData = goFetchBean.isTwitterData();
-//		boolean getBackLinks = goFetchBean.isBackLinkData();
-//		
-//		Connection c = null;
-//	    try {
-//	      DriverManager.registerDriver(new AppEngineDriver());
-//	      c = DriverManager.getConnection("jdbc:google:rdbms://kastle2gofetch:url/url");
-//	      
-//	      //String statement = "INSERT INTO keywords (keyword, search_volume, vertical) VAlUES ('trousers3010',1002,'alan')";   
-//      String statement ="INSERT INTO url (url_address, get_fb_data, get_twitter_data, get_backlinks) VALUES(?,?,?,?)";
-//      
-//	      PreparedStatement stmt = c.prepareStatement(statement);
-//	     
-//	      stmt.setString (1, urlAddress);
-//	      stmt.setBoolean(2, getFBData);
-//	      stmt.setBoolean(3, getTwitterData);
-//	      stmt.setBoolean(4, getBackLinks);
-//	      
-//	      int success;
-//	      success = stmt.executeUpdate();
-//	      stmt.close();
-//	      if(1 == success){
-//	    	  logger.info(urlAddress + " added successfully");
-//	      }else{
-//	    	  logger.info(urlAddress + " FAILED to be added to url");
-//	      }
-//	      
-//
-//	    } catch (SQLException e) {
-//	        e.printStackTrace();
-//	    } finally {
-//	        if (c != null) 
-//	          try {
-//	            c.close();
-//	            } catch (SQLException ignore) {
-//	         }
-//	      } 
-	    
-		/////////////
-		// JPA version - preferable....
+		// write url to DB.
 		URL url = new URL();
 		
 		url.setUrl_address(goFetchBean.getUrl());
@@ -127,11 +86,6 @@ public class GoFetchServlet extends HttpServlet {
 	    // end JPA persistence...
 	    ///////////////
 	    
-		//TODO: if yes, just return index page/ fwd to error page.
-		
-		
-		//TODO: no - add url to DB.
-		
 		
 		// set up the SEOMoz object...
 		//SEOMozWrapper seoMoz = new SEOMozWrapper(Constants.ACCESS_ID, Constants.SECRET_KEY);

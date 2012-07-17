@@ -82,34 +82,5 @@ public class ConnectionUtil {
 
 
     	
-    	//old - glassfish implementation....
-//        HttpClient httpclient = new DefaultHttpClient();
-//
-//        HttpGet httpget = new HttpGet(urlToFetch);
-//
-//        // Create a response handler
-//        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-//        
-//        try {
-//            responseBody = httpclient.execute(httpget, responseHandler);
-//        }catch (HttpResponseException ex){
-//            
-//            errorMsg = "HttpResponseException caused by: \n" + urlToFetch;
-//            log.info(errorMsg);
-//            ex.printStackTrace();
-//
-//        } catch (Exception e) {
-//
-//            errorMsg = "Problem Connecting to SEOMoz server ";
-//            errorMsg += ConnectionUtil.TAG + " threw " + e.getMessage();
-//            errorMsg += "\n urlToFetch = " + urlToFetch;
-//            log.info(errorMsg);
-//            e.printStackTrace();
-//
-//        }
-//        httpclient.getConnectionManager().shutdown();
-//        return responseBody;
-//    }
-    	
     }
 }
