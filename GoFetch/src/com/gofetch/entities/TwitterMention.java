@@ -6,6 +6,8 @@ import java.sql.Date;
 
 import javax.persistence.*;
 
+import org.hibernate.validator.NotNull;
+
 /**
  * Entity implementation class for Entity: TwitterMention
  *
@@ -18,11 +20,11 @@ public class TwitterMention implements Serializable {
 	//TODO: finish the JPA annotation of this entity.....
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+	private Integer twitter_id;
 	private static final long serialVersionUID = 1L;
 	
-	private Date date;
-	private String tweeter;
+	@NotNull private Date date;
+	@NotNull private String tweeter;
 	private String tweet_text;
 	private Integer followers;
 	private Integer followed;
@@ -95,11 +97,11 @@ public class TwitterMention implements Serializable {
 
 
 	public Integer getId() {
-		return this.id;
+		return this.twitter_id;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.twitter_id = id;
 	}
    
 }

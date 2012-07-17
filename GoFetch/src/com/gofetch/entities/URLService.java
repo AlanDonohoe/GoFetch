@@ -1,6 +1,7 @@
 package com.gofetch.entities;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
@@ -12,7 +13,7 @@ import javax.persistence.Query;
 import com.google.appengine.api.rdbms.AppEngineDriver;
 
 /**
- * Service class for CRUD operations on URL bean
+ * Service class for CRUD operations on URL entity
  * @author alandonohoe
  *
  */
@@ -39,7 +40,12 @@ public class URLService {
             mgr.getTransaction().begin();
             mgr.persist(url);
             mgr.getTransaction().commit();
-        } finally {
+        }catch(Exception e){
+        	String msg = "SQL Exception thrown...";
+        	logger.logp(Level.SEVERE, "URLService", "createURL",msg ,e);
+        	
+        }
+        finally {
             mgr.close();
         }
         logger.info("Exiting createURL");
@@ -50,7 +56,7 @@ public class URLService {
      * @param id
      * @return URL
      */
-    public URL getURL(Long id) {
+    public URL getURL(int id) {
         logger.info("Entering getURL[" + id + "]");
         URL result = null;
         

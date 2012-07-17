@@ -15,7 +15,7 @@ public class SEOMozData implements Serializable {
 	//TODO: finish the JPA annotation of this entity.....
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+	private Integer seomoz_id;
 	private static final long serialVersionUID = 1L;
 	
 	private Integer pa;
@@ -102,11 +102,11 @@ public class SEOMozData implements Serializable {
 
 
 	public Integer getId() {
-		return this.id;
+		return this.seomoz_id;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.seomoz_id = id;
 	}
    
 }

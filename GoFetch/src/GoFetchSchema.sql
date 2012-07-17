@@ -10,11 +10,12 @@ USE `url` ;
 -- Table `url`.`url`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `url`.`url` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
+  `url_id` INT NOT NULL AUTO_INCREMENT ,
   `url_address` VARCHAR(200) NOT NULL ,
   `get_fb_data` TINYINT(1) NOT NULL ,
   `get_twitter_data` TINYINT(1) NOT NULL ,
   `get_backlinks` TINYINT(1) NOT NULL COMMENT 'If true, this indicates this is a target url and its id should be added to links table as a target' ,
+  `date` DATE NOT NULL ,
   `user_id` VARCHAR(45) NULL COMMENT 'Ensures that each target url be associated with a user, source urls do not need to be assoc with a user id.' ,
   `category` VARCHAR(45) NULL ,
   `user_category` VARCHAR(45) NULL ,
@@ -22,7 +23,7 @@ CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `user_assigned_to` VARCHAR(45) NULL ,
   `domain` VARCHAR(45) NULL ,
   `doc_title` VARCHAR(45) NULL ,
-  PRIMARY KEY (`id`) )
+  PRIMARY KEY (`url_id`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
@@ -32,7 +33,7 @@ COLLATE = utf8_general_ci;
 -- Table `url`.`facebook`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `url`.`facebook` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'Represents a URLs FB data for a specific date.' ,
+  `fb_id` INT NOT NULL AUTO_INCREMENT COMMENT 'Represents a URLs FB data for a specific date.' ,
   `url_id` INT NOT NULL ,
   `date` DATE NOT NULL ,
   `total_count` INT NOT NULL ,
@@ -40,11 +41,11 @@ CREATE  TABLE IF NOT EXISTS `url`.`facebook` (
   `comment_count` INT NOT NULL ,
   `share_count` INT NOT NULL ,
   `click_count` INT NOT NULL ,
-  PRIMARY KEY (`id`, `url_id`) ,
+  PRIMARY KEY (`fb_id`, `url_id`) ,
   INDEX `fk_facebook_url` (`url_id` ASC) ,
   CONSTRAINT `fk_facebook_url`
     FOREIGN KEY (`url_id` )
-    REFERENCES `url`.`url` (`id` )
+    REFERENCES `url`.`url` (`url_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -56,7 +57,7 @@ COLLATE = utf8_general_ci;
 -- Table `url`.`twitter_mention`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `url`.`twitter_mention` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
+  `twitter_id` INT NOT NULL AUTO_INCREMENT ,
   `url_id` INT NOT NULL ,
   `date` DATE NOT NULL ,
   `tweeter` VARCHAR(45) NOT NULL ,
@@ -64,11 +65,11 @@ CREATE  TABLE IF NOT EXISTS `url`.`twitter_mention` (
   `followed` INT NOT NULL ,
   `klout_score` INT NOT NULL ,
   `tweet_text` VARCHAR(141) NOT NULL COMMENT 'Represents a twitter mention of the URL with associated data about the tweeter.' ,
-  PRIMARY KEY (`id`, `url_id`) ,
+  PRIMARY KEY (`twitter_id`, `url_id`) ,
   INDEX `fk_twitter_mention_url1` (`url_id` ASC) ,
   CONSTRAINT `fk_twitter_mention_url1`
     FOREIGN KEY (`url_id` )
-    REFERENCES `url`.`url` (`id` )
+    REFERENCES `url`.`url` (`url_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -78,7 +79,7 @@ ENGINE = InnoDB;
 -- Table `url`.`seomoz_data`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `url`.`seomoz_data` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
+  `seomoz_id` INT NOT NULL AUTO_INCREMENT ,
   `url_id` INT NOT NULL ,
   `pa` INT NOT NULL ,
   `da` INT NOT NULL ,
@@ -87,11 +88,11 @@ CREATE  TABLE IF NOT EXISTS `url`.`seomoz_data` (
   `auditor_id` INT NULL ,
   `last_question` INT NULL ,
   `comment` VARCHAR(45) NULL ,
-  PRIMARY KEY (`id`, `url_id`) ,
+  PRIMARY KEY (`seomoz_id`, `url_id`) ,
   INDEX `fk_seomoz_data_url1` (`url_id` ASC) ,
   CONSTRAINT `fk_seomoz_data_url1`
     FOREIGN KEY (`url_id` )
-    REFERENCES `url`.`url` (`id` )
+    REFERENCES `url`.`url` (`url_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -101,13 +102,13 @@ ENGINE = InnoDB;
 -- Table `url`.`links`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `url`.`links` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
+  `links_id` INT NOT NULL AUTO_INCREMENT ,
   `target_id` INT NOT NULL ,
   `source_id` INT NOT NULL COMMENT 'Represents hyperlinks btwn source which points at target.' ,
   `anchor_text` VARCHAR(45) NOT NULL ,
   `date_detected` DATE NOT NULL ,
   `date_expired` DATE NULL ,
-  PRIMARY KEY (`id`) )
+  PRIMARY KEY (`links_id`) )
 ENGINE = InnoDB;
 
 

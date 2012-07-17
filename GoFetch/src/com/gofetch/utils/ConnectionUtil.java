@@ -1,4 +1,4 @@
-package com.gofetch;
+package com.gofetch.utils;
 
 import java.io.IOException;
 import java.util.logging.Logger;

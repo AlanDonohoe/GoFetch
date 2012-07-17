@@ -1,20 +1,13 @@
 package com.gofetch.controllers;
 
-//import java.io.IOException;
-//import javax.servlet.ServletException;
-//import javax.servlet.http.*;
-//import com.gofetch.entities.URLService;
-//import com.gofetch.seomoz.Constants;
-//import com.gofetch.seomoz.SEOMozWrapper;
-//import com.google.appengine.api.rdbms.AppEngineDriver;
-//import com.google.cloud.sql.jdbc.Connection;
-
 import com.gofetch.beans.GoFetchRequestBean;
-import com.gofetch.entities.URL;
-import com.gofetch.entities.URLService;
-
+import com.gofetch.entities.*;
+import com.gofetch.utils.DateUtil;
 
 import com.google.appengine.api.rdbms.AppEngineDriver;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
 import java.io.IOException;
@@ -70,8 +63,11 @@ public class GoFetchServlet extends HttpServlet {
 	
 		/////////////
 		// write url to DB.
+		
+		
 		URL url = new URL();
 		
+		url.setDate(DateUtil.getTodaysDate());
 		url.setUrl_address(goFetchBean.getUrl());
 		url.setUser_id(goFetchBean.getUser_id());
 		
@@ -79,24 +75,24 @@ public class GoFetchServlet extends HttpServlet {
 		url.setGet_fb_Data(goFetchBean.isFacebookData());
 		url.setGet_twitter_data(goFetchBean.isTwitterData());
 		
-		URLService urlDBUnit = new URLService();
+		////////
+		// testing SEOMoz data....
+		SEOMozData seoMoz = new SEOMozData();
 		
+		seoMoz.setDa(100);
+		seoMoz.setPa(50);
+		
+		url.setSeoMozObject(seoMoz);
+
+		//
+		//////////////
+		URLService urlDBUnit = new URLService();
 		urlDBUnit.createURL(url);
+		
 		
 	    // end JPA persistence...
 	    ///////////////
-	    
 		
-		// set up the SEOMoz object...
-		//SEOMozWrapper seoMoz = new SEOMozWrapper(Constants.ACCESS_ID, Constants.SECRET_KEY);
-		
-		/*
-		 * until we pay for the API - set this true here - speeds up queries... 
-         *   we will only ever get the top (by PA) 1000 links to any URL target...
-         *   all SEOMoz API stuff, can be dealt with in quiet periods using backend/cron jobs...
-		 */
-		//seoMoz.usingSEOMozFreeAPI(true); 
-	
 		
 		try {
 			getServletContext().getRequestDispatcher("/index.html").forward(req,resp);

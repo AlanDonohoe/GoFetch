@@ -3,7 +3,7 @@ package com.gofetch.seomoz;
 import java.net.URLEncoder;
 
 import com.gofetch.seomoz.Authenticator;
-import com.gofetch.ConnectionUtil;
+import com.gofetch.utils.ConnectionUtil;
 
 /**
  * 

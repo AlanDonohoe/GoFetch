@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.lang.Integer;
 import javax.persistence.*;
 
+import org.hibernate.validator.NotNull;
+
 /**
  * Entity implementation class for Entity: FaceBookData
  *
@@ -15,10 +17,10 @@ public class FaceBookData implements Serializable {
 	//TODO: finish the JPA annotation of this entity.....
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+	private Integer fb_id;
 	private static final long serialVersionUID = 1L;
 		
-	private java.sql.Date date;
+	@NotNull private java.sql.Date date;
 	private int totalCount;
 	private int likeCount;
 	private int commentCount;
@@ -91,11 +93,11 @@ public class FaceBookData implements Serializable {
 
 
 	public Integer getId() {
-		return this.id;
+		return this.fb_id;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.fb_id = id;
 	}
    
 }

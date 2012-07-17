@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.lang.String;
 import javax.persistence.*;
 
+import org.hibernate.validator.NotNull;
+
 /**
  * Entity implementation class for Entity: Keywords
  *
@@ -13,7 +15,7 @@ import javax.persistence.*;
 public class Keywords implements Serializable {
 	   
 	@Id
-	private String keyword;
+	@NotNull private String keyword;
 	private static final long serialVersionUID = 1L;
 	
 	private Integer search_volume;

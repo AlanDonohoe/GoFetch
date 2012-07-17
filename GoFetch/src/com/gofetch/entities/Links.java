@@ -6,6 +6,8 @@ import java.sql.Date;
 
 import javax.persistence.*;
 
+import org.hibernate.validator.NotNull;
+
 /**
  * Entity implementation class for Entity: Links
  *
@@ -21,10 +23,10 @@ public class Links implements Serializable {
 	private Integer id;
 	private static final long serialVersionUID = 1L;
 	
-	private Integer target_id;
-	private Integer source_id;
+	@NotNull private Integer target_id;
+	@NotNull private Integer source_id;
 	
-	private Date date_detected;
+	@NotNull private Date date_detected;
 	private Date date_expired;
 	
 

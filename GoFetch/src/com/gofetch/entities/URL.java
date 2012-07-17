@@ -3,7 +3,10 @@ package com.gofetch.entities;
 import java.io.Serializable;
 import java.lang.Integer;
 import java.lang.String;
+import java.sql.Date;
+import java.util.List;
 import javax.persistence.*;
+import org.hibernate.validator.NotNull;
 
 /**
  * Entity implementation class for Entity: URL
@@ -16,11 +19,15 @@ public class URL implements Serializable {
 	//TODO: finish the JPA annotation of this entity.....
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+	@Column( nullable=false )
+	private Integer url_id;
 	private static final long serialVersionUID = 1L;
 	
-	private String url_address;
-	private String user_id;
+	
+	@NotNull private String url_address;
+	@NotNull private String user_id;
+	@NotNull private Date date;
+	
 	private String category;
 	private String domain;
 	private String doc_title;
@@ -31,6 +38,15 @@ public class URL implements Serializable {
 	private boolean get_fb_Data;
 	private boolean get_twitter_data;
 	private boolean get_backlinks;
+	
+	@OneToOne(optional=true, cascade=CascadeType.ALL)
+	@JoinColumn(name="seomoz_id")
+	private SEOMozData seoMozObject;
+//	@OneToMany(cascade=CascadeType.ALL)
+//	private List <TwitterMention> twitterList;
+//	@OneToMany(cascade=CascadeType.ALL)
+//	private List <FaceBookData> faceBookList;
+	
 
 	public URL() {
 		super();
@@ -41,6 +57,52 @@ public class URL implements Serializable {
 	}   
 	
 	
+	
+	public SEOMozData getSeoMozObject() {
+		return seoMozObject;
+	}
+
+
+
+	public void setSeoMozObject(SEOMozData seoMozObject) {
+		this.seoMozObject = seoMozObject;
+	}
+
+
+
+//	public List<TwitterMention> getTwitterList() {
+//		return twitterList;
+//	}
+//
+//
+//
+//	public void setTwitterList(List<TwitterMention> twitterList) {
+//		this.twitterList = twitterList;
+//	}
+//
+//
+//
+//	public List<FaceBookData> getFaceBookList() {
+//		return faceBookList;
+//	}
+//
+//
+//
+//	public void setFaceBookList(List<FaceBookData> faceBookList) {
+//		this.faceBookList = faceBookList;
+//	}
+//
+
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+
 
 	public String getUser_id() {
 		return user_id;
@@ -152,11 +214,11 @@ public class URL implements Serializable {
 		this.url_address = url_address;
 	}   
 	public Integer getId() {
-		return this.id;
+		return this.url_id;
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+		this.url_id = id;
 	}
    
 }
