@@ -1,5 +1,6 @@
 package com.gofetch.entities;
 
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,7 +10,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 
+import com.gofetch.utils.DateUtil;
 import com.google.appengine.api.rdbms.AppEngineDriver;
 
 /**
@@ -75,13 +78,14 @@ public class URLService {
         return result;
     }
     
+    
     /**
      * Gets all Contacts
      * @return List of Contact beans
      */
     @SuppressWarnings("unchecked")
 	public List<URL> getURLs() {
-        logger.info("Entering getContacts");
+        logger.info("Entering getURLs");
         List<URL> result = null;
         
         //TODO: remove line if mgr can be instantiated at class member level...
@@ -94,11 +98,97 @@ public class URLService {
             mgr.close();
         }
         if (result == null) {
-            logger.warning("No contacts returned");
+            logger.warning("No URLs returned");
         }
-        logger.info("Exiting getContacts");
+        logger.info("Exiting getURLs");
         return result;
     }
 
+    /*
+     * Returns a list of URLs that were added to the database today.
+     */
+    public List<URL> getTodaysURLs(){
+    	
+    	logger.info("Entering getTodaysURLs");
+        List<URL> result = null;
+        
+        //TODO: remove line if mgr can be instantiated at class member level...
+        emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+        
+        Date todaysDate = DateUtil.getTodaysDate();
+        
+        try {
+            result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :todaysDate")
+            		.setParameter("todaysDate", todaysDate, TemporalType.DATE)
+            		.getResultList();
+        } finally {
+            mgr.close();
+        }
+        if (result == null) {
+            logger.warning("No URLs returned");
+        }
+        logger.info("Exiting getTodaysURLs");
+        return result;
+    	
+    }
 
+    /*
+     * Returns a list of URLs that were added to the database today.
+     */
+    public List<URL> getYesterdaysURLs(){
+    	
+    	logger.info("Entering getYesterdaysURLs");
+        List<URL> result = null;
+        
+        //TODO: remove line if mgr can be instantiated at class member level...
+        emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+        
+        Date yesterdaysDate = DateUtil.getYesterDaysDate();
+        
+        try {
+        	result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :yesterdaysDate")
+            		.setParameter("yesterdaysDate", yesterdaysDate, TemporalType.DATE)
+            		.getResultList();
+    
+        } finally {
+            mgr.close();
+        }
+        if (result == null) {
+            logger.warning("No URLs returned");
+        }
+        logger.info("Exiting getYesterdaysURLs");
+        return result;
+    	
+    }
+
+    /*
+     * Returns a list of URLs that were added between the 2 dates
+     */
+    public List<URL> getURLsBetween(Date startDate, Date endDate){
+    	
+    	logger.info("Entering getURLsBetween");
+        List<URL> result = null;
+        
+        //TODO: remove line if mgr can be instantiated at class member level...
+        emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+  
+        try {
+        	result = mgr.createQuery("SELECT u FROM URL u WHERE u.date BETWEEN :startDate AND :endDate")
+            		.setParameter("startDate", startDate, TemporalType.DATE)
+            		.setParameter("endDate", endDate, TemporalType.DATE)
+            		.getResultList();
+    
+        } finally {
+            mgr.close();
+        }
+        if (result == null) {
+            logger.warning("No URLs returned");
+        }
+        logger.info("Exiting getURLsBetween");
+        return result;
+    	
+    }
 }

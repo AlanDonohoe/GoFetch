@@ -2,6 +2,8 @@ package com.gofetch.entities;
 
 import java.io.Serializable;
 import java.lang.Integer;
+import java.util.Date;
+
 import javax.persistence.*;
 
 import org.hibernate.validator.NotNull;
@@ -20,7 +22,8 @@ public class FaceBookData implements Serializable {
 	private Integer fb_id;
 	private static final long serialVersionUID = 1L;
 		
-	@NotNull private java.sql.Date date;
+	@Temporal(TemporalType.DATE)
+	@NotNull private Date date;
 	private int totalCount;
 	private int likeCount;
 	private int commentCount;
@@ -32,12 +35,12 @@ public class FaceBookData implements Serializable {
 	}   
 	
 	
-	public java.sql.Date getDate() {
+	public Date getDate() {
 		return date;
 	}
 
 
-	public void setDate(java.sql.Date date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

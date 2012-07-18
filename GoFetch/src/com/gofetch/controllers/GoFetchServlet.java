@@ -77,12 +77,23 @@ public class GoFetchServlet extends HttpServlet {
 		
 		////////
 		// testing SEOMoz data....
-		SEOMozData seoMoz = new SEOMozData();
+//		SEOMozData seoMoz = new SEOMozData();
+//		
+//		seoMoz.setDa(100);
+//		seoMoz.setPa(50);
+//		
+//		url.setSeoMozObject(seoMoz);
 		
-		seoMoz.setDa(100);
-		seoMoz.setPa(50);
-		
-		url.setSeoMozObject(seoMoz);
+		/*
+		 * Exception here:
+		 * 
+		 * Internal Exception: java.sql.SQLException: Field 'url_id' doesn't have a default value
+Error Code: 1364
+Call: INSERT INTO seomoz_data (SEOMOZ_ID, AUDITOR_ID, AUDITOR_RANK, COMMENT, DA, LAST_QUESTION, PA, RGA_SCORE) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+	bind => [8 parameters bound]
+	
+	- debug and check that url object is assigned an id on creation here?? or is it when passed to teh DB??
+		 */
 
 		//
 		//////////////

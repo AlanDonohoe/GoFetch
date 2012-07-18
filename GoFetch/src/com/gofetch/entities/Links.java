@@ -2,7 +2,7 @@ package com.gofetch.entities;
 
 import java.io.Serializable;
 import java.lang.Integer;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.*;
 
@@ -26,7 +26,10 @@ public class Links implements Serializable {
 	@NotNull private Integer target_id;
 	@NotNull private Integer source_id;
 	
+	@Temporal(TemporalType.DATE)
 	@NotNull private Date date_detected;
+	
+	@Temporal(TemporalType.DATE)
 	private Date date_expired;
 	
 

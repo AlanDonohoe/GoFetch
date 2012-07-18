@@ -2,7 +2,7 @@ package com.gofetch.entities;
 
 import java.io.Serializable;
 import java.lang.Integer;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.*;
 
@@ -23,6 +23,7 @@ public class TwitterMention implements Serializable {
 	private Integer twitter_id;
 	private static final long serialVersionUID = 1L;
 	
+	@Temporal(TemporalType.DATE)
 	@NotNull private Date date;
 	@NotNull private String tweeter;
 	private String tweet_text;

@@ -3,7 +3,7 @@ package com.gofetch.entities;
 import java.io.Serializable;
 import java.lang.Integer;
 import java.lang.String;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import org.hibernate.validator.NotNull;
@@ -12,6 +12,7 @@ import org.hibernate.validator.NotNull;
  * Entity implementation class for Entity: URL
  *
  */
+
 @Entity
 @Table(name="url")
 public class URL implements Serializable {
@@ -26,6 +27,8 @@ public class URL implements Serializable {
 	
 	@NotNull private String url_address;
 	@NotNull private String user_id;
+	
+	@Temporal(TemporalType.DATE) 
 	@NotNull private Date date;
 	
 	private String category;
@@ -39,9 +42,9 @@ public class URL implements Serializable {
 	private boolean get_twitter_data;
 	private boolean get_backlinks;
 	
-	@OneToOne(optional=true, cascade=CascadeType.ALL)
-	@JoinColumn(name="seomoz_id")
-	private SEOMozData seoMozObject;
+//	@OneToOne(optional=true, cascade=CascadeType.ALL)
+//	@JoinColumn(name="seomoz_id")
+//	private SEOMozData seoMozObject;
 //	@OneToMany(cascade=CascadeType.ALL)
 //	private List <TwitterMention> twitterList;
 //	@OneToMany(cascade=CascadeType.ALL)
@@ -58,15 +61,15 @@ public class URL implements Serializable {
 	
 	
 	
-	public SEOMozData getSeoMozObject() {
-		return seoMozObject;
-	}
-
-
-
-	public void setSeoMozObject(SEOMozData seoMozObject) {
-		this.seoMozObject = seoMozObject;
-	}
+//	public SEOMozData getSeoMozObject() {
+//		return seoMozObject;
+//	}
+//
+//
+//
+//	public void setSeoMozObject(SEOMozData seoMozObject) {
+//		this.seoMozObject = seoMozObject;
+//	}
 
 
 
