@@ -13,10 +13,9 @@ import org.hibernate.validator.NotNull;
  *
  */
 @Entity
+@Table(name="links")
+public class Link implements Serializable {
 
-public class Links implements Serializable {
-
-	   
 	//TODO: finish the JPA annotation of this entity.....
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -33,7 +32,7 @@ public class Links implements Serializable {
 	private Date date_expired;
 	
 
-	public Links() {
+	public Link() {
 		super();
 	}   
 	

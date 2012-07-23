@@ -156,8 +156,8 @@ public class SEOMozWrapper {
         linksService.setAuthenticator(authenticator);
 
         // check we're not asking for above limit:
-        if (noOfLinks > Constants.LINK_QUERY_MAX) {
-            noOfLinks = Constants.LINK_QUERY_MAX;
+        if (noOfLinks > Constants.FREE_API_LINK_QUERY_MAX) {
+            noOfLinks = Constants.FREE_API_LINK_QUERY_MAX;
         }
 
         String response = linksService.getLinks(url, scope, filters, sort, sourceCols, targetCols, linkCols, offset, noOfLinks);
@@ -209,7 +209,7 @@ public class SEOMozWrapper {
             if (calledOnce) /// no need to call the first time.. 
             {
                 try {
-                    Thread.sleep(Constants.SEOMOZ_SERVER_DELAY);  
+                    Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);  
                 } catch (InterruptedException ex) {
 
                     // from: http://stackoverflow.com/questions/9139128/a-sleeping-thread-is-getting-interrupted-causing-loss-of-connection-to-db
@@ -223,8 +223,7 @@ public class SEOMozWrapper {
             }
             calledOnce = true;
 
-            tempLinks = getSelectURLLinkData(url, scope, filters, sort, sourceCols, targetCols, linkCols, offset, Constants.LINK_QUERY_MAX);
-
+            tempLinks = getSelectURLLinkData(url, scope, filters, sort, sourceCols, targetCols, linkCols, offset, Constants.FREE_API_LINK_QUERY_MAX);
 
             if (tempLinks.isEmpty()) { //if no_more_links 
 
@@ -233,7 +232,7 @@ public class SEOMozWrapper {
 
             } // if we have got back less than the max amount allowed, indicates we have all the links SEOMoz has to offer
             //OR we're using free API - we can ONLY ever get 1000 links
-            else if ((tempLinks.size() < Constants.LINK_QUERY_MAX) || usingSEOMozFreeAPI) {
+            else if ((tempLinks.size() < Constants.FREE_API_LINK_QUERY_MAX) || usingSEOMozFreeAPI) {
 
                 moreLinksLeft = false; //No more links from SEOMoz  - set flag
                 noOfTotalLinks = tempLinks.size();
@@ -403,9 +402,9 @@ public class SEOMozWrapper {
                 //  see: https://seomoz.zendesk.com/entries/459198-rate-limiting-throttling-and-avoiding-time-outs
 
                 // for bug fix: see: http://forums.java.net/node/808052 - need to adjust timeout....
-                Thread.sleep(Constants.SEOMOZ_SERVER_DELAY);    
+                Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);    
 
-                response = urlMetricsService.getUrlMetrics(urlList.get(i).getUu(), authorityBitMask);
+                response = urlMetricsService.getUrlMetrics(urlList.get(i).getURLAddress(), authorityBitMask);
 
                 if (!response.isEmpty()) {// replace below if clause with this, to make more efficient... 
                     res = gson.fromJson(response, UrlResponse.class);
@@ -420,7 +419,7 @@ public class SEOMozWrapper {
 
                     //////////////
                     //logging
-                    currentURL = urlList.get(i).getUu();
+                    currentURL = urlList.get(i).getURLAddress();
                     logString = i + " out of " + urlListSize + " -BackLink PA and DA data got for " + currentURL + " DA = " + stringDA + " PA = " + stringPA;
                     log.info(logString);
                     //
@@ -439,7 +438,7 @@ public class SEOMozWrapper {
                     urlListSize--;
                     //////////////
                     //logging
-                    currentURL = urlList.get(i).getUu();
+                    currentURL = urlList.get(i).getURLAddress();
                     logString = i + " deleting: " + currentURL + " - due to error getting data from SEOMoz and reducing no of links to " + urlListSize;
                     log.info(logString);
                     //

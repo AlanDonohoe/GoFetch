@@ -26,20 +26,13 @@ public class URLService {
 	@PersistenceUnit(unitName="GoFetch")
 	EntityManagerFactory emf;
 
-	//TODO: check to see if this works here - and remove from each of the method bodies...
-	//EntityManager mgr = emf.createEntityManager();
-
 	private static Logger logger = Logger.getLogger(URLService.class.getName());
 
 	public void createURL(URL url){
-		logger.info("Entering url["
-				+ url.getUrl_address());
+		logger.info("Entering url[" + url.getUrl_address() + "]");
 
-		//TODO: remove line if mgr can be instantiated at class member level...
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
-
 
 		try {
 
@@ -48,9 +41,8 @@ public class URLService {
 			// TODO: make an efficient look up service here..... see:
 			// http://stackoverflow.com/questions/558978/most-efficient-way-to-see-if-an-arraylist-contains-an-object-in-java
 
-			List<URL> result = getURLs();
 
-			if(!urlAddressInList(result,url)){
+			if(!urlInDB(url)){
 
 				mgr.getTransaction().begin();
 				mgr.persist(url);
@@ -58,14 +50,14 @@ public class URLService {
 
 			}else{
 				//TODO: send error to the user with the offending url address....
-				
+
 				logger.info("url already exists in DB: "
 						+ url.getUrl_address());
 			}
-			
-			
+
+
 		}catch(Exception e){
-			String msg = "SQL Exception thrown...";
+			String msg = "Exception thrown...";
 			logger.logp(Level.SEVERE, "URLService", "createURL",msg ,e);
 
 		}
@@ -84,7 +76,7 @@ public class URLService {
 		logger.info("Entering getURL[" + id + "]");
 		URL result = null;
 
-		//TODO: remove line if mgr can be instantiated at class member level...
+		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
@@ -109,7 +101,7 @@ public class URLService {
 		logger.info("Entering getURLs");
 		List<URL> result = null;
 
-		//TODO: remove line if mgr can be instantiated at class member level...
+		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
@@ -132,7 +124,6 @@ public class URLService {
 		logger.info("Entering getTodaysURLs");
 		List<URL> result = null;
 
-		//TODO: remove line if mgr can be instantiated at class member level...
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
@@ -161,7 +152,6 @@ public class URLService {
 		logger.info("Entering getYesterdaysURLs");
 		List<URL> result = null;
 
-		//TODO: remove line if mgr can be instantiated at class member level...
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
@@ -191,7 +181,6 @@ public class URLService {
 		logger.info("Entering getURLsBetween");
 		List<URL> result = null;
 
-		//TODO: remove line if mgr can be instantiated at class member level...
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
@@ -214,11 +203,26 @@ public class URLService {
 
 	// TODO: make an efficient look up service here..... see:
 	// http://stackoverflow.com/questions/558978/most-efficient-way-to-see-if-an-arraylist-contains-an-object-in-java
+	private boolean urlInDB(URL urlCheck){
 
-	private boolean urlAddressInList(List<URL> urlList, URL urlCheck){
+		List<URL> urlList = getURLs();
 
 		for(URL urlCurrent: urlList){
 			if(urlCurrent.getUrl_address().equals(urlCheck.getUrl_address()))
+				return true;
+		}
+
+		return false;
+	}
+
+	// TODO: make an efficient look up service here..... see:
+	// http://stackoverflow.com/questions/558978/most-efficient-way-to-see-if-an-arraylist-contains-an-object-in-java
+	public boolean urlInDB(String urlAddress){
+
+		List<URL> urlList = getURLs();
+
+		for(URL urlCurrent: urlList){
+			if(urlCurrent.getUrl_address().equals(urlAddress))
 				return true;
 		}
 

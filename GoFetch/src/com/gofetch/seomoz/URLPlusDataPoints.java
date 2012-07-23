@@ -99,7 +99,7 @@ public class URLPlusDataPoints implements Comparable<URLPlusDataPoints> {
     }
 
     // backlink URL
-    public String getUu() {
+    public String getURLAddress() {
         return uu;
     }
 

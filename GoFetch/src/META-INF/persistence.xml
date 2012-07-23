@@ -4,7 +4,7 @@
 		<class>com.gofetch.entities.URL</class>
 		<class>com.gofetch.entities.FaceBookData</class>
 		<class>com.gofetch.entities.Keywords</class>
-		<class>com.gofetch.entities.Links</class>
+		<class>com.gofetch.entities.Link</class>
 		<class>com.gofetch.entities.SEOMozData</class>
 		<class>com.gofetch.entities.TwitterMention</class>
 		<properties>
