@@ -8,6 +8,8 @@ import javax.persistence.*;
 
 import org.hibernate.validator.NotNull;
 
+import com.gofetch.seomoz.Constants;
+
 /**
  * Entity implementation class for Entity: Links
  *
@@ -19,24 +21,40 @@ public class Link implements Serializable {
 	//TODO: finish the JPA annotation of this entity.....
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+	private Integer links_id;
 	private static final long serialVersionUID = 1L;
-	
+
 	@NotNull private Integer target_id;
 	@NotNull private Integer source_id;
-	
+
+	@NotNull private String anchor_text;
+
 	@Temporal(TemporalType.DATE)
 	@NotNull private Date date_detected;
-	
+
 	@Temporal(TemporalType.DATE)
 	private Date date_expired;
-	
+
 
 	public Link() {
 		super();
 	}   
-	
-	
+
+
+	public String getAnchor_text() {
+		return anchor_text;
+	}
+
+
+	public void setAnchor_text(String anchor_text) {
+
+		if(anchor_text.length() > Constants.MAX_ANCHOR_TEXT_LENGTH)
+			this.anchor_text = anchor_text.substring(0, Constants.MAX_ANCHOR_TEXT_LENGTH);
+		else
+			this.anchor_text = anchor_text;
+	}
+
+
 	public Integer getTarget_id() {
 		return target_id;
 	}
@@ -77,12 +95,15 @@ public class Link implements Serializable {
 	}
 
 
-	public Integer getId() {
-		return this.id;
+	public Integer getLinks_id() {
+		return links_id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+
+	public void setLinks_id(Integer links_id) {
+		this.links_id = links_id;
 	}
-   
+
+
+
 }

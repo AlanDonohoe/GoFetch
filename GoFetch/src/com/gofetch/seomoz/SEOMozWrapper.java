@@ -404,7 +404,7 @@ public class SEOMozWrapper {
                 // for bug fix: see: http://forums.java.net/node/808052 - need to adjust timeout....
                 Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);    
 
-                response = urlMetricsService.getUrlMetrics(urlList.get(i).getURLAddress(), authorityBitMask);
+                response = urlMetricsService.getUrlMetrics(urlList.get(i).getUu(), authorityBitMask);
 
                 if (!response.isEmpty()) {// replace below if clause with this, to make more efficient... 
                     res = gson.fromJson(response, UrlResponse.class);
@@ -419,7 +419,7 @@ public class SEOMozWrapper {
 
                     //////////////
                     //logging
-                    currentURL = urlList.get(i).getURLAddress();
+                    currentURL = urlList.get(i).getUu();
                     logString = i + " out of " + urlListSize + " -BackLink PA and DA data got for " + currentURL + " DA = " + stringDA + " PA = " + stringPA;
                     log.info(logString);
                     //
@@ -438,7 +438,7 @@ public class SEOMozWrapper {
                     urlListSize--;
                     //////////////
                     //logging
-                    currentURL = urlList.get(i).getURLAddress();
+                    currentURL = urlList.get(i).getUu();
                     logString = i + " deleting: " + currentURL + " - due to error getting data from SEOMoz and reducing no of links to " + urlListSize;
                     log.info(logString);
                     //

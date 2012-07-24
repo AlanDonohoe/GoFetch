@@ -21,12 +21,12 @@ import com.google.appengine.api.rdbms.AppEngineDriver;
  *
  */
 
-public class URLService {
+public class URLDBService extends DBService{
 
 	@PersistenceUnit(unitName="GoFetch")
 	EntityManagerFactory emf;
 
-	private static Logger logger = Logger.getLogger(URLService.class.getName());
+	private static Logger logger = Logger.getLogger(URLDBService.class.getName());
 
 	public void createURL(URL url){
 		logger.info("Entering url[" + url.getUrl_address() + "]");
@@ -91,6 +91,34 @@ public class URLService {
 		return result;
 	}
 
+	
+	/**
+	 * Gets a URL given an ID
+	 * @param id
+	 * @return URL
+	 */
+	public URL getURL(String address) {
+		logger.info("Entering getURL[" + address + "]");
+		List result = null;
+		URL url;
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		try {
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :address")
+					.setParameter("address", address)
+					.getResultList();
+		} finally {
+			mgr.close();
+		}
+		
+		url = (URL) result.get(0);
+		
+		
+		logger.info("Exiting getURL");
+		return url;
+	}
 
 	/**
 	 * Gets all Contacts
@@ -115,6 +143,32 @@ public class URLService {
 		logger.info("Exiting getURLs");
 		return result;
 	}
+	
+	public List<URL> getURLs(Date date){
+		
+		logger.info("Entering getURLs");
+		List<URL> result = null;
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		//Date yesterdaysDate = DateUtil.getYesterDaysDate();
+
+		try {
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date")
+					.setParameter("date", date, TemporalType.DATE)
+					.getResultList();
+
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			logger.warning("No URLs returned");
+		}
+		logger.info("Exiting getURLs");
+		return result;
+		
+	}
 
 	/*
 	 * Returns a list of URLs that were added to the database today.
@@ -122,32 +176,24 @@ public class URLService {
 	public List<URL> getTodaysURLs(){
 
 		logger.info("Entering getTodaysURLs");
+		
 		List<URL> result = null;
 
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
-
 		Date todaysDate = DateUtil.getTodaysDate();
+		
+		result = getURLs(todaysDate);
 
-		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :todaysDate")
-					.setParameter("todaysDate", todaysDate, TemporalType.DATE)
-					.getResultList();
-		} finally {
-			mgr.close();
-		}
-		if (result == null) {
-			logger.warning("No URLs returned");
-		}
 		logger.info("Exiting getTodaysURLs");
+		
 		return result;
 
 	}
+	
 
 	/*
 	 * Returns a list of URLs that were added to the database today.
 	 */
-	public List<URL> getYesterdaysURLs(){
+	public List<URL> getTargetURLsFrom(Date date){
 
 		logger.info("Entering getYesterdaysURLs");
 		List<URL> result = null;
@@ -155,11 +201,11 @@ public class URLService {
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
-		Date yesterdaysDate = DateUtil.getYesterDaysDate();
+		//Date yesterdaysDate = DateUtil.getYesterDaysDate();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :yesterdaysDate")
-					.setParameter("yesterdaysDate", yesterdaysDate, TemporalType.DATE)
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date AND u.get_backlinks = TRUE")
+					.setParameter("date", date, TemporalType.DATE)
 					.getResultList();
 
 		} finally {
@@ -169,6 +215,24 @@ public class URLService {
 			logger.warning("No URLs returned");
 		}
 		logger.info("Exiting getYesterdaysURLs");
+		return result;
+	}
+
+
+	/*
+	 * Returns a list of URLs that were added to the database today.
+	 */
+	public List<URL> getYesterdaysURLs(){
+
+		logger.info("Entering getYesterdaysURLs");
+		List<URL> result = null;
+
+		Date yestDate = DateUtil.getYesterDaysDate();
+		
+		result = getURLs(yestDate);
+
+		logger.info("Exiting getYesterdaysURLs");
+		
 		return result;
 
 	}
@@ -227,5 +291,53 @@ public class URLService {
 		}
 
 		return false;
+	}
+	
+	public Integer getURLIDFromAddress(String urlAddress){
+		
+		Integer url_id;
+		List<URL> result = null;
+		
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		
+		try {
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :urlAddress")
+					.setParameter("urlAddress", urlAddress)
+					.getResultList();
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			return 0;
+		}
+		
+		url_id = result.get(0).getId();
+		
+		return url_id;
+	}
+	
+public String getURLAddressFromID(Integer urlID){
+		
+		String address;
+		List<URL> result = null;
+		
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		
+		try {
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = :urlID")
+					.setParameter("urlID", urlID)
+					.getResultList();
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			return null;
+		}
+		
+		address = result.get(0).getUrl_address();
+		
+		return address;
 	}
 }

@@ -28,7 +28,7 @@ public class GoFetchServlet extends HttpServlet {
 
 		resp.setContentType("text/plain");
 		
-		URLService urls = new URLService();
+		URLDBService urls = new URLDBService();
 
 		//////////
 		// get data from page and fill bean....
@@ -133,7 +133,7 @@ Call: INSERT INTO seomoz_data (SEOMOZ_ID, AUDITOR_ID, AUDITOR_RANK, COMMENT, DA,
 
 		//
 		//////////////
-		URLService urlDBUnit = new URLService();
+		URLDBService urlDBUnit = new URLDBService();
 		urlDBUnit.createURL(url);
 
 

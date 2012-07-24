@@ -105,7 +105,7 @@ CREATE  TABLE IF NOT EXISTS `url`.`links` (
   `links_id` INT NOT NULL AUTO_INCREMENT ,
   `target_id` INT NOT NULL ,
   `source_id` INT NOT NULL COMMENT 'Represents hyperlinks btwn source which points at target.' ,
-  `anchor_text` VARCHAR(45) NOT NULL ,
+  `anchor_text` VARCHAR(200) NOT NULL ,
   `date_detected` DATE NOT NULL ,
   `date_expired` DATE NULL ,
   PRIMARY KEY (`links_id`) )
