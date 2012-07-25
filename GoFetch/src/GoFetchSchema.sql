@@ -23,6 +23,8 @@ CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `user_assigned_to` VARCHAR(45) NULL ,
   `domain` VARCHAR(45) NULL ,
   `doc_title` VARCHAR(45) NULL ,
+  `pa` INT NULL ,
+  `da` INT NULL ,
   PRIMARY KEY (`url_id`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -81,8 +83,6 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `url`.`seomoz_data` (
   `seomoz_id` INT NOT NULL AUTO_INCREMENT ,
   `url_id` INT NOT NULL ,
-  `pa` INT NOT NULL ,
-  `da` INT NOT NULL ,
   `rga_score` VARCHAR(10) NULL ,
   `auditor_rank` INT NULL ,
   `auditor_id` INT NULL ,
