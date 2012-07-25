@@ -42,6 +42,9 @@ public class URL implements Serializable {
 	private boolean get_twitter_data;
 	private boolean get_backlinks;
 	
+	private Integer pa;
+	private Integer da;
+	
 //	@OneToOne(optional=true, cascade=CascadeType.ALL)
 //	@JoinColumn(name="seomoz_id")
 //	private SEOMozData seoMozObject;
@@ -96,10 +99,34 @@ public class URL implements Serializable {
 //	}
 //
 
+	public Integer getPa() {
+		return pa;
+	}
+
+
+
+	public void setPa(Integer pa) {
+		this.pa = pa;
+	}
+
+
+
+	public Integer getDa() {
+		return da;
+	}
+
+
+
+	public void setDa(Integer da) {
+		this.da = da;
+	}
+
+	
 
 	public Date getDate() {
 		return date;
 	}
+
 
 	public void setDate(Date date) {
 		this.date = date;

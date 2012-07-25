@@ -91,7 +91,7 @@ public class URLDBService extends DBService{
 		return result;
 	}
 
-	
+
 	/**
 	 * Gets a URL given an ID
 	 * @param id
@@ -112,10 +112,10 @@ public class URLDBService extends DBService{
 		} finally {
 			mgr.close();
 		}
-		
+
 		url = (URL) result.get(0);
-		
-		
+
+
 		logger.info("Exiting getURL");
 		return url;
 	}
@@ -143,9 +143,9 @@ public class URLDBService extends DBService{
 		logger.info("Exiting getURLs");
 		return result;
 	}
-	
+
 	public List<URL> getURLs(Date date){
-		
+
 		logger.info("Entering getURLs");
 		List<URL> result = null;
 
@@ -167,7 +167,7 @@ public class URLDBService extends DBService{
 		}
 		logger.info("Exiting getURLs");
 		return result;
-		
+
 	}
 
 	/*
@@ -176,19 +176,19 @@ public class URLDBService extends DBService{
 	public List<URL> getTodaysURLs(){
 
 		logger.info("Entering getTodaysURLs");
-		
+
 		List<URL> result = null;
 
 		Date todaysDate = DateUtil.getTodaysDate();
-		
+
 		result = getURLs(todaysDate);
 
 		logger.info("Exiting getTodaysURLs");
-		
+
 		return result;
 
 	}
-	
+
 
 	/*
 	 * Returns a list of URLs that were added to the database today.
@@ -228,11 +228,11 @@ public class URLDBService extends DBService{
 		List<URL> result = null;
 
 		Date yestDate = DateUtil.getYesterDaysDate();
-		
+
 		result = getURLs(yestDate);
 
 		logger.info("Exiting getYesterdaysURLs");
-		
+
 		return result;
 
 	}
@@ -292,15 +292,15 @@ public class URLDBService extends DBService{
 
 		return false;
 	}
-	
+
 	public Integer getURLIDFromAddress(String urlAddress){
-		
+
 		Integer url_id;
 		List<URL> result = null;
-		
+
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-		
+
 		try {
 			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :urlAddress")
 					.setParameter("urlAddress", urlAddress)
@@ -311,20 +311,20 @@ public class URLDBService extends DBService{
 		if (result == null) {
 			return 0;
 		}
-		
+
 		url_id = result.get(0).getId();
-		
+
 		return url_id;
 	}
-	
-public String getURLAddressFromID(Integer urlID){
-		
+
+	public String getURLAddressFromID(Integer urlID){
+
 		String address;
 		List<URL> result = null;
-		
+
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-		
+
 		try {
 			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = :urlID")
 					.setParameter("urlID", urlID)
@@ -335,9 +335,46 @@ public String getURLAddressFromID(Integer urlID){
 		if (result == null) {
 			return null;
 		}
-		
+
 		address = result.get(0).getUrl_address();
-		
+
 		return address;
 	}
+
+	/**
+	 * Updates record with url address with new page authority (pa) & domain authority (da) data
+	 * 
+	 * @param urlAddress - target url 
+	 * @param pa - Page Authority
+	 * @param da - Domain Authority
+	 */
+	public void updateURLAuthorityData(String urlAddress, Integer pa, Integer da){
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		int result, url_id;
+		
+		
+
+		try {
+			
+			url_id = getURLIDFromAddress(urlAddress);
+			
+			mgr.getTransaction().begin();
+			
+			URL url = mgr.find(URL.class, url_id);
+			url.setPa(pa);
+			url.setDa(da);
+
+			mgr.merge(url);
+			mgr.getTransaction().commit();
+
+		} finally {
+			mgr.close();
+		}
+
+
+	}
+
+
 }

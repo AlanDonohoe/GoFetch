@@ -18,8 +18,6 @@ public class SEOMozData implements Serializable {
 	private Integer seomoz_id;
 	private static final long serialVersionUID = 1L;
 	
-	private Integer pa;
-	private Integer da;
 	private Integer auditor_rank;
 	private Integer auditor_id;
 	private Integer last_question;
@@ -30,26 +28,6 @@ public class SEOMozData implements Serializable {
 		super();
 	}   
 	
-	
-	public Integer getPa() {
-		return pa;
-	}
-
-
-	public void setPa(Integer pa) {
-		this.pa = pa;
-	}
-
-
-	public Integer getDa() {
-		return da;
-	}
-
-
-	public void setDa(Integer da) {
-		this.da = da;
-	}
-
 
 	public Integer getAuditor_rank() {
 		return auditor_rank;
