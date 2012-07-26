@@ -113,6 +113,9 @@ public class URLDBService extends DBService{
 			mgr.close();
 		}
 
+		if(result.isEmpty())
+			return null;
+		
 		url = (URL) result.get(0);
 
 
@@ -308,7 +311,7 @@ public class URLDBService extends DBService{
 		} finally {
 			mgr.close();
 		}
-		if (result == null) {
+		if (result == null || result.isEmpty()) {
 			return 0;
 		}
 
@@ -332,7 +335,7 @@ public class URLDBService extends DBService{
 		} finally {
 			mgr.close();
 		}
-		if (result == null) {
+		if (result == null || result.isEmpty()) {
 			return null;
 		}
 
@@ -353,15 +356,13 @@ public class URLDBService extends DBService{
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 		int result, url_id;
-		
-		
 
 		try {
-			
+
 			url_id = getURLIDFromAddress(urlAddress);
-			
+
 			mgr.getTransaction().begin();
-			
+
 			URL url = mgr.find(URL.class, url_id);
 			url.setPa(pa);
 			url.setDa(da);
@@ -376,5 +377,64 @@ public class URLDBService extends DBService{
 
 	}
 
+	/**
+	 * Updates record with url address with new page authority (pa) & domain authority (da) data
+	 * 
+	 * @param urlAddress - target url 
+	 * @param pa - Page Authority
+	 * @param da - Domain Authority
+	 * @param domainName - Domain name of url.
+	 */
+	public void updateURLData(String urlAddress, Integer pa, Integer da, String domainName, String docTitle){
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		int result, url_id;
+
+		try {
+
+			url_id = getURLIDFromAddress(urlAddress);
+
+			mgr.getTransaction().begin();
+
+			URL url = mgr.find(URL.class, url_id);
+			url.setPa(pa);
+			url.setDa(da);
+			url.setDomain(domainName);
+			url.setDoc_title(docTitle);
+
+			mgr.merge(url);
+			mgr.getTransaction().commit();
+
+		} finally {
+			mgr.close();
+		}
+
+	}
+
+	public void updateDomainNames(List<URL> urls){
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		try {
+
+			for(URL currentURL : urls){
+
+				mgr.getTransaction().begin();
+
+				URL url = mgr.find(URL.class, currentURL.getId());
+				url.setDomain(currentURL.getDomain());
+
+				mgr.merge(url);
+				mgr.getTransaction().commit();
+
+			}
+
+		} finally {
+			mgr.close();
+		}
+
+	}
 
 }

@@ -25,28 +25,40 @@ public class URLPlusDataPoints implements Comparable<URLPlusDataPoints> {
     private String lt; // anchor text
     private String luuu; // target URL
     private String domainName; // domain....
-    private static String targetUrlDA; //class wide member - this backlink's target's DA
-    private static String targetUrlPA; //class wide member - this backlink's target's PA
+    private String docTitle;
+    //private static String targetUrlDA; //class wide member - this backlink's target's DA
+    //private static String targetUrlPA; //class wide member - this backlink's target's PA
     
     SEOMozURLData seoMozData = new SEOMozURLData();
-
-	public static String getTargetUrlDA() {
-        return targetUrlDA;
+    
+//
+//	public static String getTargetUrlDA() {
+//        return targetUrlDA;
+//		
+//    }
+//
+//    public static void setTargetUrlDA(String targetUrlDA) {
+//        URLPlusDataPoints.targetUrlDA = targetUrlDA;
+//    }
+//
+//    public static String getTargetUrlPA() {
+//        return targetUrlPA;
+//        
+//    }
+//
+//    public static void setTargetUrlPA(String targetUrlPA) {
+//        URLPlusDataPoints.targetUrlPA = targetUrlPA;
+//    }
+    
+    
+	public void setDocTitle(String docTitle) {
+		this.docTitle = docTitle;
 		
-    }
-
-    public static void setTargetUrlDA(String targetUrlDA) {
-        URLPlusDataPoints.targetUrlDA = targetUrlDA;
-    }
-
-    public static String getTargetUrlPA() {
-        return targetUrlPA;
-        
-    }
-
-    public static void setTargetUrlPA(String targetUrlPA) {
-        URLPlusDataPoints.targetUrlPA = targetUrlPA;
-    }
+	}
+	
+	public String getDocTitle(){
+		return docTitle;
+	}
 
     /**
      * URL thats been cleaned of buggy escape characters, and is now Gephi
@@ -148,7 +160,7 @@ public class URLPlusDataPoints implements Comparable<URLPlusDataPoints> {
 
     public void setBackLinkPA(String backLinkPA) {
         //this.backLinkPA = backLinkPA;
-    	seoMozData.setBackLinkDA(Integer.parseInt(backLinkPA));
+    	seoMozData.setBackLinkPA(Integer.parseInt(backLinkPA));
     }
 
     public String getBackLinkURL() {
@@ -176,5 +188,7 @@ public class URLPlusDataPoints implements Comparable<URLPlusDataPoints> {
 //      //return compareBackLinkDA - this.getBackLinkDAInt();
 
     }
+
+
     
 }

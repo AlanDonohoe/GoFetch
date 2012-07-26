@@ -373,17 +373,18 @@ public class SEOMozWrapper {
         long authorityBitMask = URLMetricsConstants.URLMETRICS_COL_ALL; //URLMetricsConstants.URLMETRICS_COL_DOMAIN_AUTHORITY 
         																// | URLMetricsConstants.URLMETRICS_COL_PAGE_AUTHORITY;
 
-        // first set the target URL's DA and PA:
-        response = urlMetricsService.getUrlMetrics(urlList.get(0).getLuuu(), authorityBitMask);
-
-        res = gson.fromJson(response, UrlResponse.class);
-
-        // remove the digits after the decimal point
-        stringPA = removepostDecimalDigits(res.getUpa());
-        stringDA = removepostDecimalDigits(res.getPda());
-
-        URLPlusDataPoints.setTargetUrlPA(stringPA);
-        URLPlusDataPoints.setTargetUrlDA(stringDA);
+        //TODO: tidy up the whole SEOMoz legacy wrapper stuff...
+//        // first set the target URL's DA and PA: - this is not required in the new DB version of..
+//        response = urlMetricsService.getUrlMetrics(urlList.get(0).getLuuu(), authorityBitMask);
+//
+//        res = gson.fromJson(response, UrlResponse.class);
+//
+//        // remove the digits after the decimal point
+//        stringPA = removepostDecimalDigits(res.getUpa());
+//        stringDA = removepostDecimalDigits(res.getPda());
+//
+//        URLPlusDataPoints.setTargetUrlPA(stringPA);
+//        URLPlusDataPoints.setTargetUrlDA(stringDA);
 
         try {
 
