@@ -385,7 +385,7 @@ public class URLDBService extends DBService{
 	 * @param da - Domain Authority
 	 * @param domainName - Domain name of url.
 	 */
-	public void updateURLData(String urlAddress, Integer pa, Integer da, String domainName, String docTitle){
+	public void updateURLData(String urlAddress, Integer pa, Integer da, String docTitle){
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
@@ -400,7 +400,6 @@ public class URLDBService extends DBService{
 			URL url = mgr.find(URL.class, url_id);
 			url.setPa(pa);
 			url.setDa(da);
-			url.setDomain(domainName);
 			url.setDoc_title(docTitle);
 
 			mgr.merge(url);

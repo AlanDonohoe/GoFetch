@@ -16,15 +16,13 @@ CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `get_twitter_data` TINYINT(1) NOT NULL ,
   `get_backlinks` TINYINT(1) NOT NULL COMMENT 'If true, this indicates this is a target url and its id should be added to links table as a target' ,
   `date` DATE NOT NULL ,
+  `page_authority` INT NULL ,
+  `domain_authority` INT NULL ,
   `user_id` VARCHAR(45) NULL COMMENT 'Ensures that each target url be associated with a user, source urls do not need to be assoc with a user id.' ,
   `category` VARCHAR(45) NULL ,
-  `user_category` VARCHAR(45) NULL ,
-  `user_campaign` VARCHAR(45) NULL ,
-  `user_assigned_to` VARCHAR(45) NULL ,
   `domain` VARCHAR(45) NULL ,
   `doc_title` VARCHAR(45) NULL ,
-  `pa` INT NULL ,
-  `da` INT NULL ,
+  `seomoz_url` TINYINT(1) NULL COMMENT 'If true, this source url was detected by SEOMoz.' ,
   PRIMARY KEY (`url_id`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -108,6 +106,10 @@ CREATE  TABLE IF NOT EXISTS `url`.`links` (
   `anchor_text` VARCHAR(200) NOT NULL ,
   `date_detected` DATE NOT NULL ,
   `date_expired` DATE NULL ,
+  `user_category` VARCHAR(45) NULL ,
+  `user_assigned_to` VARCHAR(45) NULL ,
+  `user_campaign` VARCHAR(45) NULL ,
+  `client` VARCHAR(45) NULL ,
   PRIMARY KEY (`links_id`) )
 ENGINE = InnoDB;
 
@@ -132,6 +134,7 @@ CREATE  TABLE IF NOT EXISTS `url`.`SEQUENCE` (
 ENGINE = InnoDB;
 
 INSERT INTO SEQUENCE(SEQ_NAME, SEQ_COUNT) values ('SEQ_GEN', 0);
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
