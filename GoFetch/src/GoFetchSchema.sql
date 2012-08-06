@@ -30,30 +30,6 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `url`.`facebook`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`facebook` (
-  `fb_id` INT NOT NULL AUTO_INCREMENT COMMENT 'Represents a URLs FB data for a specific date.' ,
-  `url_id` INT NOT NULL ,
-  `date` DATE NOT NULL ,
-  `total_count` INT NOT NULL ,
-  `like_count` INT NOT NULL ,
-  `comment_count` INT NOT NULL ,
-  `share_count` INT NOT NULL ,
-  `click_count` INT NOT NULL ,
-  PRIMARY KEY (`fb_id`, `url_id`) ,
-  INDEX `fk_facebook_url` (`url_id` ASC) ,
-  CONSTRAINT `fk_facebook_url`
-    FOREIGN KEY (`url_id` )
-    REFERENCES `url`.`url` (`url_id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
 -- Table `url`.`twitter_mention`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `url`.`twitter_mention` (
@@ -133,7 +109,39 @@ CREATE  TABLE IF NOT EXISTS `url`.`SEQUENCE` (
   `SEQ_COUNT` DECIMAL(15) NULL )
 ENGINE = InnoDB;
 
+
 INSERT INTO SEQUENCE(SEQ_NAME, SEQ_COUNT) values ('SEQ_GEN', 0);
+
+-- -----------------------------------------------------
+-- Table `url`.`misc_social_data`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `url`.`misc_social_data` (
+  `social_data_id` INT NOT NULL AUTO_INCREMENT ,
+  `url_id` INT NOT NULL ,
+  `date` DATE NOT NULL ,
+  `stumble_upon` INT NULL ,
+  `reddit` INT NULL ,
+  `delicious` INT NULL ,
+  `buzz` INT NULL ,
+  `pinterest` INT NULL ,
+  `linkedin` INT NULL ,
+  `google_plus_one` INT NULL ,
+  `twitter` INT NULL ,
+  `fb_total_count` INT NULL ,
+  `fb_like_count` INT NULL ,
+  `fb_comment_count` INT NULL ,
+  `fb_share_count` INT NULL ,
+  `fb_click_count` INT NULL ,
+  `diggs` INT NULL ,
+  PRIMARY KEY (`social_data_id`, `url_id`) ,
+  INDEX `fk_misc_social_data_url1` (`url_id` ASC) ,
+  CONSTRAINT `fk_misc_social_data_url1`
+    FOREIGN KEY (`url_id` )
+    REFERENCES `url`.`url` (`url_id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

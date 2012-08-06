@@ -21,13 +21,15 @@ import com.google.appengine.api.rdbms.AppEngineDriver;
  *
  */
 
-public class URLDBService extends DBService{
+public class URLDBService{// extends DBService{
 
 	@PersistenceUnit(unitName="GoFetch")
 	EntityManagerFactory emf;
 
 	private static Logger logger = Logger.getLogger(URLDBService.class.getName());
-
+	//TODO: writing URLs to DB is v v slow - takes about 2 secs per record... why????
+	//	maybe create a method: void createURLs(List<URL> listURLs) method and have a loop within that to include only: if(!urlInDB(url)){...persist.... }
+	//	
 	public void createURL(URL url){
 		logger.info("Entering url[" + url.getUrl_address() + "]");
 
@@ -81,6 +83,10 @@ public class URLDBService extends DBService{
 
 		try {
 			result = mgr.find(URL.class, id);
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
+
 		} finally {
 			mgr.close();
 		}
@@ -109,6 +115,10 @@ public class URLDBService extends DBService{
 			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :address")
 					.setParameter("address", address)
 					.getResultList();
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
+
 		} finally {
 			mgr.close();
 		}
@@ -137,6 +147,10 @@ public class URLDBService extends DBService{
 
 		try {
 			result= mgr.createQuery("SELECT u FROM URL u").getResultList();
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
+
 		} finally {
 			mgr.close();
 		}
@@ -155,12 +169,14 @@ public class URLDBService extends DBService{
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
-		//Date yesterdaysDate = DateUtil.getYesterDaysDate();
-
 		try {
 			result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date")
 					.setParameter("date", date, TemporalType.DATE)
 					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
 
 		} finally {
 			mgr.close();
@@ -198,18 +214,20 @@ public class URLDBService extends DBService{
 	 */
 	public List<URL> getTargetURLsFrom(Date date){
 
-		logger.info("Entering getYesterdaysURLs");
+		logger.info("Entering getTargetURLsFrom");
 		List<URL> result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
-		//Date yesterdaysDate = DateUtil.getYesterDaysDate();
-
 		try {
 			result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date AND u.get_backlinks = TRUE")
 					.setParameter("date", date, TemporalType.DATE)
 					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "getTargetURLsFrom",msg ,e);
 
 		} finally {
 			mgr.close();
@@ -256,6 +274,10 @@ public class URLDBService extends DBService{
 					.setParameter("startDate", startDate, TemporalType.DATE)
 					.setParameter("endDate", endDate, TemporalType.DATE)
 					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "getURLsBetween",msg ,e);
 
 		} finally {
 			mgr.close();
@@ -308,7 +330,11 @@ public class URLDBService extends DBService{
 			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :urlAddress")
 					.setParameter("urlAddress", urlAddress)
 					.getResultList();
-		} finally {
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "getURLIDFromAddress",msg ,e);
+
+		}  finally {
 			mgr.close();
 		}
 		if (result == null || result.isEmpty()) {
@@ -332,7 +358,11 @@ public class URLDBService extends DBService{
 			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = :urlID")
 					.setParameter("urlID", urlID)
 					.getResultList();
-		} finally {
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "getURLIDFromAddress",msg ,e);
+
+		}  finally {
 			mgr.close();
 		}
 		if (result == null || result.isEmpty()) {
@@ -364,13 +394,17 @@ public class URLDBService extends DBService{
 			mgr.getTransaction().begin();
 
 			URL url = mgr.find(URL.class, url_id);
-			url.setPa(pa);
-			url.setDa(da);
+			url.setPage_authority(pa);
+			url.setDomain_authority(da);
 
 			mgr.merge(url);
 			mgr.getTransaction().commit();
 
-		} finally {
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "updateURLAuthorityData",msg ,e);
+
+		}  finally {
 			mgr.close();
 		}
 
@@ -398,14 +432,18 @@ public class URLDBService extends DBService{
 			mgr.getTransaction().begin();
 
 			URL url = mgr.find(URL.class, url_id);
-			url.setPa(pa);
-			url.setDa(da);
+			url.setPage_authority(pa);
+			url.setDomain_authority(da);
 			url.setDoc_title(docTitle);
 
 			mgr.merge(url);
 			mgr.getTransaction().commit();
 
-		} finally {
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "updateURLData",msg ,e);
+
+		}  finally {
 			mgr.close();
 		}
 
@@ -430,10 +468,44 @@ public class URLDBService extends DBService{
 
 			}
 
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "updateDomainNames",msg ,e);
+
 		} finally {
 			mgr.close();
 		}
 
 	}
+	
+	
+	/*
+	 * Returns a list of URLs that are to be monitored for social data...
+	 */
+	public List<URL> getSociallyTrackedURLs(){
 
+		logger.info("Entering getSociallyTrackedURLs");
+		List<URL> result = null;
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		try {
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.get_twitter_data = TRUE OR u.get_fb_data = TRUE")
+					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown...";
+			logger.logp(Level.SEVERE, "URLService", "getSociallyTrackedURLs",msg ,e);
+
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			logger.warning("No URLs returned");
+		}
+		logger.info("Exiting getSociallyTrackedURLs");
+		return result;
+
+	}
 }

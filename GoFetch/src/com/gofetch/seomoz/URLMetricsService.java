@@ -1,5 +1,6 @@
 package com.gofetch.seomoz;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 
 import com.gofetch.seomoz.Authenticator;
@@ -41,8 +42,9 @@ public class URLMetricsService
 	 * @param col This field filters the data to get only specific columns
 	 * 			  col = 0 fetches all the data
 	 * @return
+	 * @throws IOException 
 	 */
-	public String getUrlMetrics(String objectURL, long col)
+	public String getUrlMetrics(String objectURL, long col) throws IOException
 	{
 		
 		String urlToFetch = "http://lsapi.seomoz.com/linkscape/url-metrics/" + URLEncoder.encode(objectURL) + "?" + authenticator.getAuthenticationStr();
@@ -62,10 +64,11 @@ public class URLMetricsService
 	 * 
 	 * @param objectURL
 	 * @return
+	 * @throws IOException 
 	 * 
 	 * @see URLMetricsService#getUrlMetrics(String, int)
 	 */
-	public String getUrlMetrics(String objectURL)
+	public String getUrlMetrics(String objectURL) throws IOException
 	{
 		return getUrlMetrics(objectURL, 0);		
 	}

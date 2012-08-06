@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 // new GAE imports:
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 /**
@@ -39,8 +40,9 @@ public class ConnectionUtil {
 	 *
 	 * @param urlToFetch url to be connected
 	 * @return the http get response
+	 * @throws IOException 
 	 */
-	public static String makeRequest(String urlToFetch) {
+	public static String makeRequest(String urlToFetch) throws IOException {
 		String responseBody = "";
 
 		// new implementation - GAE version:
@@ -89,6 +91,9 @@ public class ConnectionUtil {
 			errorMsg += " caused by: \n" + urlToFetch;
 			log.info(errorMsg);
 			eIO.printStackTrace();
+			
+			// pass up to calling method to handle there...
+			throw eIO;
 
 		} catch (RuntimeException eRT){
 			errorMsg =	eRT.getMessage();
@@ -96,7 +101,7 @@ public class ConnectionUtil {
 			log.info(errorMsg);
 			eRT.printStackTrace();
 
-		}
+		} 
 		
 		return responseBody;
 

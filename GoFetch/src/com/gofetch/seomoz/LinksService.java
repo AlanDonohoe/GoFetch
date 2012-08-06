@@ -1,5 +1,6 @@
 package com.gofetch.seomoz;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 
 import com.gofetch.seomoz.Authenticator;
@@ -46,8 +47,9 @@ public class LinksService
 	 * @param offset The start record of the page can be specified using the Offset parameter
 	 * @param limit The size of the page can by specified using the Limit parameter.
 	 * @return
+	 * @throws IOException 
 	 */
-	public String getLinks(String objectURL, String scope, String filters, String sort, long colSource, long colTarget, long colLink,int offset, int limit)
+	public String getLinks(String objectURL, String scope, String filters, String sort, long colSource, long colTarget, long colLink,int offset, int limit) throws IOException
 	{
 		//TODO: replace depreciated method - http://stackoverflow.com/questions/213506/java-net-urlencoder-encodestring-is-deprecated-what-should-i-use-instead
 		String urlToFetch = "http://lsapi.seomoz.com/linkscape/links/" + URLEncoder.encode(objectURL) + "?" + authenticator.getAuthenticationStr();

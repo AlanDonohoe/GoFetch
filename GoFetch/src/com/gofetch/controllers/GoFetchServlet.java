@@ -108,7 +108,7 @@ public class GoFetchServlet extends HttpServlet {
 		url.setUser_id(goFetchBean.getUser_id());
 
 		url.setGet_backlinks(goFetchBean.isBackLinkData());
-		url.setGet_fb_Data(goFetchBean.isFacebookData());
+		url.setGet_fb_data(goFetchBean.isFacebookData());
 		url.setGet_twitter_data(goFetchBean.isTwitterData());
 
 		////////

@@ -34,16 +34,15 @@ public class URL implements Serializable {
 	private String category;
 	private String domain;
 	private String doc_title;
-	private String user_category;
-	private String user_campaign;
-	private String user_assigned_to;
 	
-	private boolean get_fb_Data;
+	private boolean get_fb_data;
 	private boolean get_twitter_data;
 	private boolean get_backlinks;
 	
-	private Integer pa;
-	private Integer da;
+	private Integer page_authority;
+	private Integer domain_authority;
+	
+	private boolean seomoz_url;
 	
 //	@OneToOne(optional=true, cascade=CascadeType.ALL)
 //	@JoinColumn(name="seomoz_id")
@@ -51,81 +50,57 @@ public class URL implements Serializable {
 //	@OneToMany(cascade=CascadeType.ALL)
 //	private List <TwitterMention> twitterList;
 //	@OneToMany(cascade=CascadeType.ALL)
-//	private List <FaceBookData> faceBookList;
+//	private List <MiscSocialData> MiscSocialDataList;
 	
 
 	public URL() {
 		super();
 		
-		get_fb_Data = false;
+		get_fb_data = false;
 		get_twitter_data = false;
 		get_backlinks = false;
+		seomoz_url = false;
 	}   
-	
-	
-	
-//	public SEOMozData getSeoMozObject() {
-//		return seoMozObject;
-//	}
-//
-//
-//
-//	public void setSeoMozObject(SEOMozData seoMozObject) {
-//		this.seoMozObject = seoMozObject;
-//	}
-
-
-
-//	public List<TwitterMention> getTwitterList() {
-//		return twitterList;
-//	}
-//
-//
-//
-//	public void setTwitterList(List<TwitterMention> twitterList) {
-//		this.twitterList = twitterList;
-//	}
-//
-//
-//
-//	public List<FaceBookData> getFaceBookList() {
-//		return faceBookList;
-//	}
-//
-//
-//
-//	public void setFaceBookList(List<FaceBookData> faceBookList) {
-//		this.faceBookList = faceBookList;
-//	}
-//
-
-	public Integer getPa() {
-		return pa;
-	}
-
-
-
-	public void setPa(Integer pa) {
-		this.pa = pa;
-	}
-
-
-
-	public Integer getDa() {
-		return da;
-	}
-
-
-
-	public void setDa(Integer da) {
-		this.da = da;
-	}
-
-	
 
 	public Date getDate() {
 		return date;
 	}
+
+
+	public boolean isSeomoz_url() {
+		return seomoz_url;
+	}
+
+
+
+	public void setSeomoz_url(boolean seomoz_url) {
+		this.seomoz_url = seomoz_url;
+	}
+
+
+
+	public Integer getPage_authority() {
+		return page_authority;
+	}
+
+
+
+	public void setPage_authority(Integer page_authority) {
+		this.page_authority = page_authority;
+	}
+
+
+
+	public Integer getDomain_authority() {
+		return domain_authority;
+	}
+
+
+
+	public void setDomain_authority(Integer domain_authority) {
+		this.domain_authority = domain_authority;
+	}
+
 
 
 	public void setDate(Date date) {
@@ -176,43 +151,13 @@ public class URL implements Serializable {
 	}
 
 
-	public String getUser_category() {
-		return user_category;
+	public boolean isGet_fb_data() {
+		return get_fb_data;
 	}
 
 
-	public void setUser_category(String user_category) {
-		this.user_category = user_category;
-	}
-
-
-	public String getUser_campaign() {
-		return user_campaign;
-	}
-
-
-	public void setUser_campaign(String user_campaign) {
-		this.user_campaign = user_campaign;
-	}
-
-
-	public String getUser_assigned_to() {
-		return user_assigned_to;
-	}
-
-
-	public void setUser_assigned_to(String user_assigned_to) {
-		this.user_assigned_to = user_assigned_to;
-	}
-
-
-	public boolean isGet_fb_Data() {
-		return get_fb_Data;
-	}
-
-
-	public void setGet_fb_Data(boolean get_fb_Data) {
-		this.get_fb_Data = get_fb_Data;
+	public void setGet_fb_data(boolean get_fb_Data) {
+		this.get_fb_data = get_fb_Data;
 	}
 
 
