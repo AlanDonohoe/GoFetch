@@ -10,14 +10,12 @@ import org.hibernate.validator.NotNull;
 
 /**
  * Entity implementation class for Entity: TwitterMention
- *
+ * //Don't know if we need this now... as we can jsut access Topsy for historical data to make social ripple charts...
  */
 @Entity
 @Table(name="twitter_mention")
 public class TwitterMention implements Serializable {
 
-	   
-	//TODO: finish the JPA annotation of this entity.....
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer twitter_id;

@@ -3,6 +3,7 @@ package com.gofetch.entities;
 import java.io.Serializable;
 import java.lang.Integer;
 import java.lang.String;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -35,8 +36,7 @@ public class URL implements Serializable {
 	private String domain;
 	private String doc_title;
 	
-	private boolean get_fb_data;
-	private boolean get_twitter_data;
+	private boolean get_social_data;
 	private boolean get_backlinks;
 	
 	private Integer page_authority;
@@ -44,11 +44,14 @@ public class URL implements Serializable {
 	
 	private boolean seomoz_url;
 	
-//	@OneToOne(optional=true, cascade=CascadeType.ALL)
-//	@JoinColumn(name="seomoz_id")
+	// can not work out how to use JPAnnotation to make all the related objects delete when related url is deleted,
+	//	so i'm doing it programmatically...
+//	@OneToOne(optional=true, cascade=CascadeType.ALL, mappedBy= "url")
 //	private SEOMozData seoMozObject;
+//	
 //	@OneToMany(cascade=CascadeType.ALL)
 //	private List <TwitterMention> twitterList;
+//	
 //	@OneToMany(cascade=CascadeType.ALL)
 //	private List <MiscSocialData> MiscSocialDataList;
 	
@@ -56,10 +59,10 @@ public class URL implements Serializable {
 	public URL() {
 		super();
 		
-		get_fb_data = false;
-		get_twitter_data = false;
+		get_social_data = false;
 		get_backlinks = false;
 		seomoz_url = false;
+		
 	}   
 
 	public Date getDate() {
@@ -150,26 +153,21 @@ public class URL implements Serializable {
 		this.doc_title = doc_title;
 	}
 
-
-	public boolean isGet_fb_data() {
-		return get_fb_data;
+	public Integer getUrl_id() {
+		return url_id;
 	}
 
-
-	public void setGet_fb_data(boolean get_fb_Data) {
-		this.get_fb_data = get_fb_Data;
+	public void setUrl_id(Integer url_id) {
+		this.url_id = url_id;
 	}
 
-
-	public boolean isGet_twitter_data() {
-		return get_twitter_data;
+	public boolean isGet_social_data() {
+		return get_social_data;
 	}
 
-
-	public void setGet_twitter_data(boolean get_twitter_data) {
-		this.get_twitter_data = get_twitter_data;
+	public void setGet_social_data(boolean get_social_data) {
+		this.get_social_data = get_social_data;
 	}
-
 
 	public boolean isGet_backlinks() {
 		return get_backlinks;

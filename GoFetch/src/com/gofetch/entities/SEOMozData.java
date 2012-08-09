@@ -11,12 +11,15 @@ import javax.persistence.*;
 @Entity
 @Table(name="seomoz_data")
 public class SEOMozData implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	//TODO: finish the JPA annotation of this entity.....
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer seomoz_id;
-	private static final long serialVersionUID = 1L;
+	
+	private Integer url_id;
 	
 	private Integer auditor_rank;
 	private Integer auditor_id;
@@ -28,6 +31,31 @@ public class SEOMozData implements Serializable {
 		super();
 	}   
 	
+
+	
+	public Integer getSeomoz_id() {
+		return seomoz_id;
+	}
+
+
+
+	public void setSeomoz_id(Integer seomoz_id) {
+		this.seomoz_id = seomoz_id;
+	}
+
+
+
+	public Integer getUrl_id() {
+		return url_id;
+	}
+
+
+
+	public void setUrl_id(Integer url_id) {
+		this.url_id = url_id;
+	}
+
+
 
 	public Integer getAuditor_rank() {
 		return auditor_rank;

@@ -3,34 +3,26 @@ package com.gofetch.beans;
 public class GoFetchRequestBean {
 	protected String url;
 	protected String user_id;
-	protected boolean facebookData;
-	protected boolean twitterData;
+	protected boolean socialData;
 	protected boolean backLinkData;
-	
-	
-	public String getUser_id() {
-		return user_id;
-	}
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
-	}
+	protected int noOfLayers;
 	public String getUrl() {
 		return url;
 	}
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public boolean isFacebookData() {
-		return facebookData;
+	public String getUser_id() {
+		return user_id;
 	}
-	public void setFacebookData(boolean facebookData) {
-		this.facebookData = facebookData;
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
 	}
-	public boolean isTwitterData() {
-		return twitterData;
+	public boolean isSocialData() {
+		return socialData;
 	}
-	public void setTwitterData(boolean twitterData) {
-		this.twitterData = twitterData;
+	public void setSocialData(boolean socialData) {
+		this.socialData = socialData;
 	}
 	public boolean isBackLinkData() {
 		return backLinkData;
@@ -38,7 +30,12 @@ public class GoFetchRequestBean {
 	public void setBackLinkData(boolean backLinkData) {
 		this.backLinkData = backLinkData;
 	}
-	
+	public int getNoOfLayers() {
+		return noOfLayers;
+	}
+	public void setNoOfLayers(int noOfLayers) {
+		this.noOfLayers = noOfLayers;
+	}
 	
 	
 }

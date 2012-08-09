@@ -12,8 +12,7 @@ USE `url` ;
 CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `url_id` INT NOT NULL AUTO_INCREMENT ,
   `url_address` VARCHAR(200) NOT NULL ,
-  `get_fb_data` TINYINT(1) NOT NULL ,
-  `get_twitter_data` TINYINT(1) NOT NULL ,
+  `get_social_data` TINYINT(1) NOT NULL ,
   `get_backlinks` TINYINT(1) NOT NULL COMMENT 'If true, this indicates this is a target url and its id should be added to links table as a target' ,
   `date` DATE NOT NULL ,
   `page_authority` INT NULL ,
@@ -81,6 +80,7 @@ CREATE  TABLE IF NOT EXISTS `url`.`links` (
   `source_id` INT NOT NULL COMMENT 'Represents hyperlinks btwn source which points at target.' ,
   `anchor_text` VARCHAR(200) NOT NULL ,
   `date_detected` DATE NOT NULL ,
+  `final_target_url` VARCHAR(200) NOT NULL ,
   `date_expired` DATE NULL ,
   `user_category` VARCHAR(45) NULL ,
   `user_assigned_to` VARCHAR(45) NULL ,
@@ -108,7 +108,6 @@ CREATE  TABLE IF NOT EXISTS `url`.`SEQUENCE` (
   `SEQ_NAME` VARCHAR(50) NULL ,
   `SEQ_COUNT` DECIMAL(15) NULL )
 ENGINE = InnoDB;
-
 
 INSERT INTO SEQUENCE(SEQ_NAME, SEQ_COUNT) values ('SEQ_GEN', 0);
 

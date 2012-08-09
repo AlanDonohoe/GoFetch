@@ -47,7 +47,7 @@ public class GoFetchServlet extends HttpServlet {
 
 				return;
 			} catch (ServletException e) {
-				// TODO Auto-generated catch block
+				// TODO Auto-generated catch block  - do something else here....
 				e.printStackTrace();
 			}
 
@@ -64,7 +64,7 @@ public class GoFetchServlet extends HttpServlet {
 
 				return;
 			} catch (ServletException e) {
-				// TODO Auto-generated catch block
+				// TODO Auto-generated catch block - do something else here....
 				e.printStackTrace();
 			}
 		}
@@ -76,8 +76,7 @@ public class GoFetchServlet extends HttpServlet {
 		goFetchBean.setUser_id(req.getParameter("user_id"));
 
 		String backlink_data = req.getParameter("backlink_data");
-		String facebook_data = req.getParameter("facebook_data");
-		String twitter_data =  req.getParameter("twitter_data");
+		String social_data = req.getParameter("social_data");
 
 		if(null == backlink_data){
 			goFetchBean.setBackLinkData(false);
@@ -85,17 +84,12 @@ public class GoFetchServlet extends HttpServlet {
 			goFetchBean.setBackLinkData(true);
 		} 
 
-		if(null == facebook_data){
-			goFetchBean.setFacebookData(false);
+		if(null == social_data){
+			goFetchBean.setSocialData(false);
 		} else{
-			goFetchBean.setFacebookData(true);
+			goFetchBean.setSocialData(true);
 		} 
 
-		if(null == twitter_data){
-			goFetchBean.setTwitterData(false);
-		} else{
-			goFetchBean.setTwitterData(true);
-		} 
 		//
 		//////////////
 
@@ -108,31 +102,8 @@ public class GoFetchServlet extends HttpServlet {
 		url.setUser_id(goFetchBean.getUser_id());
 
 		url.setGet_backlinks(goFetchBean.isBackLinkData());
-		url.setGet_fb_data(goFetchBean.isFacebookData());
-		url.setGet_twitter_data(goFetchBean.isTwitterData());
+		url.setGet_social_data(goFetchBean.isSocialData());
 
-		////////
-		// testing SEOMoz data....
-		//		SEOMozData seoMoz = new SEOMozData();
-		//		
-		//		seoMoz.setDa(100);
-		//		seoMoz.setPa(50);
-		//		
-		//		url.setSeoMozObject(seoMoz);
-
-		/*
-		 * Exception here:
-		 * 
-		 * Internal Exception: java.sql.SQLException: Field 'url_id' doesn't have a default value
-Error Code: 1364
-Call: INSERT INTO seomoz_data (SEOMOZ_ID, AUDITOR_ID, AUDITOR_RANK, COMMENT, DA, LAST_QUESTION, PA, RGA_SCORE) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-	bind => [8 parameters bound]
-
-	- debug and check that url object is assigned an id on creation here?? or is it when passed to teh DB??
-		 */
-
-		//
-		//////////////
 		URLDBService urlDBUnit = new URLDBService();
 		urlDBUnit.createURL(url);
 

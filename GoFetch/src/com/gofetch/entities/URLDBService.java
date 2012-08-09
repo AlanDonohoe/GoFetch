@@ -21,7 +21,7 @@ import com.google.appengine.api.rdbms.AppEngineDriver;
  *
  */
 
-public class URLDBService{// extends DBService{
+public class URLDBService{
 
 	@PersistenceUnit(unitName="GoFetch")
 	EntityManagerFactory emf;
@@ -91,7 +91,7 @@ public class URLDBService{// extends DBService{
 			mgr.close();
 		}
 		if (result == null) {
-			logger.warning("No URLs returned");
+			logger.warning("URLDBService: getURL(int id) - No URLs returned, for id:" + id);
 		}
 		logger.info("Exiting getURL");
 		return result;
@@ -105,32 +105,31 @@ public class URLDBService{// extends DBService{
 	 */
 	public URL getURL(String address) {
 		logger.info("Entering getURL[" + address + "]");
-		List result = null;
-		URL url;
+
+		List<URL> url = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :address")
+			url = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :address")
 					.setParameter("address", address)
 					.getResultList();
 		}catch(Exception e){
-			String msg = "Exception thrown...";
+			String msg = "Exception thrown getting URL: " + address;
 			logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
 
 		} finally {
 			mgr.close();
 		}
 
-		if(result.isEmpty())
-			return null;
-		
-		url = (URL) result.get(0);
-
-
 		logger.info("Exiting getURL");
-		return url;
+		
+		if(null == url)
+			return null;
+		else
+			return url.get(0);
+
 	}
 
 	/**
@@ -477,8 +476,8 @@ public class URLDBService{// extends DBService{
 		}
 
 	}
-	
-	
+
+
 	/*
 	 * Returns a list of URLs that are to be monitored for social data...
 	 */
@@ -491,7 +490,7 @@ public class URLDBService{// extends DBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.get_twitter_data = TRUE OR u.get_fb_data = TRUE")
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = TRUE")
 					.getResultList();
 
 		}catch(Exception e){
@@ -502,10 +501,84 @@ public class URLDBService{// extends DBService{
 			mgr.close();
 		}
 		if (result == null) {
-			logger.warning("No URLs returned");
+			logger.warning("No SociallyTracked URLs returned");
 		}
 		logger.info("Exiting getSociallyTrackedURLs");
 		return result;
+
+	}
+
+//	/**
+//	 * Method checks that urlAddress is in DB, and if it is, deletes that URL from the DB.
+//	 * @param urlAddress string address of url to be deleted
+//	 */
+//	public void deleteURL(String urlAddress){
+//
+//		logger.info("Entering deleteURL. Deleting " + urlAddress);
+//
+//		URL url;
+//
+//		emf = Persistence.createEntityManagerFactory("GoFetch");
+//		EntityManager mgr = emf.createEntityManager();
+//
+//		url = getURL(urlAddress);
+//
+//		if(url != null){
+//
+//			try{
+//				mgr.getTransaction().begin();
+//
+//				mgr.createQuery("DELETE FROM URL u WHERE u.url_id = :url_id")
+//				.setParameter("url_id", url_id)
+//				.executeUpdate();
+//
+//				mgr.getTransaction().commit();
+//
+//			}catch(Exception e){
+//				String msg = "Exception thrown deleting: " + urlAddress;
+//				logger.logp(Level.SEVERE, "URLService", "deleteURL",msg ,e);
+//
+//			} finally {
+//				mgr.close();
+//			}
+//
+//		}
+//		else{
+//			logger.info(urlAddress + " Not in DB.");
+//		}
+//
+//		logger.info("Exiting deleteURL.");
+//
+//	}
+//
+
+	public void deleteURL(int url_id){
+
+		logger.info("Entering deleteURL. Deleting " + url_id);
+
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+			try{
+				mgr.getTransaction().begin();
+
+				mgr.createQuery("DELETE FROM URL u WHERE u.url_id = :url_id")
+				.setParameter("url_id", url_id)
+				.executeUpdate();
+
+				mgr.getTransaction().commit();
+
+			}catch(Exception e){
+				String msg = "Exception thrown deleting: " + url_id;
+				logger.logp(Level.SEVERE, "URLService", "deleteURL",msg ,e);
+
+			} finally {
+				mgr.close();
+			}
+
+
+		logger.info("Exiting deleteURL.");
 
 	}
 }

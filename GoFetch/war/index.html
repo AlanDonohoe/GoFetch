@@ -385,26 +385,20 @@
 					</p>
 
 					<p>
-						<input name="facebook_data" type="checkbox" value="" checked>
-						GoFetch Facebook data
+						<input name="social_data" type="checkbox" value="" checked>
+						GoFetch Social data (Facebook, Twitter, etc...)
 						<br>
 
-						<input name="twitter_data" type="checkbox" value="" checked>
-						GoFetch Twitter data (includes Tweeters' Klouts score)
-						<br>
 						<input name="backlink_data" type="checkbox" value="" checked>
 						GoFetch Backlink data
 					</p>
+					
 
 					<p class="introtext">
 						Every day, GoFetch will monitor your  urls, recording the data you are interested in.
 						<br>
 						<br>
 
-						* Facebook - Total Count, Likes, Comments, Shares, Click Count.
-						<br>
-						* Twitter  - No of times url mentioned, ID of the tweeter plus their Klout score.
-						<br>
 						* Backlink data -
 						Want to monitor the data around the links pointing to your target url?
 					</p>
@@ -462,6 +456,14 @@
 				  Get Todays URLs
 				  <input type="submit" name="get_todays_urls" id="get_todays_urls" value="Submit">
 			  </form>
+              
+				<form name="form2" method="post" action="/delete_url">
+				   <p>Delete URL  
+                   <input type="text" name="url_to_delete" value="http://">
+
+				     <input type="submit" name="delete_url" id="delete_url" value="Submit"></p>
+			      </p>
+	          </form>
 				<p class="introtext">&nbsp;</p>
 
 			</div>

@@ -34,11 +34,24 @@ public class Link implements Serializable {
 
 	@Temporal(TemporalType.DATE)
 	private Date date_expired;
+	
+	@NotNull
+	private String final_target_url;
 
 
 	public Link() {
 		super();
 	}   
+
+
+	public String getFinal_target_url() {
+		return final_target_url;
+	}
+
+
+	public void setFinal_target_url(String final_target_url) {
+		this.final_target_url = final_target_url;
+	}
 
 
 	public String getAnchor_text() {
