@@ -1,4 +1,4 @@
-#Thu Jul 12 17:06:47 BST 2012
+#Fri Aug 10 10:46:00 BST 2012
 eclipse.preferences.version=1
 filesCopiedToWebInfLib=appengine-api-1.0-sdk-1.7.0.jar|appengine-api-labs-1.7.0.jar|appengine-jsr107cache-1.7.0.jar|jsr107cache-1.1.jar
 gaeDatanucleusEnabled=false
@@ -7,8 +7,8 @@ gaeIsEclipseDefaultInstPath=true
 googleCloudSqlEnabled=true
 localDevMySqlEnabled=true
 mySqlDatabaseName=url
-mySqlDatabasePassword=bravo123
-mySqlDatabaseUser=root
+mySqlDatabasePassword=kastle2
+mySqlDatabaseUser=kastle2
 mySqlHostName=localhost
 mySqlIsConfigured=true
 mySqlJdbcJar=/Applications/eclipse/plugins/mysql-connector-java-5.1.18-bin.jar

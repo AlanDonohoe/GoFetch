@@ -385,14 +385,23 @@
 					</p>
 
 					<p>
+                    					<input name="backlink_data" type="checkbox" value="" checked>
+						GoFetch Backlink data
+                        <br>
 						<input name="social_data" type="checkbox" value="" checked>
 						GoFetch Social data (Facebook, Twitter, etc...)
 						<br>
 
-						<input name="backlink_data" type="checkbox" value="" checked>
-						GoFetch Backlink data
-					</p>
-					
+	
+					<br>
+             
+
+ <select name="layers">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+</select>
+Number of layers in the ripple.
 
 					<p class="introtext">
 						Every day, GoFetch will monitor your  urls, recording the data you are interested in.
@@ -401,13 +410,17 @@
 
 						* Backlink data -
 						Want to monitor the data around the links pointing to your target url?
-					</p>
 					<br>
+                    * The Ripple: Recursively monitor URLs that link to the backlinks pointing to you target URL. 
+                    </p>
+		
 					<p class="introtext">
 						GoFetch will retrieve the links pointing to your target url, then depending what you're interested in, will monitor these daily for new data.
 					</p>
 					<p class="introtext">
-						<br>
+                    
+
+					
 						Monthly, GoFetch will check to see if there's any new links pointing to your target and add these to the links to fetch daily data on.
 						<br>
 						<br>
@@ -451,20 +464,7 @@
 				<p class="introtext">
 					<a href="mailto:Alan@propellernet.co.uk">Email me</a> and let me know - that's what I'm here for.
 				</p>
-				<p class="introtext">&nbsp;</p>
-				<form name="form1" method="post" action="/processnewtargets">
-				  Get Todays URLs
-				  <input type="submit" name="get_todays_urls" id="get_todays_urls" value="Submit">
-			  </form>
-              
-				<form name="form2" method="post" action="/delete_url">
-				   <p>Delete URL  
-                   <input type="text" name="url_to_delete" value="http://">
-
-				     <input type="submit" name="delete_url" id="delete_url" value="Submit"></p>
-			      </p>
-	          </form>
-				<p class="introtext">&nbsp;</p>
+	
 
 			</div>
 
