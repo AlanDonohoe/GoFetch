@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <backends>
-  <backend name="gofetch_backend">
-    <class>B2</class>
+  <backend name="gofetchbackend">
+    <class>B1</class>
     <instances>1</instances>
     <options>
       <dynamic>true</dynamic>

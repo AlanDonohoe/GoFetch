@@ -141,7 +141,7 @@ public class SEOMozWrapper {
 			String errorMsg = SEOMozWrapper.TAG + " threw " + e.getMessage();
 			errorMsg += " Getting URL metrics data for: " + url;
 			log.info(errorMsg);
-			e.printStackTrace();
+			//e.printStackTrace();
 
 			return 0;
 		}
@@ -239,7 +239,7 @@ public class SEOMozWrapper {
 
 					errorMsg = SEOMozWrapper.TAG + " threw " + ex.getMessage();
 					log.info(errorMsg);
-					ex.printStackTrace();
+					//ex.printStackTrace();
 				}
 
 			}
@@ -364,7 +364,7 @@ public class SEOMozWrapper {
 		} catch (Exception e) {
 			errorMsg = SEOMozWrapper.TAG + " threw " + e.getMessage();
 			log.info(errorMsg);
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		noOfUniqueDomains = uniqueDomainsList.size();
@@ -479,11 +479,11 @@ public class SEOMozWrapper {
 			Thread.currentThread().interrupt(); // restore interrupted status
 			errorMsg = SEOMozWrapper.TAG + " threw " + ex.getMessage();
 			log.info(errorMsg);
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		} catch (Exception e) {
 			errorMsg = SEOMozWrapper.TAG + " threw " + e.getMessage();
 			log.info(errorMsg);
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 	}

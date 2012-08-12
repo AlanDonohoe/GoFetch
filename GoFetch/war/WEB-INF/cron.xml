@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
   <cron>
-    <url>/gettargetsbacklinks</url>
+    <url>/processnewtargets</url>
+    <target>gofetchbackend</target>
     <description>Get Yesterday's Target URLs' back links</description>
     <schedule>every day 00:01</schedule>
+    <timezone>Europe/London</timezone>
   </cron> 
 </cronentries>

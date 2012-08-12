@@ -11,7 +11,7 @@ USE `url` ;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `url_id` INT NOT NULL AUTO_INCREMENT ,
-  `url_address` VARCHAR(200) NOT NULL ,
+  `url_address` VARCHAR(500) NOT NULL ,
   `get_social_data` TINYINT(1) NOT NULL ,
   `get_backlinks` TINYINT(1) NOT NULL COMMENT 'If true, this indicates this is a target url and its id should be added to links table as a target' ,
   `date` DATE NOT NULL ,
@@ -19,7 +19,7 @@ CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `domain_authority` INT NULL ,
   `user_id` VARCHAR(45) NULL COMMENT 'Ensures that each target url be associated with a user, source urls do not need to be assoc with a user id.' ,
   `category` VARCHAR(45) NULL ,
-  `domain` VARCHAR(45) NULL ,
+  `domain` VARCHAR(200) NULL ,
   `doc_title` VARCHAR(45) NULL ,
   `seomoz_url` TINYINT(1) NULL COMMENT 'If true, this source url was detected by SEOMoz.' ,
   PRIMARY KEY (`url_id`) )

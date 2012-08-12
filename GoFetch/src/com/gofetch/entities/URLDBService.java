@@ -2,18 +2,18 @@ package com.gofetch.entities;
 
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
+//import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.Query;
+//import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
 import com.gofetch.utils.DateUtil;
-import com.google.appengine.api.rdbms.AppEngineDriver;
+//import com.google.appengine.api.rdbms.AppEngineDriver;
 
 /**
  * Service class for CRUD operations on URL entity
@@ -26,12 +26,12 @@ public class URLDBService{
 	@PersistenceUnit(unitName="GoFetch")
 	EntityManagerFactory emf;
 
-	private static Logger logger = Logger.getLogger(URLDBService.class.getName());
+	private static Logger log = Logger.getLogger(URLDBService.class.getName());
 	//TODO: writing URLs to DB is v v slow - takes about 2 secs per record... why????
 	//	maybe create a method: void createURLs(List<URL> listURLs) method and have a loop within that to include only: if(!urlInDB(url)){...persist.... }
-	//	
+	//	use batch processing of URLs to DB.
 	public void createURL(URL url){
-		logger.info("Entering url[" + url.getUrl_address() + "]");
+		log.info("Entering url[" + url.getUrl_address() + "]");
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
@@ -53,20 +53,21 @@ public class URLDBService{
 			}else{
 				//TODO: send error to the user with the offending url address....
 
-				logger.info("url already exists in DB: "
+				log.info("url already exists in DB: "
 						+ url.getUrl_address());
 			}
 
 
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "createURL",msg ,e);
+			String msg = "Exception thrown. URLService: createURL";
+			//logger.logp(Level.SEVERE, "URLService", "createURL",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		}
 		finally {
 			mgr.close();
 		}
-		logger.info("Exiting createURL");
+		log.info("Exiting createURL");
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class URLDBService{
 	 * @return URL
 	 */
 	public URL getURL(int id) {
-		logger.info("Entering getURL[" + id + "]");
+		log.info("Entering getURL[" + id + "]");
 		URL result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -84,16 +85,17 @@ public class URLDBService{
 		try {
 			result = mgr.find(URL.class, id);
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
+			String msg = "Exception thrown. URLService: getURL";
+			//logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		} finally {
 			mgr.close();
 		}
 		if (result == null) {
-			logger.warning("URLDBService: getURL(int id) - No URLs returned, for id:" + id);
+			log.warning("URLDBService: getURL(int id) - No URLs returned, for id:" + id);
 		}
-		logger.info("Exiting getURL");
+		log.info("Exiting getURL");
 		return result;
 	}
 
@@ -104,7 +106,7 @@ public class URLDBService{
 	 * @return URL
 	 */
 	public URL getURL(String address) {
-		logger.info("Entering getURL[" + address + "]");
+		log.info("Entering getURL[" + address + "]");
 
 		List<URL> url = null;
 
@@ -116,14 +118,15 @@ public class URLDBService{
 					.setParameter("address", address)
 					.getResultList();
 		}catch(Exception e){
-			String msg = "Exception thrown getting URL: " + address;
-			logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
+			String msg = "Exception thrown getting URL: " + address + "URLService: getURL";
+			//logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		} finally {
 			mgr.close();
 		}
 
-		logger.info("Exiting getURL");
+		log.info("Exiting getURL");
 		
 		if(null == url)
 			return null;
@@ -138,7 +141,7 @@ public class URLDBService{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<URL> getURLs() {
-		logger.info("Entering getURLs");
+		log.info("Entering getURLs");
 		List<URL> result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -147,22 +150,23 @@ public class URLDBService{
 		try {
 			result= mgr.createQuery("SELECT u FROM URL u").getResultList();
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
+			String msg = "Exception thrown. URLService: getURLs";
+			//logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		} finally {
 			mgr.close();
 		}
 		if (result == null) {
-			logger.warning("No URLs returned");
+			log.warning("No URLs returned");
 		}
-		logger.info("Exiting getURLs");
+		log.info("Exiting getURLs");
 		return result;
 	}
 
 	public List<URL> getURLs(Date date){
 
-		logger.info("Entering getURLs");
+		log.info("Entering getURLs");
 		List<URL> result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -174,16 +178,17 @@ public class URLDBService{
 					.getResultList();
 
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
+			String msg = "Exception thrown. URLService: getURLs";
+			//logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		} finally {
 			mgr.close();
 		}
 		if (result == null) {
-			logger.warning("No URLs returned");
+			log.warning("No URLs returned");
 		}
-		logger.info("Exiting getURLs");
+		log.info("Exiting getURLs");
 		return result;
 
 	}
@@ -193,7 +198,7 @@ public class URLDBService{
 	 */
 	public List<URL> getTodaysURLs(){
 
-		logger.info("Entering getTodaysURLs");
+		log.info("Entering getTodaysURLs");
 
 		List<URL> result = null;
 
@@ -201,7 +206,7 @@ public class URLDBService{
 
 		result = getURLs(todaysDate);
 
-		logger.info("Exiting getTodaysURLs");
+		log.info("Exiting getTodaysURLs");
 
 		return result;
 
@@ -213,7 +218,7 @@ public class URLDBService{
 	 */
 	public List<URL> getTargetURLsFrom(Date date){
 
-		logger.info("Entering getTargetURLsFrom");
+		log.info("Entering getTargetURLsFrom");
 		List<URL> result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -225,16 +230,17 @@ public class URLDBService{
 					.getResultList();
 
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "getTargetURLsFrom",msg ,e);
+			String msg = "Exception thrown. URLService: getTargetURLsFrom";
+			//logger.logp(Level.SEVERE, "URLService", "getTargetURLsFrom",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		} finally {
 			mgr.close();
 		}
 		if (result == null) {
-			logger.warning("No URLs returned");
+			log.warning("No URLs returned");
 		}
-		logger.info("Exiting getYesterdaysURLs");
+		log.info("Exiting getYesterdaysURLs");
 		return result;
 	}
 
@@ -244,14 +250,14 @@ public class URLDBService{
 	 */
 	public List<URL> getYesterdaysURLs(){
 
-		logger.info("Entering getYesterdaysURLs");
+		log.info("Entering getYesterdaysURLs");
 		List<URL> result = null;
 
 		Date yestDate = DateUtil.getYesterDaysDate();
 
 		result = getURLs(yestDate);
 
-		logger.info("Exiting getYesterdaysURLs");
+		log.info("Exiting getYesterdaysURLs");
 
 		return result;
 
@@ -262,7 +268,7 @@ public class URLDBService{
 	 */
 	public List<URL> getURLsBetween(Date startDate, Date endDate){
 
-		logger.info("Entering getURLsBetween");
+		log.info("Entering getURLsBetween");
 		List<URL> result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -275,16 +281,17 @@ public class URLDBService{
 					.getResultList();
 
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "getURLsBetween",msg ,e);
+			String msg = "Exception thrown: URLService: getURLsBetween";
+			//logger.logp(Level.SEVERE, "URLService", "getURLsBetween",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		} finally {
 			mgr.close();
 		}
 		if (result == null) {
-			logger.warning("No URLs returned");
+			log.warning("No URLs returned");
 		}
-		logger.info("Exiting getURLsBetween");
+		log.info("Exiting getURLsBetween");
 		return result;
 
 	}
@@ -330,8 +337,9 @@ public class URLDBService{
 					.setParameter("urlAddress", urlAddress)
 					.getResultList();
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "getURLIDFromAddress",msg ,e);
+			String msg = "Exception thrown: URLService: getURLIDFromAddress";
+			//logger.logp(Level.SEVERE, "URLService", "getURLIDFromAddress",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		}  finally {
 			mgr.close();
@@ -358,8 +366,9 @@ public class URLDBService{
 					.setParameter("urlID", urlID)
 					.getResultList();
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "getURLIDFromAddress",msg ,e);
+			String msg = "Exception thrown: URLService: getURLIDFromAddress";
+			//logger.logp(Level.SEVERE, "URLService", "getURLIDFromAddress",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		}  finally {
 			mgr.close();
@@ -384,7 +393,7 @@ public class URLDBService{
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-		int result, url_id;
+		int url_id;
 
 		try {
 
@@ -400,8 +409,9 @@ public class URLDBService{
 			mgr.getTransaction().commit();
 
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "updateURLAuthorityData",msg ,e);
+			String msg = "Exception thrown: URLService: updateURLAuthorityData";
+			//logger.logp(Level.SEVERE, "URLService", "updateURLAuthorityData",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		}  finally {
 			mgr.close();
@@ -422,7 +432,7 @@ public class URLDBService{
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-		int result, url_id;
+		int url_id;
 
 		try {
 
@@ -439,8 +449,9 @@ public class URLDBService{
 			mgr.getTransaction().commit();
 
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "updateURLData",msg ,e);
+			String msg = "Exception thrown. URLService: updateURLData";
+			//logger.logp(Level.SEVERE, "URLService", "updateURLData",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		}  finally {
 			mgr.close();
@@ -468,8 +479,9 @@ public class URLDBService{
 			}
 
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "updateDomainNames",msg ,e);
+			String msg = "Exception thrown. URLService: updateDomainNames";
+			//logger.logp(Level.SEVERE, "URLService", "updateDomainNames",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		} finally {
 			mgr.close();
@@ -483,7 +495,7 @@ public class URLDBService{
 	 */
 	public List<URL> getSociallyTrackedURLs(){
 
-		logger.info("Entering getSociallyTrackedURLs");
+		log.info("Entering getSociallyTrackedURLs");
 		List<URL> result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -494,16 +506,17 @@ public class URLDBService{
 					.getResultList();
 
 		}catch(Exception e){
-			String msg = "Exception thrown...";
-			logger.logp(Level.SEVERE, "URLService", "getSociallyTrackedURLs",msg ,e);
+			String msg = "Exception thrown. URLService: getSociallyTrackedURLs";
+			//logger.logp(Level.SEVERE, "URLService", "getSociallyTrackedURLs",msg ,e);
+			log.severe(msg + e.getMessage());
 
 		} finally {
 			mgr.close();
 		}
 		if (result == null) {
-			logger.warning("No SociallyTracked URLs returned");
+			log.warning("No SociallyTracked URLs returned");
 		}
-		logger.info("Exiting getSociallyTrackedURLs");
+		log.info("Exiting getSociallyTrackedURLs");
 		return result;
 
 	}
@@ -514,7 +527,7 @@ public class URLDBService{
 //	 */
 //	public void deleteURL(String urlAddress){
 //
-//		logger.info("Entering deleteURL. Deleting " + urlAddress);
+//		log.info("Entering deleteURL. Deleting " + urlAddress);
 //
 //		URL url;
 //
@@ -544,17 +557,17 @@ public class URLDBService{
 //
 //		}
 //		else{
-//			logger.info(urlAddress + " Not in DB.");
+//			log.info(urlAddress + " Not in DB.");
 //		}
 //
-//		logger.info("Exiting deleteURL.");
+//		log.info("Exiting deleteURL.");
 //
 //	}
 //
 
 	public void deleteURL(int url_id){
 
-		logger.info("Entering deleteURL. Deleting " + url_id);
+		log.info("Entering deleteURL. Deleting " + url_id);
 
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -570,15 +583,16 @@ public class URLDBService{
 				mgr.getTransaction().commit();
 
 			}catch(Exception e){
-				String msg = "Exception thrown deleting: " + url_id;
-				logger.logp(Level.SEVERE, "URLService", "deleteURL",msg ,e);
+				String msg = "Exception thrown deleting: " + url_id + ". URLService: deleteURL";
+				//logger.logp(Level.SEVERE, "URLService", "deleteURL",msg ,e);
+				log.severe(msg + e.getMessage());
 
 			} finally {
 				mgr.close();
 			}
 
 
-		logger.info("Exiting deleteURL.");
+		log.info("Exiting deleteURL.");
 
 	}
 }

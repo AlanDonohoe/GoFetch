@@ -22,7 +22,7 @@ import javax.servlet.http.*;
 @SuppressWarnings("serial")
 public class GoFetchServlet extends HttpServlet {
 
-	private static Logger logger = Logger.getLogger(GoFetchServlet.class.getName());
+	private static Logger log = Logger.getLogger(GoFetchServlet.class.getName());
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 

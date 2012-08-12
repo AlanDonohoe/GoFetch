@@ -1,7 +1,7 @@
 package com.gofetch.seomoz;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 
 /**
  * Performs helpful text parsing on url, img and anchor text that would often cause problems in program...
@@ -10,9 +10,9 @@ import java.util.logging.Logger;
  */
 public class TextParser {
 
-    public static final String TAG = "TextParser"; // used for logging errors
-    private static final Logger log = Logger.getLogger(TAG); // used for logging errors
-    private String errorMsg;                            // used for logging errors
+//    public static final String TAG = "TextParser"; // used for logging errors
+//    private static final Logger log = Logger.getLogger(TAG); // used for logging errors
+//    private String errorMsg;                            // used for logging errors
 
     public static String getDomainNameFromURL(String url) {
 

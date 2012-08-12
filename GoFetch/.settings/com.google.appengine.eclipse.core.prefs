@@ -1,4 +1,4 @@
-#Fri Aug 10 10:46:00 BST 2012
+#Fri Aug 10 15:24:41 BST 2012
 eclipse.preferences.version=1
 filesCopiedToWebInfLib=appengine-api-1.0-sdk-1.7.0.jar|appengine-api-labs-1.7.0.jar|appengine-jsr107cache-1.7.0.jar|jsr107cache-1.1.jar
 gaeDatanucleusEnabled=false
@@ -14,12 +14,12 @@ mySqlIsConfigured=true
 mySqlJdbcJar=/Applications/eclipse/plugins/mysql-connector-java-5.1.18-bin.jar
 mySqlPort=3306
 prodDatabaseName=url
-prodDatabasePassword=bravo123
-prodDatabaseUser=root
+prodDatabasePassword=kastle2
+prodDatabaseUser=kastle2
 prodInstanceName=kastle2gofetch
 prodIsConfigured=true
 testDatabaseName=url
-testDatabasePassword=bravo123
-testDatabaseUser=root
+testDatabasePassword=kastle2
+testDatabaseUser=kastle2
 testInstanceName=kastle2gofetch
 testIsConfigured=true

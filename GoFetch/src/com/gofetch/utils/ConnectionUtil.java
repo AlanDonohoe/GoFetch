@@ -82,7 +82,7 @@ public class ConnectionUtil {
 		} catch (MalformedURLException eMal) {
 			errorMsg =	eMal.getMessage();
 			errorMsg += " caused by: \n" + urlToFetch;
-			log.info(errorMsg);
+			//.info(errorMsg);
 			eMal.printStackTrace();
 
 		} catch (IOException eIO) {
@@ -90,7 +90,7 @@ public class ConnectionUtil {
 			errorMsg =	eIO.getMessage();
 			errorMsg += " caused by: \n" + urlToFetch;
 			log.info(errorMsg);
-			eIO.printStackTrace();
+			//eIO.printStackTrace();
 			
 			// pass up to calling method to handle there...
 			throw eIO;
@@ -99,7 +99,7 @@ public class ConnectionUtil {
 			errorMsg =	eRT.getMessage();
 			errorMsg += " caused by: \n" + urlToFetch;
 			log.info(errorMsg);
-			eRT.printStackTrace();
+			//eRT.printStackTrace();
 
 		} 
 		
