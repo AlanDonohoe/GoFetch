@@ -21,7 +21,7 @@ nav ul { list-style:none; }
 blockquote, q { quotes:none; }
 blockquote:before, blockquote:after,
 q:before, q:after { content:''; content:none; }
-a { margin:0; padding:0; font-size:100%; vertical-align:baseline; background:transparent; }
+a, a:hover, a:visited { margin:0; padding:0; font-size:100%; vertical-align:baseline; background:transparent; color:#000; }
 ins { background-color:#ff9; color:#000; text-decoration:none; }
 mark { background-color:#ff9; color:#000; font-style:italic; font-weight:bold; }
 del { text-decoration: line-through; }
@@ -68,7 +68,7 @@ input:invalid, textarea:invalid { border-radius: 1px;  -moz-box-shadow: 0px 0px 
 
 ::-moz-selection{ background: #FFD204; color:#fff; text-shadow: none; }
 ::selection { background:#FFD204; color:#fff; text-shadow: none; } 
-a:link { -webkit-tap-highlight-color: #FFD204; } 
+a:link { -webkit-tap-highlight-color: #000; color: #000;  } /* was: #FFD204;*/
 
 button {  width: auto; overflow: visible; }
 .ie7 img { -ms-interpolation-mode: bicubic; }
@@ -247,10 +247,12 @@ header {
     height: 18px;
     overflow: hidden;
     text-decoration: none;
+	color:#000;
 }
 
 #main-menu li:first-child a{
 	padding-left: 17px;
+	color:#000;
 }
 
 #main-menu li ul li:first-child a{
