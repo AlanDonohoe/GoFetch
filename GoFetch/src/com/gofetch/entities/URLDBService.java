@@ -1,5 +1,6 @@
 package com.gofetch.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 //import java.util.logging.Level;
@@ -27,6 +28,7 @@ public class URLDBService{
 	EntityManagerFactory emf;
 
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
+	
 	//TODO: writing URLs to DB is v v slow - takes about 2 secs per record... why????
 	//	maybe create a method: void createURLs(List<URL> listURLs) method and have a loop within that to include only: if(!urlInDB(url)){...persist.... }
 	//	use batch processing of URLs to DB.
@@ -128,7 +130,7 @@ public class URLDBService{
 
 		log.info("Exiting getURL");
 		
-		if(null == url)
+		if((null == url) || (url.isEmpty()))
 			return null;
 		else
 			return url.get(0);
@@ -136,8 +138,8 @@ public class URLDBService{
 	}
 
 	/**
-	 * Gets all Contacts
-	 * @return List of Contact beans
+	 * 
+	 * @return List of ALL URLs in DB
 	 */
 	@SuppressWarnings("unchecked")
 	public List<URL> getURLs() {

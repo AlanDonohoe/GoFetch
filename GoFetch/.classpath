@@ -2,20 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/gson-2.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
-		<attributes>
-			<attribute name="owner.project.facets" value="java"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/appengine-tools-api.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/docs/javadoc/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/AnnotationRelationShip/lib/hibernate-validator.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/tools/orm/datanucleus-jpa-1.1.5.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/tools/orm/geronimo-jpa_3.0_spec-1.1.1.jar"/>
@@ -25,5 +18,24 @@
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/commons-io-2.1.jar"/>
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/json-path-0.8.0.jar"/>
+	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/el-impl-2.2.1-b05.jar" sourcepath="/Users/alandonohoe/.m2/repository/org/glassfish/web/el-impl/2.2.1-b05/el-impl-2.2.1-b05-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/el-api-2.2.jar"/>
+	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/jsf-api-2.0.9.jar" sourcepath="/Users/alandonohoe/.m2/repository/com/sun/faces/jsf-api/2.0.9/jsf-api-2.0.9-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/jsf-impl-2.0.9.jar" sourcepath="/Users/alandonohoe/.m2/repository/com/sun/faces/jsf-impl/2.0.9/jsf-impl-2.0.9-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/javax.faces-2.1.10.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSF 2.0 (Apache Myfaces JSF Core-2.0 API 2.0.2)">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+			<attribute name="owner.project.facets" value="jst.jsf"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

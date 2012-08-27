@@ -5,6 +5,7 @@ import com.gofetch.beans.GoFetchRequestBean;
 import com.gofetch.entities.*;
 import com.gofetch.seomoz.Constants;
 import com.gofetch.utils.DateUtil;
+import com.gofetch.utils.TextUtil;
 
 import com.google.appengine.api.rdbms.AppEngineDriver;
 
@@ -35,6 +36,9 @@ public class GoFetchServlet extends HttpServlet {
 		GoFetchRequestBean goFetchBean = new GoFetchRequestBean();
 
 		goFetchBean.setUrl(req.getParameter("target_url"));
+		
+		//add trailing slash to all urls in DB...
+		goFetchBean.setUrl(TextUtil.addSlashToEndOfString(goFetchBean.getUrl()));
 
 		// initial error checking, in case JS is disabled in browser:
 		if((goFetchBean.getUrl().length() < GoFetchConstants.MIN_VALID_URL_LENGTH) || 
