@@ -1057,7 +1057,7 @@ a.submit-button {
 }
 
 .who-we-are.the-rocketeers .contact-links {
-    background: #3C3437  url(../images/brown-bubble-bottom.gif) no-repeat left bottom;;
+    background: #3C3437  url(../images/brown-bubble-bottom.gif) no-repeat left bottom;
     color: #fff;
     text-shadow: none;
     padding-bottom: 45px;
@@ -2698,6 +2698,26 @@ clear: left;
 
 /* ******** */
 
+#dvLoading
+
+{
+
+   background:#000 url(images/loader.gif) no-repeat center center;
+
+   height: 100px;
+
+   width: 100px;
+
+   position: fixed;
+
+   z-index: 1000;
+
+   left: 50%;
+
+   top: 50%;
+ margin: -25px 0 0 -25px;
+
+}
 
 	
 
