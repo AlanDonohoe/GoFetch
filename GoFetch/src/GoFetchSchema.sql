@@ -118,10 +118,7 @@ CREATE  TABLE IF NOT EXISTS `url`.`misc_social_data` (
   `social_data_id` INT NOT NULL AUTO_INCREMENT ,
   `url_id` INT NOT NULL ,
   `date` DATE NOT NULL ,
-  `stumble_upon` INT NULL ,
-  `reddit` INT NULL ,
   `delicious` INT NULL ,
-  `buzz` INT NULL ,
   `pinterest` INT NULL ,
   `linkedin` INT NULL ,
   `google_plus_one` INT NULL ,
@@ -131,7 +128,6 @@ CREATE  TABLE IF NOT EXISTS `url`.`misc_social_data` (
   `fb_comment_count` INT NULL ,
   `fb_share_count` INT NULL ,
   `fb_click_count` INT NULL ,
-  `diggs` INT NULL ,
   PRIMARY KEY (`social_data_id`, `url_id`) ,
   INDEX `fk_misc_social_data_url1` (`url_id` ASC) ,
   CONSTRAINT `fk_misc_social_data_url1`

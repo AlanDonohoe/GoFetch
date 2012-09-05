@@ -1,7 +1,9 @@
 package com.gofetch.utils;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
@@ -34,6 +36,44 @@ public class ConnectionUtil {
 	private static Logger log = Logger.getLogger(TAG);         // used for logging errors
 	private static String errorMsg;                            // used for logging errorsÏ
 
+	public static String post(String urlPage, String postData) throws Exception{
+		
+
+		        URL url = new URL(urlPage);
+		        
+		        StringBuilder response = new StringBuilder();
+		        
+		        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		        connection.addRequestProperty("User-Agent", "Mozilla");
+		        connection.addRequestProperty("Content-Type", "application/json");
+		        connection.setRequestMethod("POST");
+		 
+		        connection.addRequestProperty("Content-Length", "" + postData.length());
+		        connection.setDoOutput(true);
+		        connection.setDoInput(true);
+		 
+		        DataOutputStream outputStream = new DataOutputStream(
+		                connection.getOutputStream());
+		        outputStream.writeBytes(postData.toString());
+		 
+		        outputStream.flush();
+		        outputStream.close();
+		 
+		        InputStream input = connection.getInputStream();
+		        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+		 
+		        String line;
+		 
+		        while ((line = reader.readLine()) != null) {
+		            response.append(line);
+		        }
+		 
+		        reader.close();
+		        
+		        return response.toString();
+		 
+		
+	}
 	/**
 	 *
 	 * Method to make a GET HTTP connection to the given url and return the output
@@ -84,6 +124,8 @@ public class ConnectionUtil {
 			errorMsg += " caused by: \n" + urlToFetch;
 			//.info(errorMsg);
 			eMal.printStackTrace();
+			
+			//TODO: add throws to all these catch blocks to allow control further up stream
 
 		} catch (IOException eIO) {
 

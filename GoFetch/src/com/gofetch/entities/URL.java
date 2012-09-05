@@ -38,9 +38,11 @@ public class URL implements Serializable {
 	
 	private boolean get_social_data;
 	private boolean get_backlinks;
+	private boolean backlinks_got;
 	
 	private Integer page_authority;
 	private Integer domain_authority;
+	private Integer no_of_layers;
 	
 	private boolean seomoz_url;
 	
@@ -64,6 +66,53 @@ public class URL implements Serializable {
 		seomoz_url = false;
 		
 	}   
+	
+
+
+
+
+
+
+
+	public boolean isBacklinks_got() {
+		return backlinks_got;
+	}
+
+
+
+
+
+
+
+
+	public void setBacklinks_got(boolean backlinks_got) {
+		this.backlinks_got = backlinks_got;
+	}
+
+
+
+
+
+
+
+
+	public Integer getNo_of_layers() {
+		return no_of_layers;
+	}
+
+
+
+
+
+
+	public void setNo_of_layers(Integer no_of_layers) {
+		this.no_of_layers = no_of_layers;
+	}
+
+
+
+
+
 
 	public Date getDate() {
 		return date;
@@ -193,5 +242,7 @@ public class URL implements Serializable {
 	public void setId(Integer id) {
 		this.url_id = id;
 	}
+
+	
    
 }

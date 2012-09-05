@@ -2,7 +2,7 @@ package com.gofetch.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,7 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import com.gofetch.GoFetchConstants;
-import com.gofetch.controllers.GoFetchServlet;
+//import com.gofetch.controllers.GoFetchServlet;
 import com.gofetch.entities.URLDBService;
 import com.gofetch.entities.URL;
 import com.gofetch.utils.DateUtil;
@@ -26,26 +26,75 @@ public class GoFetchRequestBean implements Serializable {
 			.getName());
 	private String url = "http://";
 	private String user_id = "@propellernet.co.uk";
-	private boolean socialData = true;
-	private boolean backLinkData = true;
+	private boolean socialData= true;
+	private boolean backLinkData= true;
 	private int noOfLayers = 1;
 	private int[] rippleList = { 1, 2, 3 };
 
 	private List<String> errorReport = new ArrayList<String>();
 	private List<String> successReport = new ArrayList<String>();
 	private List<String> urlAddressesInDB = new ArrayList<String>();
+	private List<String> results = new ArrayList<String>(); //used in autocomplete
 
 	URLDBService urlDB = null;
 	List<URL> urlsinDB = null;
+	
+
 
 	public GoFetchRequestBean() {
 
-		url = "http://";
+	
+		// could have all this here... need to find a way to load the url addresses into memory, seamlessly...
+		//	maybe as app loads, then keep them in a session scoped bean...???
+		//	can i have a managed bean that JUST is deals with the url addresses - make it application scope?
+		
+		//urlAddressesInDB = new ArrayList<String>();
+		
+//		urlDB = new URLDBService();
+//		urlsinDB = urlDB.getURLs();
+//
+//		for (URL url : urlsinDB) {
+//			urlAddressesInDB.add(url.getUrl_address());
+//		}
 
 	}
 
+	
+	
 	public List<String> getErrorReport() {
 		return errorReport;
+	}
+
+	public List<String> getUrlAddressesInDB() {
+		return urlAddressesInDB;
+	}
+
+	public void setUrlAddressesInDB(List<String> urlAddressesInDB) {
+		this.urlAddressesInDB = urlAddressesInDB;
+	}
+
+	public List<String> getResults() {
+		return results;
+	}
+
+	public void setResults(List<String> results) {
+		this.results = results;
+	}
+
+	public URLDBService getUrlDB() {
+		return urlDB;
+	}
+
+	public void setUrlDB(URLDBService urlDB) {
+		this.urlDB = urlDB;
+	}
+
+	public List<URL> getUrlsinDB() {
+		return urlsinDB;
+	}
+
+	public void setUrlsinDB(List<URL> urlsinDB) {
+		this.urlsinDB = urlsinDB;
 	}
 
 	public void setErrorReport(List<String> errorReport) {
@@ -84,22 +133,7 @@ public class GoFetchRequestBean implements Serializable {
 		this.user_id = user_id;
 	}
 
-	public boolean isSocialData() {
-		return socialData;
-	}
-
-	public void setSocialData(boolean socialData) {
-		this.socialData = socialData;
-	}
-
-	public boolean isBackLinkData() {
-		return backLinkData;
-	}
-
-	public void setBackLinkData(boolean backLinkData) {
-		this.backLinkData = backLinkData;
-	}
-
+	
 	public int getNoOfLayers() {
 		return noOfLayers;
 	}
@@ -108,7 +142,31 @@ public class GoFetchRequestBean implements Serializable {
 		this.noOfLayers = noOfLayers;
 	}
 
+	public boolean isSocialData() {
+		return socialData;
+	}
 
+
+
+	public void setSocialData(boolean socialData) {
+		this.socialData = socialData;
+	}
+
+
+
+	public boolean isBackLinkData() {
+		return backLinkData;
+	}
+
+
+
+	public void setBackLinkData(boolean backLinkData) {
+		this.backLinkData = backLinkData;
+	}
+
+
+
+	//TODO: change this to something faster like: http://igoro.com/archive/efficient-auto-complete-with-a-ternary-search-tree/
 	public List<String> completeURLs(String query) {
 
 		urlDB = new URLDBService();
@@ -118,7 +176,7 @@ public class GoFetchRequestBean implements Serializable {
 			urlAddressesInDB.add(url.getUrl_address());
 		}
 
-		List<String> results = new ArrayList<String>();
+		
 
 		for (String possibleURL : urlAddressesInDB) {
 
@@ -134,6 +192,12 @@ public class GoFetchRequestBean implements Serializable {
 
 	// action controller method:
 	public String addNewURLs() {
+		
+		errorReport = new ArrayList<String>();
+		successReport = new ArrayList<String>();
+		urlAddressesInDB = new ArrayList<String>();
+		results =  new ArrayList<String>();
+		
 
 		List<String> urlList = new ArrayList<String>();
 		List<String> urlListPassed = new ArrayList<String>();
@@ -173,7 +237,7 @@ public class GoFetchRequestBean implements Serializable {
 
 				tempString = urls[i]
 						+ " - does not begin with \"http://\", this has been added to the URL and will be added to GoFetch.";
-				errorReport.add(tempString);
+				successReport.add(tempString);
 
 				String temp = "http://" + urls[i];
 
@@ -225,6 +289,8 @@ public class GoFetchRequestBean implements Serializable {
 
 			url.setGet_backlinks(backLinkData);
 			url.setGet_social_data(socialData);
+			url.setNo_of_layers(noOfLayers);
+			url.setBacklinks_got(false); // turns to true, when ProcessNewTargets have got this url's backlinks
 
 			// URLDBService urlDBUnit = new URLDBService();
 			urlDB.createURL(url);

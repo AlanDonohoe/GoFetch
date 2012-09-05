@@ -2,9 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
 
-class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions fontface video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" lang="en">
-	<head>
+class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions fontface video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" 
+lang="en"
+>
+	<h:head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 		<style type="text/css"></style>
 
@@ -341,9 +344,9 @@ class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-w
 			pointer-events: auto !important;
 			}
 		</style>
-	</head>
+	</h:head>
 
-	<body class="home">
+	<h:body class="home">
 
 		<div id="numberRender.param" style="display:none;">
 			clientid:393;format:434;cookieExpiry:1;groupId:269
@@ -357,12 +360,21 @@ class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-w
 				<p class="hello">
 				<strong> Show me the data</strong>
 			</p>
-			<f:view contentType="text/html">
-		<h:form>
+			
+		<h:form> <!--  forceSelection="true" -->
+				<p:autoComplete value="#{queryGoFetchBean.urlTarget}" id="queryURL"
+					completeMethod="#{queryGoFetchBean.complete}" 
+					 size="75" 
+					 maxResults="5"
+					 minQueryLength="10"/>
+				<!-- converter="URLConverter" var="p" itemLabel="#{p.name}" itemValue="#{p}" -->
+
+					 <!--   
 			<h:inputText value="#{queryGoFetchBean.urlTarget}"/>
+			-->
 			<h:commandButton action="#{queryGoFetchBean.retrieveURLData}" value="Get The Data"></h:commandButton>
 		</h:form>
-	</f:view>
+	
 	
 			<header class="clearfix">
 
@@ -428,5 +440,5 @@ class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-w
 		<![endif]-->
 		
 
-	</body>
+	</h:body>
 </html>
