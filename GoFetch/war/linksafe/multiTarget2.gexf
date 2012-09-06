@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.2draft" version="1.2" xmlns:viz="http://www.gexf.net/1.2draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd">
+  <meta lastmodifieddate="2012-07-16">
+    <creator>Gephi 0.8.1</creator>
+    <description></description>
+  </meta>
+  <graph defaultedgetype="directed" mode="static">
+    <attributes class="node" mode="static">
+      <attribute id="score" title="score" type="string"></attribute>
+      <attribute id="Anchor Text" title="Anchor Text" type="string"></attribute>
+      <attribute id="Page Authority" title="Page Authority" type="integer"></attribute>
+      <attribute id="Domain Authority" title="Domain Authority" type="integer"></attribute>
+    </attributes>
+    <nodes>
+      <node id="http://en.wikipedia.org/wiki/Marks_%26_Spencer">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="marksandspencer.com"></attvalue>
+          <attvalue for="Page Authority" value="78"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="42.857143"></viz:size>
+        <viz:position x="-186.27318" y="-26.075256" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://twitter.com/marksandspencer">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="http://www.marksa..."></attvalue>
+          <attvalue for="Page Authority" value="85"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="47.857143"></viz:size>
+        <viz:position x="112.63305" y="-79.1548" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://news.bbc.co.uk/2/hi/technology/6210068.stm">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks&amp;Spencer"></attvalue>
+          <attvalue for="Page Authority" value="74"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="40.0"></viz:size>
+        <viz:position x="54.431503" y="102.00148" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://uk.finance.yahoo.com/q/pr?s=MKS.L">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="http://www.marksandspencer.com"></attvalue>
+          <attvalue for="Page Authority" value="51"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="23.571428"></viz:size>
+        <viz:position x="-0.7342973" y="-128.11992" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://www.baidu.com/s?wd=marks-and-spencer">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks &amp;amp; Spencer"></attvalue>
+          <attvalue for="Page Authority" value="48"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="21.428572"></viz:size>
+        <viz:position x="-102.76128" y="-105.40704" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://cyclodelic.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks &amp;amp; Spencer"></attvalue>
+          <attvalue for="Page Authority" value="54"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="25.714285"></viz:size>
+        <viz:position x="-29.089119" y="108.79081" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://bronchia.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="M&amp;amp;S"></attvalue>
+          <attvalue for="Page Authority" value="45"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="19.285713"></viz:size>
+        <viz:position x="-117.5661" y="63.77646" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://teaandsympathynewyork.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks &amp;amp; Spencer&amp;#8217;s"></attvalue>
+          <attvalue for="Page Authority" value="41"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="16.428572"></viz:size>
+        <viz:position x="-117.67772" y="-55.511223" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://sandrissimo.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks &amp;amp; Spencer"></attvalue>
+          <attvalue for="Page Authority" value="40"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="15.714286"></viz:size>
+        <viz:position x="34.0191" y="-87.45995" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://beautifulkitchens.wordpress.com/?ref=spelling">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks &amp;amp; Spencer"></attvalue>
+          <attvalue for="Page Authority" value="40"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="15.714286"></viz:size>
+        <viz:position x="-124.55669" y="14.873603" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://herapparel.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="M&amp;amp;S"></attvalue>
+          <attvalue for="Page Authority" value="39"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="15.0"></viz:size>
+        <viz:position x="72.99597" y="-9.182647" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://homeshoppingspy.wordpress.com/2009/02/20/flower-arranging-with-ms/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="M&amp;amp;S"></attvalue>
+          <attvalue for="Page Authority" value="39"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="15.0"></viz:size>
+        <viz:position x="-51.514683" y="-109.21955" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://joekomodo.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="M&amp;amp;S"></attvalue>
+          <attvalue for="Page Authority" value="37"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="13.571428"></viz:size>
+        <viz:position x="62.83622" y="32.1939" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://homeshoppingspy.wordpress.com/2011/04/20/hot-trend-bees/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="M&amp;amp;S"></attvalue>
+          <attvalue for="Page Authority" value="36"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="12.857143"></viz:size>
+        <viz:position x="-72.96044" y="77.93652" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://brigadeirorosa.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="http://www.marksandspencer.com/"></attvalue>
+          <attvalue for="Page Authority" value="36"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="12.857143"></viz:size>
+        <viz:position x="275.48245" y="-3.6139717" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://theweddingcritters.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Limited Collection from M&amp;amp;S"></attvalue>
+          <attvalue for="Page Authority" value="35"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="12.142857"></viz:size>
+        <viz:position x="321.98172" y="56.055557" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://fashionisdanger.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="M&amp;amp;S"></attvalue>
+          <attvalue for="Page Authority" value="34"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="11.428572"></viz:size>
+        <viz:position x="222.5087" y="156.19342" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://babygenie.wordpress.com/2011/12/14/what-i-wore-wednesday-office-with-a-twist/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks &amp;amp; Spencer"></attvalue>
+          <attvalue for="Page Authority" value="34"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="11.428572"></viz:size>
+        <viz:position x="293.2611" y="138.06131" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://lortodirosanna.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="per una"></attvalue>
+          <attvalue for="Page Authority" value="34"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="11.428572"></viz:size>
+        <viz:position x="-176.83614" y="284.254" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://fadfashionfutures.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks &amp;amp; Spencer"></attvalue>
+          <attvalue for="Page Authority" value="34"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="11.428572"></viz:size>
+        <viz:position x="-229.94754" y="208.48778" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://jamesmcintosh.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks and Spencerkerseiling &amp;#8211; Happy Cinco de&amp;nbsp;Mayotosh&amp;#039;s Weblog&quot; height=&quot;80&quot; border=&quot;0&quot; alt=&quot;BMW-Treff - der Treffpunkt f├╝r alle BMW-Fans- und Fahrer&quot; /&gt;http://www.treffseite"></attvalue>
+          <attvalue for="Page Authority" value="33"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="10.714286"></viz:size>
+        <viz:position x="-97.62842" y="271.7859" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://moonstarlady.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks &amp;amp; Spencer"></attvalue>
+          <attvalue for="Page Authority" value="33"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="10.714286"></viz:size>
+        <viz:position x="20.505" y="-295.3605" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://copticstreet.wordpress.com/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks and Spencer"></attvalue>
+          <attvalue for="Page Authority" value="33"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="10.714286"></viz:size>
+        <viz:position x="-127.22899" y="-289.43924" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://txt4ever.wordpress.com/tag/mobile-retail/">
+        <attvalues>
+          <attvalue for="score" value="amber"></attvalue>
+          <attvalue for="Anchor Text" value="Marks and Spencer"></attvalue>
+          <attvalue for="Page Authority" value="32"></attvalue>
+          <attvalue for="Domain Authority" value="100"></attvalue>
+        </attvalues>
+        <viz:size value="10.0"></viz:size>
+        <viz:position x="-46.56138" y="-338.53476" z="0.0"></viz:position>
+        <viz:color r="255" g="225" b="20"></viz:color>
+      </node>
+      <node id="http://www.marksandspencer.com/Lingerie-Underwear-Womens/b/43233030">
+        <attvalues>
+          <attvalue for="score" value="green"></attvalue>
+          <attvalue for="Anchor Text" value=""></attvalue>
+          <attvalue for="Page Authority" value="88"></attvalue>
+          <attvalue for="Domain Authority" value="88"></attvalue>
+        </attvalues>
+        <viz:size value="50.0"></viz:size>
+        <viz:position x="239.46295" y="73.85612" z="0.0"></viz:position>
+        <viz:color r="92" g="255" b="51"></viz:color>
+      </node>
+      <node id="http://www.marksandspencer.com/Flowers-Gifts/b/44021030">
+        <attvalues>
+          <attvalue for="score" value="green"></attvalue>
+          <attvalue for="Anchor Text" value=""></attvalue>
+          <attvalue for="Page Authority" value="88"></attvalue>
+          <attvalue for="Domain Authority" value="88"></attvalue>
+        </attvalues>
+        <viz:size value="50.0"></viz:size>
+        <viz:position x="-147.9837" y="207.72015" z="0.0"></viz:position>
+        <viz:color r="92" g="255" b="51"></viz:color>
+      </node>
+      <node id="http://www.marksandspencer.com/Mens/b/43371030">
+        <attvalues>
+          <attvalue for="score" value="green"></attvalue>
+          <attvalue for="Anchor Text" value=""></attvalue>
+          <attvalue for="Page Authority" value="88"></attvalue>
+          <attvalue for="Domain Authority" value="88"></attvalue>
+        </attvalues>
+        <viz:size value="50.0"></viz:size>
+        <viz:position x="-52.1252" y="-258.49557" z="0.0"></viz:position>
+        <viz:color r="92" g="255" b="51"></viz:color>
+      </node>
+      <node id="http://www.marksandspencer.com/">
+        <attvalues>
+          <attvalue for="score" value="green"></attvalue>
+          <attvalue for="Anchor Text" value=""></attvalue>
+          <attvalue for="Page Authority" value="88"></attvalue>
+          <attvalue for="Domain Authority" value="88"></attvalue>
+        </attvalues>
+        <viz:size value="50.0"></viz:size>
+        <viz:position x="-28.610409" y="-10.431775" z="0.0"></viz:position>
+        <viz:color r="0" g="255" b="0"></viz:color>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="1" source="http://en.wikipedia.org/wiki/Marks_%26_Spencer" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="2" source="http://twitter.com/marksandspencer" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="3" source="http://news.bbc.co.uk/2/hi/technology/6210068.stm" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="4" source="http://uk.finance.yahoo.com/q/pr?s=MKS.L" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="5" source="http://www.baidu.com/s?wd=marks-and-spencer" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="6" source="http://cyclodelic.wordpress.com/" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="7" source="http://bronchia.wordpress.com/" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="8" source="http://teaandsympathynewyork.wordpress.com/" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="9" source="http://sandrissimo.wordpress.com/" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="10" source="http://beautifulkitchens.wordpress.com/?ref=spelling" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="11" source="http://herapparel.wordpress.com/" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="12" source="http://homeshoppingspy.wordpress.com/2009/02/20/flower-arranging-with-ms/" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="13" source="http://joekomodo.wordpress.com/" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="14" source="http://homeshoppingspy.wordpress.com/2011/04/20/hot-trend-bees/" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="15" source="http://brigadeirorosa.wordpress.com/" target="http://www.marksandspencer.com/Lingerie-Underwear-Womens/b/43233030">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="16" source="http://theweddingcritters.wordpress.com/" target="http://www.marksandspencer.com/Lingerie-Underwear-Womens/b/43233030">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="17" source="http://fashionisdanger.wordpress.com/" target="http://www.marksandspencer.com/Lingerie-Underwear-Womens/b/43233030">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="18" source="http://babygenie.wordpress.com/2011/12/14/what-i-wore-wednesday-office-with-a-twist/" target="http://www.marksandspencer.com/Lingerie-Underwear-Womens/b/43233030">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="19" source="http://lortodirosanna.wordpress.com/" target="http://www.marksandspencer.com/Flowers-Gifts/b/44021030">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="20" source="http://fadfashionfutures.wordpress.com/" target="http://www.marksandspencer.com/Flowers-Gifts/b/44021030">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="21" source="http://jamesmcintosh.wordpress.com/" target="http://www.marksandspencer.com/Flowers-Gifts/b/44021030">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="22" source="http://moonstarlady.wordpress.com/" target="http://www.marksandspencer.com/Mens/b/43371030">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="23" source="http://copticstreet.wordpress.com/" target="http://www.marksandspencer.com/Mens/b/43371030">
+        <attvalues></attvalues>
+      </edge>
+      <edge id="24" source="http://txt4ever.wordpress.com/tag/mobile-retail/" target="http://www.marksandspencer.com/Mens/b/43371030">
+        <attvalues></attvalues>
+      </edge>
+      <edge source="http://www.marksandspencer.com/Lingerie-Underwear-Womens/b/43233030" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge source="http://www.marksandspencer.com/Flowers-Gifts/b/44021030" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+      <edge source="http://www.marksandspencer.com/Mens/b/43371030" target="http://www.marksandspencer.com/">
+        <attvalues></attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>

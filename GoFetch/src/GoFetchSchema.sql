@@ -14,6 +14,8 @@ CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `url_address` VARCHAR(500) NOT NULL ,
   `get_social_data` TINYINT(1) NOT NULL ,
   `get_backlinks` TINYINT(1) NOT NULL COMMENT 'If true, this indicates this is a target url and its id should be added to links table as a target' ,
+  `backlinks_got` TINYINT(1) NULL ,
+  `no_of_layers` TINYINT(1) NOT NULL ,
   `date` DATE NOT NULL ,
   `page_authority` INT NULL ,
   `domain_authority` INT NULL ,
