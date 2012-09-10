@@ -29,6 +29,34 @@ public class URLDBService{
 
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
 	
+	//TODO: dont know if this works - JQPL Selecting single field.. rather than whole entity...
+	public List<String> getURLAddresses(){
+
+// select url.url_address from url;
+		
+		log.info("Entering getURLAddresses");
+		List<String> result = null;
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		try { // "SELECT u FROM URL u WHERE u.url_address 
+			result= (List<String>) mgr.createQuery("SELECT u.url_address FROM url u").getResultList();
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getURLAddresses";
+			//logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			log.warning("No URLs returned");
+		}
+		log.info("Exiting getURLAddresses");
+		return result;
+	}
+	
 	//TODO: writing URLs to DB is v v slow - takes about 2 secs per record... why????
 	//	maybe create a method: void createURLs(List<URL> listURLs) method and have a loop within that to include only: if(!urlInDB(url)){...persist.... }
 	//	use batch processing of URLs to DB.
@@ -150,7 +178,7 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result= mgr.createQuery("SELECT u FROM URL u").getResultList();
+			result= mgr.createQuery("SELECT u FROM URL u ORDER BY u.url_address").getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLs";
 			//logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);

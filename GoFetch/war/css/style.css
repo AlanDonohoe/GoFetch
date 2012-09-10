@@ -139,7 +139,7 @@ body {
 }
 
 #main {
-    padding-top:25px;
+/*    padding-top:25px;*/
     padding-bottom:20px;
 }
 
@@ -306,7 +306,7 @@ address {
     font-weight: 300;
     font-size: 1.35em;
     line-height: 1.3em;
-    width: 600px;
+    width: 900px;
     margin: 10px 0 40px 0;
 }
 

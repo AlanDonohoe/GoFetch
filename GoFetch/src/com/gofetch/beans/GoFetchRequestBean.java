@@ -13,6 +13,7 @@ import com.gofetch.GoFetchConstants;
 import com.gofetch.entities.URLDBService;
 import com.gofetch.entities.URL;
 import com.gofetch.utils.DateUtil;
+import com.gofetch.utils.TextUtil;
 
 @ManagedBean
 @RequestScoped
@@ -37,29 +38,29 @@ public class GoFetchRequestBean implements Serializable {
 
 	URLDBService urlDB = null;
 	List<URL> urlsinDB = null;
-	
+
 
 
 	public GoFetchRequestBean() {
 
-	
+
 		// could have all this here... need to find a way to load the url addresses into memory, seamlessly...
 		//	maybe as app loads, then keep them in a session scoped bean...???
 		//	can i have a managed bean that JUST is deals with the url addresses - make it application scope?
-		
+
 		//urlAddressesInDB = new ArrayList<String>();
-		
-//		urlDB = new URLDBService();
-//		urlsinDB = urlDB.getURLs();
-//
-//		for (URL url : urlsinDB) {
-//			urlAddressesInDB.add(url.getUrl_address());
-//		}
+
+		//		urlDB = new URLDBService();
+		//		urlsinDB = urlDB.getURLs();
+		//
+		//		for (URL url : urlsinDB) {
+		//			urlAddressesInDB.add(url.getUrl_address());
+		//		}
 
 	}
 
-	
-	
+
+
 	public List<String> getErrorReport() {
 		return errorReport;
 	}
@@ -132,7 +133,7 @@ public class GoFetchRequestBean implements Serializable {
 		this.user_id = user_id;
 	}
 
-	
+
 	public int getNoOfLayers() {
 		return noOfLayers;
 	}
@@ -168,14 +169,22 @@ public class GoFetchRequestBean implements Serializable {
 	//TODO: change this to something faster like: http://igoro.com/archive/efficient-auto-complete-with-a-ternary-search-tree/
 	public List<String> completeURLs(String query) {
 
-		urlDB = new URLDBService();
-		urlsinDB = urlDB.getURLs();
+		//if(urlAddressesInDB.isEmpty()){
+			urlDB = new URLDBService();
+			urlsinDB = urlDB.getURLs();
 
-		for (URL url : urlsinDB) {
-			urlAddressesInDB.add(url.getUrl_address());
-		}
+			for (URL url : urlsinDB) {
+				urlAddressesInDB.add(url.getUrl_address());
+			}
+		//}
 
-		
+		///////////////
+		// above replaced here:
+		//		getURLAddresses() - not working... JQPL - dont know if you can select a single field....
+		//		if( null == urlAddressesInDB){
+		//			urlDB = new URLDBService();
+		//			urlAddressesInDB = urlDB.getURLAddresses();
+		//		}
 
 		for (String possibleURL : urlAddressesInDB) {
 
@@ -191,12 +200,12 @@ public class GoFetchRequestBean implements Serializable {
 
 	// action controller method:
 	public String addNewURLs() {
-		
+
 		errorReport = new ArrayList<String>();
 		successReport = new ArrayList<String>();
 		urlAddressesInDB = new ArrayList<String>();
 		results =  new ArrayList<String>();
-		
+
 
 		List<String> urlList = new ArrayList<String>();
 		List<String> urlListPassed = new ArrayList<String>();
@@ -211,13 +220,24 @@ public class GoFetchRequestBean implements Serializable {
 
 		urlDB = new URLDBService();
 
-		urlsinDB = urlDB.getURLs();
 		//TODO: replace this loop with a query that just returns all url's addresses in DB
-		for (URL url : urlsinDB) {
-			urlAddressesInDB.add(url.getUrl_address());
-		}
 
-		// //////
+		//if(null == urlAddressesInDB){
+			urlsinDB = urlDB.getURLs();
+
+			for (URL url : urlsinDB) {
+				urlAddressesInDB.add(url.getUrl_address());
+			}
+		//}
+
+		////////////
+
+		///////////////
+		// replaced here:
+		//TODO: not working... JQPL - dont know if you can select a single field....
+		//urlAddressesInDB = urlDB.getURLAddresses();
+		//
+		// ////// getURLAddresses
 
 		// //////////
 		// check all entries length and "http://" prefix
@@ -228,7 +248,7 @@ public class GoFetchRequestBean implements Serializable {
 
 			if (urls[i].length() < GoFetchConstants.MIN_VALID_URL_LENGTH) {
 
-				 tempString = urls[i]
+				tempString = urls[i]
 						+ " - is too short to be added to GoFetch's database.";
 				errorReport.add(tempString);
 
@@ -241,7 +261,7 @@ public class GoFetchRequestBean implements Serializable {
 				String temp = "http://" + urls[i];
 
 				urls[i] = temp;
-				
+
 				urls[i] = addTrailingSlash(temp);
 
 				urlList.add(urls[i]);
@@ -254,16 +274,15 @@ public class GoFetchRequestBean implements Serializable {
 		}
 		//
 		// //////////////
-		
-		
+
+
 
 		// /////////////////////
 		// run through passed urls and check that url not already in DB....
 		for (int x = 0; x < urlList.size(); x++) {
 
-			if (urlAddressesInDB.contains(urlList.get(x))) { // check that url
-																// not
-				// already in DB....
+			// add trailing slash to all urls so they can be checked against normalised urls in DB
+			if (urlAddressesInDB.contains(TextUtil.addSlashToEndOfString(urlList.get(x)))) { // check that url not already in DB....
 
 				tempString = urlList.get(x)
 						+ " -  is already entered in GoFetch and is being monitored.";
@@ -311,10 +330,10 @@ public class GoFetchRequestBean implements Serializable {
 
 
 	}
-	
+
 	// this makes sure all entries to DB have the trailing slash at the end.
 	private String addTrailingSlash(String url){
-		
+
 		if(!url.endsWith("/")){
 			return(url + "/");
 		}
