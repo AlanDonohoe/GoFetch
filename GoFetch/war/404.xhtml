@@ -3,14 +3,14 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions fontface video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths">
+	class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions fontface video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"
+	lang="en">
 
 <h:head>
-
-
-	<title>Propellernet - GoFetch</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<style type="text/css"></style>
+	<link href="https://plus.google.com/102063518057904306821"
+		rel="publisher" />
 
 	<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 
@@ -21,38 +21,44 @@
 	<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
 
 	<!--[if (gt IE 9)|!(IE)]><!-->
-	<!--<![endif]-->
+
+
 
 	<meta name="keywords" content="natural search" />
-
 	<meta charset="utf-8" />
 
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
+	<title>Propellernet - GoFetch</title>
 
 	<meta name="description"
 		content="Propellernet is a Travel and Fashion SEO agency. If you work in either of these sectors and want to increase your online revenue, stay a while and get to know us!" />
 
+
+
+
+
 	<meta name="�robots�" content="�noodp�" />
-
-	<!-- base href="http://www.propellernet.co.uk/" -->
-
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
 
 	<link rel="shortcut icon"
-		href="http://www.propellernet.co.uk/favicon.ico" />
+		href="http://www.propellernet.co.uk/favicon.ico"></link>
 
 	<link rel="apple-touch-icon"
 		href="http://www.propellernet.co.uk/apple-touch-icon.png"
-		type="image/x-icon" />
+		type="image/x-icon"></link>
 
 	<link rel="icon" type="image/vnd.microsoft.icon"
-		href="http://www.propellernet.co.uk/favicon.ico" />
+		href="http://www.propellernet.co.uk/favicon.ico"></link>
 
 	<link rel="shortcut icon"
-		href="http://www.propellernet.co.uk/favicon.ico" type="image/x-icon" />
+		href="http://www.propellernet.co.uk/favicon.ico" type="image/x-icon"></link>
 
-	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/style.css"></link>
+
+	<script src="js/gofetchscripts.js"></script>
+
+
 
 	<style type="text/css">
 #twtr-widget-1 .twtr-avatar,#twtr-widget-1 .twtr-user {
@@ -99,7 +105,7 @@
 /* See license.txt for terms of usage */
 /** reset styling **/
 .firebugResetStyles {
-	z-index: 2147483646 top:         0 !important;
+	z-index: 2147483646 top:     0 !important;
 	left: 0 !important;
 	display: block !important;
 	border: 0 none !important;
@@ -364,11 +370,13 @@
 	pointer-events: auto !important;
 }
 </style>
-
-
 </h:head>
 
 <h:body class="home">
+
+<!--  
+ <div id="dvLoading"></div>
+-->
 
 	<div id="numberRender.param" style="display: none;">
 		clientid:393;format:434;cookieExpiry:1;groupId:269</div>
@@ -377,176 +385,66 @@
 
 		<div id="main" class="clearfix">
 
+			<p class="hello">
+				<strong>hmmm... there seems to be a problem... </strong>
+			</p>
 
-			<f:view contentType="text/html">
-				<h:form id="results_form" prependId="false">
-					<p:dataTable id="results_table" var="socialAndURLData"
-						value="#{queryGoFetchBean.urlPlusSocialList}" scrollable="true"
-						scrollWidth="855" scrollHeight="300" resizableColumns="false"
-						rendered="#{queryGoFetchBean.listSize}"
-						emptyMessage="No data found for this URL." 
-						style="text-align: center;"
-						> <!--  -->
-						
-<!-- 
-	 <f:facet name="header"> 
-				Historical Social Data
-</f:facet> 
-FaceBook Data  -->
+			<p class="introtext"> No worries. <br /><br />If you have time, <a href="mailto:Alan@propellernet.co.uk">email me</a> and  and let me know what happened. 
+			<br />Or else you can just navigate somewhere else using the links above.</p><br/>
 
-<!-- 						<p:column style="width:16px">
-							<p:rowToggler />
-						</p:column> 
- -->
-			
-				<p:columnGroup type="header"> 
-				<p:row>
-				<p:column headerText="" colspan="1"  ></p:column>
-				<p:column headerText="FaceBook Data" colspan="7"  ></p:column>
-				<p:column headerText="Social Data" colspan="5"  ></p:column>
-				</p:row>
-					<p:row>  
-								<p:column headerText="Date" width="75"  ></p:column>
-								<p:column headerText="Clicks" width="35" ></p:column>
-								<p:column headerText="Comments" width="70" ></p:column>
-								<p:column headerText="Likes" width="40" ></p:column>
-								<p:column headerText="Shares" width="45" ></p:column>
-								<p:column headerText="CommentBox" width="95" ></p:column>
-								<p:column headerText="Total" width="55" ></p:column>
-								<p:column headerText="Twitter" width="55" ></p:column>
-								<p:column headerText="Google+" width="60" ></p:column>
-								<p:column headerText="LinkedIn" width="60" ></p:column>
-								<p:column headerText="Pinterest" width="60" ></p:column>
-								<p:column headerText="Delicious" width="60" ></p:column>
-								</p:row>  
-</p:columnGroup>  
-							
-		 	
-						
-
-					<!--   <p:rowExpansion> -->
-						<p:subTable value="#{socialAndURLData.socialDataList}" var="item" id="sub_table">
-
-							<f:facet name="header" style="width:300px; text-align: left;" id="target_url">
-					#{socialAndURLData.url.url_address} 
-
-					</f:facet>
- 
-							<p:column  style="width:75px">
-								<h:outputText value="#{item.date}">
-									<f:convertDateTime pattern="dd.MM.yyyy" ></f:convertDateTime>
-								</h:outputText>
-							</p:column>
-							<p:column  style="width:35px">
-								<h:outputText value="#{item.fb_click_Count}" ></h:outputText>
-							</p:column>
-							<p:column style="width:70px" >
-								<h:outputText value="#{item.fb_comment_Count}" ></h:outputText>
-							</p:column>
-							<p:column style="width:40px">
-								<h:outputText value="#{item.fb_like_Count}" ></h:outputText>
-							</p:column>
-							<p:column style="width:45px">
-								<h:outputText value="#{item.fb_share_Count}" ></h:outputText>
-							</p:column>
-							<p:column style="width:95px">
-								<h:outputText value="#{item.fb_commentsbox_count}" ></h:outputText>
-							</p:column>
-							<p:column style="width:55px">
-								<h:outputText value="#{item.fb_total_Count}" ></h:outputText>
-							</p:column>
-							<p:column style="width:55px">
-								<h:outputText value="#{item.twitter}" ></h:outputText>
-							</p:column>
-							<p:column style="width:60px">
-								<h:outputText value="#{item.google_plus_one}" ></h:outputText>
-							</p:column>
-							<p:column style="width:60px">
-								<h:outputText value="#{item.linkedin}" ></h:outputText>
-							</p:column>
-							<p:column style="width:60px">
-								<h:outputText value="#{item.pinterest}" ></h:outputText>
-							</p:column>
-							<p:column style="width:60px">
-								<h:outputText value="#{item.delicious}" ></h:outputText>
-							</p:column>
-
-						</p:subTable>
-						<!-- </p:rowExpansion> -->
-					</p:dataTable>
-				<!--  </h:form>  -->
+			<br />
 			
 
-				<!-- <h:form>-->  
-				<!-- hidden for now.... -->
-				<h:commandButton action="#{queryGoFetchBean.visualiseData}"
-					value="Visualise This Data" style="display: none;"></h:commandButton>
-			
-				<h:commandButton action="#{queryGoFetchBean.exportToExcel}"
-					value="Download Excel Data" 
-					rendered="#{queryGoFetchBean.listSize}" style="display: none;"></h:commandButton>
-<!--  rendered="#{not empty socialAndURLData.socialDataList}" -->
- 
-<p:panel header="Download Data" rendered="#{queryGoFetchBean.listSize}" style="display: none;">  
-        <h:commandLink rendered="#{queryGoFetchBean.listSize}" style="display: none;">  
-            <p:graphicImage value="/images/excel.png" ></p:graphicImage>
-            <p:dataExporter type="xls" target="sub_table" fileName="gofetchdata" ></p:dataExporter>  
-        </h:commandLink>  
-
-    </p:panel>  
-
-
-			</h:form>
-				
-			<h:outputText styleClass="h1" rendered="#{not queryGoFetchBean.listSize}" value="Sorry... No data for that URL." ></h:outputText>
-			</f:view>
-				<!--  output text here... queryGoFetchBean.urlPlusSocialList -->
-		
-			<header class="clearfix">
-
-				<a id="logo" class="ir" href="http://www.propellernet.co.uk/">Propellernet
-					- Authentic Search</a>
-
-				<h1 id="top-slogan" class="two-line">
-					<span class="line-2"><em> GoFetch.</em></span>
-				</h1>
-
-				<nav id="main-menu" class="clearfix" role="navigation">
-					<ul>
-
-						<li><a href="/index.jsf" title="Home">Home</a></li>
-						<li><a href="/QueryGoFetch.jsf" title="Show Data">Show
-								Data</a></li>
-
-						<li
-							style="left: 0px; width: 62px; display: block; overflow: hidden;"
-							class="back"></li>
-					</ul>
-				</nav>
-
-			</header>
-
-
-			<footer>
-				<br /> <br /> <br /> 
-
-				<p>
-					© Copyright Propellernet - Authentic Search Agency 2010. All Rights
-					reserved. | <a href="http://www.propellernet.co.uk/sitemap">Sitemap</a>
-					| <a href="http://www.propellernet.co.uk/lets-talk">Contact us</a>
-				</p>
-
-				<p>
-					Site designed by <a target="_blank"
-						href="http://aspaceforsomething.com/">aspaceforsomething.com</a> |
-					<a target="_blank" href="http://www.devourdesign.co.uk/">Web
-						development: Devour Design</a>
-				</p>
-
-
-			</footer>
 
 		</div>
+		<!-- end of container.... -->
+
+		<header class="clearfix">
+			<a id="logo" class="ir" href="http://www.propellernet.co.uk/">Propellernet
+				- Authentic Search</a>
+
+			<h1 id="top-slogan" class="two-line">
+				<span class="line-2"><em> GoFetch.</em></span>
+			</h1>
+
+			<nav id="main-menu" class="clearfix" role="navigation">
+
+				<ul> 
+					<li><a href="/index.jsf" title="Home">Home</a></li>
+					<li><a href="/QueryGoFetch.jsf" title="Show Data">Show
+							Data</a></li>
+
+
+
+					<li
+						style="left: 0px; width: 62px; display: block; overflow: hidden;"
+						class="back">
+						<div class="left"></div>
+					</li>
+				</ul>
+
+			</nav>
+
+
+		</header>
+
+		<footer>
+
+			<p>
+				© Copyright Propellernet - Authentic Search Agency 2010. All Rights
+				reserved. | <a href="http://www.propellernet.co.uk/sitemap">Sitemap</a>
+				| <a href="http://www.propellernet.co.uk/lets-talk">Contact us</a>
+			</p>
+
+			<p>
+				Site designed by <a target="_blank"
+					href="http://aspaceforsomething.com/">aspaceforsomething.com</a> |
+				<a target="_blank" href="http://www.devourdesign.co.uk/">Web
+					development: Devour Design</a>
+			</p>
+
+		</footer>
+
 	</div>
 	<!-- end of #container -->
 
@@ -557,7 +455,6 @@ FaceBook Data  -->
 		<script> DD_belatedPNG.fix('img, .png_bg'); </script>
 
 		<![endif]-->
-
 
 </h:body>
 </html>

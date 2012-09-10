@@ -1,8 +1,8 @@
 package com.gofetch.beans;
 
 import java.io.Serializable;
+
 import java.util.ArrayList;
-//import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import com.gofetch.GoFetchConstants;
-//import com.gofetch.controllers.GoFetchServlet;
 import com.gofetch.entities.URLDBService;
 import com.gofetch.entities.URL;
 import com.gofetch.utils.DateUtil;
@@ -236,7 +235,7 @@ public class GoFetchRequestBean implements Serializable {
 			} else if (!urls[i].startsWith("http://")) {
 
 				tempString = urls[i]
-						+ " -  \"http://\" has been added to the beginning of URL and has been be added to GoFetch.";
+						+ " -  \"http://\" has been added to the beginning of URL and has this URL been be added to GoFetch.";
 				successReport.add(tempString);
 
 				String temp = "http://" + urls[i];

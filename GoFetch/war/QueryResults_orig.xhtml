@@ -379,37 +379,36 @@
 
 
 			<f:view contentType="text/html">
-				<h:form id="results_form" prependId="false">
+				<h:form id="results_form">
 					<p:dataTable id="results_table" var="socialAndURLData"
 						value="#{queryGoFetchBean.urlPlusSocialList}" scrollable="true"
 						scrollWidth="855" scrollHeight="300" resizableColumns="false"
-						rendered="#{queryGoFetchBean.listSize}"
-						emptyMessage="No data found for this URL." 
-						style="text-align: center;"
-						> <!--  -->
+						rendered="#{queryGoFetchBean.listSize}"> <!--  -->
 						
-<!-- 
-	 <f:facet name="header"> 
-				Historical Social Data
-</f:facet> 
-FaceBook Data  -->
+ <!--
+						<f:facet name="header" colspan="13">
+						Historical Social Data
+					</f:facet>
+	-->				
+
+
 
 <!-- 						<p:column style="width:16px">
 							<p:rowToggler />
 						</p:column> 
  -->
 			
-				<p:columnGroup type="header"> 
-				<p:row>
-				<p:column headerText="" colspan="1"  ></p:column>
-				<p:column headerText="FaceBook Data" colspan="7"  ></p:column>
-				<p:column headerText="Social Data" colspan="5"  ></p:column>
-				</p:row>
-					<p:row>  
-								<p:column headerText="Date" width="75"  ></p:column>
-								<p:column headerText="Clicks" width="35" ></p:column>
+						<p:columnGroup type="header">
+						<p:row>
+							
+							<p:column headerText="FaceBook Data" colspan="6" ></p:column>
+							<p:column  colspan="6" ></p:column>
+						</p:row>
+							<p:row>
+								<p:column headerText="Date........." width="75"  ></p:column>
+								<p:column headerText="Clicks" width="140" ></p:column>
 								<p:column headerText="Comments" width="70" ></p:column>
-								<p:column headerText="Likes" width="40" ></p:column>
+								<p:column headerText="Likes" width="35" ></p:column>
 								<p:column headerText="Shares" width="45" ></p:column>
 								<p:column headerText="CommentBox" width="95" ></p:column>
 								<p:column headerText="Total" width="55" ></p:column>
@@ -417,17 +416,16 @@ FaceBook Data  -->
 								<p:column headerText="Google+" width="60" ></p:column>
 								<p:column headerText="LinkedIn" width="60" ></p:column>
 								<p:column headerText="Pinterest" width="60" ></p:column>
-								<p:column headerText="Delicious" width="60" ></p:column>
-								</p:row>  
-</p:columnGroup>  
-							
-		 	
+								<p:column headerText="Delicious" width="160" ></p:column>
+
+							</p:row>
+						</p:columnGroup>
 						
 
 					<!--   <p:rowExpansion> -->
-						<p:subTable value="#{socialAndURLData.socialDataList}" var="item" id="sub_table">
+						<p:subTable value="#{socialAndURLData.socialDataList}" var="item">
 
-							<f:facet name="header" style="width:300px; text-align: left;" id="target_url">
+							<f:facet name="header" style="width:300px" >
 					#{socialAndURLData.url.url_address} 
 
 					</f:facet>
@@ -437,13 +435,13 @@ FaceBook Data  -->
 									<f:convertDateTime pattern="dd.MM.yyyy" ></f:convertDateTime>
 								</h:outputText>
 							</p:column>
-							<p:column  style="width:35px">
+							<p:column  style="width:140px">
 								<h:outputText value="#{item.fb_click_Count}" ></h:outputText>
 							</p:column>
 							<p:column style="width:70px" >
 								<h:outputText value="#{item.fb_comment_Count}" ></h:outputText>
 							</p:column>
-							<p:column style="width:40px">
+							<p:column style="width:35px">
 								<h:outputText value="#{item.fb_like_Count}" ></h:outputText>
 							</p:column>
 							<p:column style="width:45px">
@@ -467,7 +465,7 @@ FaceBook Data  -->
 							<p:column style="width:60px">
 								<h:outputText value="#{item.pinterest}" ></h:outputText>
 							</p:column>
-							<p:column style="width:60px">
+							<p:column style="width:160px">
 								<h:outputText value="#{item.delicious}" ></h:outputText>
 							</p:column>
 
@@ -487,21 +485,36 @@ FaceBook Data  -->
 					rendered="#{queryGoFetchBean.listSize}" style="display: none;"></h:commandButton>
 <!--  rendered="#{not empty socialAndURLData.socialDataList}" -->
  
-<p:panel header="Download Data" rendered="#{queryGoFetchBean.listSize}" style="display: none;">  
-        <h:commandLink rendered="#{queryGoFetchBean.listSize}" style="display: none;">  
+<p:panel header="Download Data">  
+        <h:commandLink>  
             <p:graphicImage value="/images/excel.png" ></p:graphicImage>
-            <p:dataExporter type="xls" target="sub_table" fileName="gofetchdata" ></p:dataExporter>  
+            <p:dataExporter type="xls" target="results_table" fileName="gofetchdata" ></p:dataExporter>  
         </h:commandLink>  
-
+  
+        <h:commandLink>  
+            <p:graphicImage value="/images/pdf.png" ></p:graphicImage>  
+            <p:dataExporter type="pdf" target="results_table" fileName="gofetchdata"></p:dataExporter>  
+        </h:commandLink>  
+          
+        <h:commandLink>  
+            <p:graphicImage value="/images/csv.png" ></p:graphicImage>  
+            <p:dataExporter type="csv" target="results_table" fileName="gofetchdata" ></p:dataExporter>
+        </h:commandLink>  
+          
+        <h:commandLink>  
+            <p:graphicImage value="/images/xml.png" ></p:graphicImage>
+            <p:dataExporter type="xml" target="results_table" fileName="gofetchdata" ></p:dataExporter> 
+        </h:commandLink>  
     </p:panel>  
 
 
 			</h:form>
 				
-			<h:outputText styleClass="h1" rendered="#{not queryGoFetchBean.listSize}" value="Sorry... No data for that URL." ></h:outputText>
+			<h:outputText styleClass="h1" rendered="#{not queryGoFetchBean.listSize}" value="Sorry...No data for that URL yet." ></h:outputText>
 			</f:view>
 				<!--  output text here... queryGoFetchBean.urlPlusSocialList -->
-		
+						
+
 			<header class="clearfix">
 
 				<a id="logo" class="ir" href="http://www.propellernet.co.uk/">Propellernet

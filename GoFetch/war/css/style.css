@@ -2720,4 +2720,8 @@ clear: left;
 }
 
 	
+	
+/*********dynamic datatable - in query results*******/
 
+.ui-datatable-subtable-header{
+}

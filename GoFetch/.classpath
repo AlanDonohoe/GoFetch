@@ -37,6 +37,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/poi-3.5-FINAL.jar"/>
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/primefaces-3.4.RC1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
