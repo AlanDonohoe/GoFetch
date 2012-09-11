@@ -262,14 +262,12 @@ public class GoFetchRequestBean implements Serializable {
 
 				urls[i] = temp;
 
-				urls[i] = addTrailingSlash(temp);
-
 				urlList.add(urls[i]);
 			}
 
 			else { // its passed both basic checks - then can add to DB
 
-				urlList.add(addTrailingSlash(urls[i]));
+				urlList.add(urls[i]);
 			}
 		}
 		//
@@ -282,7 +280,7 @@ public class GoFetchRequestBean implements Serializable {
 		for (int x = 0; x < urlList.size(); x++) {
 
 			// add trailing slash to all urls so they can be checked against normalised urls in DB
-			if (urlAddressesInDB.contains(TextUtil.addSlashToEndOfString(urlList.get(x)))) { // check that url not already in DB....
+			if ((urlAddressesInDB.contains(urlList.get(x)))||(urlAddressesInDB.contains(TextUtil.addSlashToEndOfString(urlList.get(x))))) { // check that url not already in DB....
 
 				tempString = urlList.get(x)
 						+ " -  is already entered in GoFetch and is being monitored.";
@@ -331,14 +329,6 @@ public class GoFetchRequestBean implements Serializable {
 
 	}
 
-	// this makes sure all entries to DB have the trailing slash at the end.
-	private String addTrailingSlash(String url){
 
-		if(!url.endsWith("/")){
-			return(url + "/");
-		}
-		else
-			return url;
-	}
 
 }
