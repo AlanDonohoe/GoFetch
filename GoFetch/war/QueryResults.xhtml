@@ -403,7 +403,7 @@ FaceBook Data  -->
 				<p:row>
 				<p:column headerText="" colspan="1"  ></p:column>
 				<p:column headerText="FaceBook Data" colspan="6"  ></p:column>
-				<p:column headerText="Social Data" colspan="5"  ></p:column>
+				<p:column headerText="Social Data" colspan="6"  ></p:column>
 				</p:row>
 					<p:row>  
 								<p:column headerText="Date" width="75"  ></p:column>
@@ -411,13 +411,14 @@ FaceBook Data  -->
 								<p:column headerText="Comments" width="70" ></p:column>
 								<p:column headerText="Likes" width="40" ></p:column>
 								<p:column headerText="Shares" width="45" ></p:column>
-								<p:column headerText="CommentBox" width="95" ></p:column>
+								<p:column headerText="C.Box" width="55" ></p:column>
 								<p:column headerText="Total" width="55" ></p:column>
 								<p:column headerText="Twitter" width="55" ></p:column>
 								<p:column headerText="Google+" width="60" ></p:column>
 								<p:column headerText="LinkedIn" width="60" ></p:column>
 								<p:column headerText="Pinterest" width="60" ></p:column>
 								<p:column headerText="Delicious" width="60" ></p:column>
+								<p:column headerText="Stumbles" width="60" ></p:column>
 								</p:row>  
 </p:columnGroup>  
 							
@@ -449,7 +450,7 @@ FaceBook Data  -->
 							<p:column style="width:45px">
 								<h:outputText value="#{item.fb_share_Count}" ></h:outputText>
 							</p:column>
-							<p:column style="width:95px">
+							<p:column style="width:55px">
 								<h:outputText value="#{item.fb_commentsbox_count}" ></h:outputText>
 							</p:column>
 							<p:column style="width:55px">
@@ -469,6 +470,9 @@ FaceBook Data  -->
 							</p:column>
 							<p:column style="width:60px">
 								<h:outputText value="#{item.delicious}" ></h:outputText>
+							</p:column>
+							<p:column style="width:60px">
+								<h:outputText value="#{item.stumble_upon}"></h:outputText>
 							</p:column>
 
 						</p:subTable>

@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
 //import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
@@ -40,11 +41,11 @@ public class URLDBService{
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
-		try { // "SELECT u FROM URL u WHERE u.url_address 
+		try { 
 			result= (List<String>) mgr.createQuery("SELECT u.url_address FROM url u").getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLAddresses";
-			//logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
+			
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -209,7 +210,7 @@ public class URLDBService{
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLs";
-			//logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
+			
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -292,6 +293,8 @@ public class URLDBService{
 		return result;
 
 	}
+	
+	
 
 	/*
 	 * Returns a list of URLs that were added between the 2 dates
@@ -548,6 +551,57 @@ public class URLDBService{
 		}
 		log.info("Exiting getSociallyTrackedURLs");
 		return result;
+
+	}
+	
+	
+	public List<URL> getURLsFromIDs(List<Integer> idList){
+
+		log.info("Entering getURLsFromIDs");
+		// List<URL> result = null; // used if we use option 1
+		List<URL> urls = new ArrayList<URL>(); //used if we use option 2.
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		
+		//TODO: decide: 2 options: - need to check in optimization....
+		
+		//1: one call to DB and search list for idList
+		//		get list of all urls and then use java selection process to retrieve urls from this list that are in idList
+		
+		//2: multiple calls to DB:
+		//	loop through all idList and make repeat calls to DB retrieving URL for each.
+		
+
+		try {
+			
+			//2: 
+			for(int i = 0; i < idList.size(); i++){
+				
+				urls.add(mgr.find(URL.class, idList.get(i)));
+				
+				
+				
+			}
+			
+//			
+//			result = (List<URL>)mgr.createQuery("SELECT u FROM URL u WHERE u.url_id IN :idList")
+//					.setParameter("idList", idList)
+//					.getResultList();
+			
+
+
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getURLsFromIDs";
+			//logger.logp(Level.SEVERE, "URLService", "getSociallyTrackedURLs",msg ,e);
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+
+		log.info("Exiting getURLsFromIDs");
+		return urls;
 
 	}
 

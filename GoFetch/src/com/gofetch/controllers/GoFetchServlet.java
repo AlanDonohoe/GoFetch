@@ -28,7 +28,7 @@ public class GoFetchServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 		// moved this functionality into managed bean... GoFetchRequestBean
-		resp.setContentType("text/plain");
+		resp.setContentType("text/plain");	
 //		
 //		URLDBService urls = new URLDBService();
 //
