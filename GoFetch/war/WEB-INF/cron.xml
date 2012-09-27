@@ -2,7 +2,7 @@
 <cronentries>
    <cron>
     <url>/processnewtargets</url>
-    <target>gofetchbackend</target>
+    <target>api</target>
     <description>Get Yesterday's Target URLs' back links</description>
     <schedule>every day 09:00</schedule>
     <timezone>Europe/London</timezone>

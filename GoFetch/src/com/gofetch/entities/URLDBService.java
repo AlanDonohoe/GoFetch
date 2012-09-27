@@ -32,8 +32,6 @@ public class URLDBService{
 	
 	//TODO: dont know if this works - JQPL Selecting single field.. rather than whole entity...
 	public List<String> getURLAddresses(){
-
-// select url.url_address from url;
 		
 		log.info("Entering getURLAddresses");
 		List<String> result = null;
@@ -579,17 +577,9 @@ public class URLDBService{
 			for(int i = 0; i < idList.size(); i++){
 				
 				urls.add(mgr.find(URL.class, idList.get(i)));
-				
-				
-				
+							
 			}
-			
-//			
-//			result = (List<URL>)mgr.createQuery("SELECT u FROM URL u WHERE u.url_id IN :idList")
-//					.setParameter("idList", idList)
-//					.getResultList();
-			
-
+	
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLsFromIDs";
@@ -677,6 +667,36 @@ public class URLDBService{
 
 
 		log.info("Exiting deleteURL.");
+
+	}
+	
+	/*
+	 * Returns list of urls that have had their get_backlinks flag checked, but have not yet got their backlink data eg: from SEOMoz
+	 */
+	public List<URL> getUnproccessedTargetURLs(){
+
+		log.info("Entering getUnproccessedTargetURLs");
+		
+		List<URL> urls = null; 
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+	
+		try {
+			
+			urls = mgr.createQuery("SELECT u FROM URL u WHERE u.get_backlinks = TRUE and u.backlinks_got = false")
+					.getResultList();
+	
+		}catch(Exception e){
+			String msg = "Exception thrown. URLDBService: getUnproccessedTargetURLs";
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+
+		log.info("Exiting getUnproccessedTargetURLs");
+		return urls;
 
 	}
 }

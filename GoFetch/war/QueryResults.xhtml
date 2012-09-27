@@ -6,7 +6,213 @@
 	class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions fontface video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths">
 
 <h:head>
+	<script src="js/gofetchscripts.js"></script>
+	<script src="js/jsonpath-0.8.0.js"></script>
+	
+	
+	
+	<script type="text/javascript">
+	
+	/*
+                // Do something inline with variable from server.
+                var variableFromServer = '#{queryGoFetchBean.urlPlusSocialList}'; 
+                //var urlSocialData = new URLPlusSocialData(variableFromServer);
+                
+                //urlSocialData.googleChartArray();
+                
+                //var urlVar = jsonPath(variableFromServer,"$[*].URL").toJSONString();
+                
+                doSomethingInline(variableFromServer);
+                function doSomethingInline(variable) {
+                   // alert('doSomethingInline: ' + variable);
+                    
+                    var startOfURLData, endOfURLData;
+		
+				// now find limits of url data we are interested in....
+				startOfURLData = variable.indexOf('SocialData', 0);
+				
+				endOfURLData = variable.indexOf('URL', startOfURLData);
+				
+				//var dataString = new String(variable);
+				
+				//grab all that data
+				var splicedData = variable.substring(0,endOfURLData );
+				var serverDataAsJSON = '{' + variable.substring(1,splicedData.length);
+				
+				var finalComma = serverDataAsJSON.lastIndexOf(',');
+				
+				serverDataAsJSON = serverDataAsJSON.substring(0, finalComma) + '}';
+				
+				
+				//get no of entries in array:
+				
+				
+				
+				var tempArray = serverDataAsJSON.split('Date');
+				var tempArray2 = tempArray[1].split(': ');
+				
+				
+				
+				
+				
+				tempArray[0] = "{"URL":"http://www.mone...aspx", "SocialData":[{""
+				
+				tempArray2 now = 
+				
+				
+				var arLength = tempArray.length;
+				
+				var finalArray = new Array(arLength); 
+				
+				finalArray[0] = new Array('Date', 'FaceBook Total', 'Twitter','Google+','LinkedIn','Pinterest','Delicious','StumbleUpon');
+				
+				finalArray[1] = new Array('10-09-2012',  1000,      	400,		300,		20,			30,			40,				50);
+				//finalArray[1] = new Array(8);
+				
+				var date = tempArray2[1];
+				
+				date =  date.substring(2,11);
+				
+				finalArray[1][0] = date; // error here.. need to assign date here...
+				
+				var data = [
+          ['Date', 'FaceBook Total', 	'Twitter',	'Google+', 'LinkedIn', 'Pinterest', 'Delicious', 'StumbleUpon'], 
+          ['10-09-2012',  1000,      	400,		300,		20,			30,			40,				50],
+          ['12-09-2012',  1170,    		460,		400,			20,			30,			40,			50],
+          ['15-09-2012',  660,     		1120,		600,			20,			30,			40,			50],
+          ['19-09-2012',  1030,   		540,		700,			20,			30,			40,			50]
+        ];
+				
+				
+				
+				//var tempString;
 
+				
+				//tempString = splicedData;
+				var noOfEntries = 0;
+				var dateIndex = 0;
+				
+				while(-1 != dateIndex){
+					dateIndex = tempString.indexOf('Date');
+														// add 5 - to move past the current data
+					tempString = tempString.substring((dateIndex +5));
+					
+					noOfEntries++;
+					
+				}
+				
+				var tempOne = tempArray.length;
+				
+				var dataArray = splicedData.split(',');
+				
+				dataArray.length();
+                    
+                    // process the data from the server.... just need social data from the main target url....
+             
+                  
+                }
+ */
+            </script>
+
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+      
+      ///////////////
+      // new data.........
+      /*
+      var variableFromServer = '#{queryGoFetchBean.urlPlusSocialList}'; 
+      
+            var startOfURLData, endOfURLData;
+		
+				// now find limits of url data we are interested in....
+				startOfURLData = variableFromServer.indexOf('SocialData', 0);
+				
+				endOfURLData = variableFromServer.indexOf('URL', startOfURLData);
+				
+				//var dataString = new String(variable);
+				
+				//grab all that data
+				var splicedData = variableFromServer.substring(0,endOfURLData );
+				var serverDataAsJSON = '{' + variableFromServer.substring(1,splicedData.length);
+				
+				var finalComma = serverDataAsJSON.lastIndexOf(',');
+				
+				serverDataAsJSON = serverDataAsJSON.substring(0, finalComma) + '}';
+				
+				
+				//get no of entries in array:
+			
+				var tempArray = serverDataAsJSON.split('Date');
+				var tempArray2 = tempArray[1].split(': ');
+	
+				
+				var arLength = tempArray.length;
+				
+				var finalArray = new Array();// new Array(arLength); 
+				
+				finalArray[0] = new Array();
+				
+				finalArray[0].push( ['Date', 'FaceBook Total', 	'Twitter',	'Google+', 'LinkedIn', 'Pinterest', 'Delicious', 'StumbleUpon']);
+				
+				finalArray[0].push( [2012,  1000,      	400,		300,		20,			30,			40,				50]);
+				finalArray[0].push( [2012,  1170,    		460,		400,			20,			30,			40,			50]);
+				finalArray[0].push( [2012,  660,     		1120,		600,			20,			30,			40,			50]);
+				finalArray[0].push( [2012,  1030,   		540,		700,			20,			30,			40,			50]);
+				//finalArray[0] = ['Date', 'FaceBook Total', 'Twitter','Google+','LinkedIn','Pinterest','Delicious','StumbleUpon'];
+				
+				//finalArray[1] = ['10-09-2012',  1000,      	400,		300,		20,			30,			40,				50];
+				//finalArray[1] = new Array(8);
+				
+				//var date = tempArray2[1];
+				
+				//date =  date.substring(2,11);
+				
+				//finalArray[1][0] = date; // error here.. need to assign date here...
+				
+      
+      //
+      ////////////////////
+      
+      var googleArray = new Array([
+          ['Date', 'FaceBook Total', 	'Twitter',	'Google+', 'LinkedIn', 'Pinterest', 'Delicious', 'StumbleUpon'], 
+          ['10-09-2012',  1000,      	400,		300,		20,			30,			40,				50],
+          ['12-09-2012',  1170,    		460,		400,			20,			30,			40,			50],
+          ['15-09-2012',  660,     		1120,		600,			20,			30,			40,			50],
+          ['19-09-2012',  1030,   		540,		700,			20,			30,			40,			50]
+        ]);
+        
+        var dataOrig =  google.visualization.arrayToDataTable(googleArray);
+        */
+        /*
+        var data = google.visualization.arrayToDataTable([
+          ['Date', 'FaceBook Total', 	'Twitter',	'Google+', 'LinkedIn', 'Pinterest', 'Delicious', 'StumbleUpon'], 
+          ['25-08-2012',  72,      		117,		150,			170,			25,			40,			50],
+          ['02-09-2012',  76,      		118,		180,			180,			28,			40,			50],
+          ['03-09-2012',  78,      		119,		210,			190,			28,			40,			50],
+          ['06-09-2012',  78,      		120,		290,			210,			28,			40,			50],
+          ['08-09-2012',  80,      		135,		295,			210,			28,			40,			50],
+          ['09-09-2012',  90,      		140,		300,			210,			30,			40,			50],
+          ['10-09-2012',  100,      	140,		300,			210,			30,			40,			55],
+          ['12-09-2012',  170,    		146,		350,			211,			30,			40,			55],
+          ['15-09-2012',  180,     		150,		370,			223,			35,			40,			55],
+          ['19-09-2012',  190,   		154,		380,			225,			36,			40,			55],
+          ['19-09-2012',  195,   		160,		380,			225,			37,			41,			57]
+        ]);
+        
+        //var data2 = google.visualization.arrayToDataTable(finalArray);
+
+        var options = {
+          title: 'Historical Social Data'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+        */
+      }
+    </script>
 
 	<title>Propellernet - GoFetch</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -376,100 +582,110 @@
 	<div id="container">
 
 		<div id="main" class="clearfix">
+			<!--  <div id="chart_div" style="width: 900px; height: 500px;"></div>-->
 
 
 			<f:view contentType="text/html">
+
+
+
 				<h:form id="results_form" prependId="false">
+
+
+
+
 					<p:dataTable id="results_table" var="socialAndURLData"
 						value="#{queryGoFetchBean.urlPlusSocialList}" scrollable="true"
 						scrollWidth="855" scrollHeight="300" resizableColumns="false"
 						rendered="#{queryGoFetchBean.listSize}"
-						emptyMessage="No data found for this URL." 
-						style="text-align: center;"
-						> <!--  -->
-						
-<!-- 
+						emptyMessage="No data found for this URL."
+						style="text-align: center;">
+						<!--  -->
+
+						<!-- 
 	 <f:facet name="header"> 
 				Historical Social Data
 </f:facet> 
 FaceBook Data  -->
 
-<!-- 						<p:column style="width:16px">
+						<!-- 						<p:column style="width:16px">
 							<p:rowToggler />
 						</p:column> 
  -->
-			
-				<p:columnGroup type="header"> 
-				<p:row>
-				<p:column headerText="" colspan="1"  ></p:column>
-				<p:column headerText="FaceBook Data" colspan="6"  ></p:column>
-				<p:column headerText="Social Data" colspan="6"  ></p:column>
-				</p:row>
-					<p:row>  
-								<p:column headerText="Date" width="75"  ></p:column>
-								<p:column headerText="Clicks" width="35" ></p:column>
-								<p:column headerText="Comments" width="70" ></p:column>
-								<p:column headerText="Likes" width="40" ></p:column>
-								<p:column headerText="Shares" width="45" ></p:column>
-								<p:column headerText="C.Box" width="55" ></p:column>
-								<p:column headerText="Total" width="55" ></p:column>
-								<p:column headerText="Twitter" width="55" ></p:column>
-								<p:column headerText="Google+" width="60" ></p:column>
-								<p:column headerText="LinkedIn" width="60" ></p:column>
-								<p:column headerText="Pinterest" width="60" ></p:column>
-								<p:column headerText="Delicious" width="60" ></p:column>
-								<p:column headerText="Stumbles" width="60" ></p:column>
-								</p:row>  
-</p:columnGroup>  
-							
-		 	
-						
 
-					<!--   <p:rowExpansion> -->
-						<p:subTable value="#{socialAndURLData.socialDataList}" var="item" id="sub_table">
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column headerText="" colspan="1"></p:column>
+								<p:column headerText="FaceBook Data" colspan="6"></p:column>
+								<p:column headerText="Social Data" colspan="6"></p:column>
+							</p:row>
+							<p:row>
+								<p:column headerText="Date" width="75"></p:column>
+								<p:column headerText="Clicks" width="35"></p:column>
+								<p:column headerText="Comments" width="70"></p:column>
+								<p:column headerText="Likes" width="40"></p:column>
+								<p:column headerText="Shares" width="45"></p:column>
+								<p:column headerText="C.Box" width="55"></p:column>
+								<p:column headerText="Total" width="55"></p:column>
+								<p:column headerText="Twitter" width="55"></p:column>
+								<p:column headerText="Google+" width="60"></p:column>
+								<p:column headerText="LinkedIn" width="60"></p:column>
+								<p:column headerText="Pinterest" width="60"></p:column>
+								<p:column headerText="Delicious" width="60"></p:column>
+								<p:column headerText="Stumbles" width="60"></p:column>
+							</p:row>
+						</p:columnGroup>
 
-							<f:facet name="header" style="width:300px; text-align: left;" id="target_url">
+
+
+
+						<!--   <p:rowExpansion> -->
+						<p:subTable value="#{socialAndURLData.socialDataList}" var="item"
+							id="sub_table">
+
+							<f:facet name="header" style="width:300px; text-align: left;"
+								id="target_url">
 					#{socialAndURLData.url.url_address} 
 
 					</f:facet>
- 
-							<p:column  style="width:75px">
+
+							<p:column style="width:75px">
 								<h:outputText value="#{item.date}">
-									<f:convertDateTime pattern="dd.MM.yyyy" ></f:convertDateTime>
+									<f:convertDateTime pattern="dd.MM.yyyy"></f:convertDateTime>
 								</h:outputText>
 							</p:column>
-							<p:column  style="width:35px">
-								<h:outputText value="#{item.fb_click_Count}" ></h:outputText>
+							<p:column style="width:35px">
+								<h:outputText value="#{item.fb_click_Count}"></h:outputText>
 							</p:column>
-							<p:column style="width:70px" >
-								<h:outputText value="#{item.fb_comment_Count}" ></h:outputText>
+							<p:column style="width:70px">
+								<h:outputText value="#{item.fb_comment_Count}"></h:outputText>
 							</p:column>
 							<p:column style="width:40px">
-								<h:outputText value="#{item.fb_like_Count}" ></h:outputText>
+								<h:outputText value="#{item.fb_like_Count}"></h:outputText>
 							</p:column>
 							<p:column style="width:45px">
-								<h:outputText value="#{item.fb_share_Count}" ></h:outputText>
+								<h:outputText value="#{item.fb_share_Count}"></h:outputText>
 							</p:column>
 							<p:column style="width:55px">
-								<h:outputText value="#{item.fb_commentsbox_count}" ></h:outputText>
+								<h:outputText value="#{item.fb_commentsbox_count}"></h:outputText>
 							</p:column>
 							<p:column style="width:55px">
-								<h:outputText value="#{item.fb_total_Count}" ></h:outputText>
+								<h:outputText value="#{item.fb_total_Count}"></h:outputText>
 							</p:column>
 							<p:column style="width:55px">
-								<h:outputText value="#{item.twitter}" ></h:outputText>
+								<h:outputText value="#{item.twitter}"></h:outputText>
 							</p:column>
 							<p:column style="width:60px">
-								<h:outputText value="#{item.google_plus_one}" ></h:outputText>
+								<h:outputText value="#{item.google_plus_one}"></h:outputText>
 							</p:column>
 							<p:column style="width:60px">
-								<h:outputText value="#{item.linkedin}" ></h:outputText>
+								<h:outputText value="#{item.linkedin}"></h:outputText>
 							</p:column>
 							<p:column style="width:60px">
-								<h:outputText value="#{item.pinterest}" ></h:outputText>
+								<h:outputText value="#{item.pinterest}"></h:outputText>
 							</p:column>
 							<p:column style="width:60px">
-								<h:outputText value="#{item.delicious}" ></h:outputText>
+								<h:outputText value="#{item.delicious}"></h:outputText>
 							</p:column>
 							<p:column style="width:60px">
 								<h:outputText value="#{item.stumble_upon}"></h:outputText>
@@ -478,34 +694,40 @@ FaceBook Data  -->
 						</p:subTable>
 						<!-- </p:rowExpansion> -->
 					</p:dataTable>
-				<!--  </h:form>  -->
-			
-
-				<!-- <h:form>-->  
-				<!-- hidden for now.... -->
-				<h:commandButton action="#{queryGoFetchBean.visualiseData}"
-					value="Visualise This Data" style="display: none;"></h:commandButton>
-			
-				<h:commandButton image="/images/excel.png" action="#{queryGoFetchBean.exportToExcel}"
-					value="Download Excel Data" 
-					rendered="#{queryGoFetchBean.listSize}" style="display: none;"></h:commandButton>
-<!--  rendered="#{not empty socialAndURLData.socialDataList}" -->
- 
-<p:panel header="Download Data" rendered="#{queryGoFetchBean.listSize}" style="display: none;">  
-        <h:commandLink rendered="#{queryGoFetchBean.listSize}" style="display: none;">  
-            <p:graphicImage value="/images/excel.png" ></p:graphicImage>
-            <p:dataExporter type="xls" target="sub_table" fileName="gofetchdata" ></p:dataExporter>  
-        </h:commandLink>  
-
-    </p:panel>  
+					<!--  </h:form>  -->
 
 
-			</h:form>
-				
-			<h:outputText styleClass="h1" rendered="#{not queryGoFetchBean.listSize}" value="Sorry... No data for that URL." ></h:outputText>
+					<!-- <h:form>-->
+					<!-- hidden for now.... -->
+					<h:commandButton action="#{queryGoFetchBean.visualiseData}"
+						value="Visualise This Data" style="display: none;"></h:commandButton>
+
+					<h:commandButton image="/images/excel.png"
+						action="#{queryGoFetchBean.exportToExcel}"
+						value="Download Excel Data"
+						rendered="#{queryGoFetchBean.listSize}" style="display: none;"></h:commandButton>
+					<!--  rendered="#{not empty socialAndURLData.socialDataList}" -->
+
+					<p:panel header="Download Data"
+						rendered="#{queryGoFetchBean.listSize}" style="display: none;">
+						<h:commandLink rendered="#{queryGoFetchBean.listSize}"
+							style="display: none;">
+							<p:graphicImage value="/images/excel.png"></p:graphicImage>
+							<p:dataExporter type="xls" target="sub_table"
+								fileName="gofetchdata"></p:dataExporter>
+						</h:commandLink>
+
+					</p:panel>
+
+
+				</h:form>
+
+				<h:outputText styleClass="h1"
+					rendered="#{not queryGoFetchBean.listSize}"
+					value="Sorry... No data for that URL."></h:outputText>
 			</f:view>
-				<!--  output text here... queryGoFetchBean.urlPlusSocialList -->
-		
+			<!--  output text here... queryGoFetchBean.urlPlusSocialList -->
+
 			<header class="clearfix">
 
 				<a id="logo" class="ir" href="http://www.propellernet.co.uk/">Propellernet
@@ -532,7 +754,7 @@ FaceBook Data  -->
 
 
 			<footer>
-				<br /> <br /> <br /> 
+				<br /> <br /> <br />
 
 				<p>
 					© Copyright Propellernet - Authentic Search Agency 2010. All Rights

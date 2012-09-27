@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <backends>
-  <backend name="gofetchbackend">
+  <backend name="api">
     <class>B2</class>
     <instances>1</instances>
     <options>
       <dynamic>true</dynamic>
-      <public>false</public>
+      <public>true</public>
     </options>
   </backend>
 </backends> 
