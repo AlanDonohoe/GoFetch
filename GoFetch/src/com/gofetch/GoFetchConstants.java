@@ -1,0 +1,33 @@
+package com.gofetch;
+
+public class GoFetchConstants {
+
+	public static final int MIN_VALID_URL_LENGTH = 12;			 // used for user input validation - min = http://a.com 
+
+	///////////////////
+	// used when hitting social services for data - url goes in between preEndpoint and postEndPoint
+
+	public static final String deliciousEndPoint  = "http://feeds.delicious.com/v2/json/urlinfo/data?url=";
+	
+	public static final String faceBookPreEndPoint  = "http://api.ak.facebook.com/restserver.php?v=1.0&method=links.getStats&urls=";
+	public static final String faceBookPostEndPoint = "&format=json";
+	
+	public static final String googlePlusEndPoint  = "https://clients6.google.com/rpc?key=AIzaSyCKSbrvQasunBoV16zDH9R33D88CeLr9gQ";
+	public static final String googlePrePost =  "[{\"method\":\"pos.plusones.get\",\"id\":\"p\",\"params\":{\"nolog\":true,\"id\":\"";
+	public static final String googlePostPost =	"\",\"source\":\"widget\",\"userId\":\"@viewer\",\"groupId\":\"@self\"},\"jsonrpc\":\"2.0\",\"key\":\"p\",\"apiVersion\":\"v1\"}]";
+			
+	public static final String linkedInPreEndPoint   = "http://www.linkedin.com/countserv/count/share?url=";
+	public static final String linkedInPostEndPoint  = "&callback=myCallback&format=jsonp";
+	
+	public static final String pinterestEndPoint  = "http://api.pinterest.com/v1/urls/count.json?url=";
+
+	public static final String stumbleUponEndPoint = "http://www.stumbleupon.com/services/1.01/badge.getinfo?url=";
+	
+	public static final String twitterPreEndPoint  = "http://urls.api.twitter.com/1/urls/count.json?url="; 
+	public static final String twitterPostEndPoint = "&callback=twttr.receiveCount";
+	
+	
+	
+	//
+	/////////////////////
+}
