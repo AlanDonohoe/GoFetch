@@ -519,6 +519,46 @@ public class URLDBService{
 		}
 
 	}
+	
+	
+	/**
+	 * Updates record with url address with new page authority (pa) & domain authority (da) data
+	 * 
+	 * @param urlAddress - target url 
+	 * @param pa - Page Authority
+	 * @param da - Domain Authority
+	 * @param domainName - Domain name of url.
+	 */
+	public void updateBackLinksGot(URL url, boolean backLinksGot ){
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		int url_id;
+
+		try {
+
+			url_id = url.getId(); 
+
+			mgr.getTransaction().begin();
+
+			URL urlDB = mgr.find(URL.class, url_id);
+			urlDB.setBacklinks_got(backLinksGot);
+
+			mgr.merge(url);
+			mgr.getTransaction().commit();
+
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: updateURLData";
+		
+			log.severe(msg + e.getMessage());
+
+		}  finally {
+			mgr.close();
+		}
+
+	}
+	
+	
 
 
 	/*

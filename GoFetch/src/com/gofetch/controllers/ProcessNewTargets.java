@@ -71,15 +71,15 @@ public class ProcessNewTargets extends HttpServlet {
 		//List<URL> urlListYest = urlDBUnit.getTargetURLsFrom(DateUtil
 		//		.getTodaysDate());
 		// replace this ....
-		
+
 		//new implementation: returns all the urls that have get_backlinks = true backlinks_got = false
 		List<URL> unprocessedURLs = urlDBUnit.getUnproccessedTargetURLs();
-		
+
 
 		if (!unprocessedURLs.isEmpty()) {
 			for (URL currentURL : unprocessedURLs) {
 				if (currentURL.isGet_backlinks()) {
-					
+
 					boolean getLinksSuccessful = true;
 
 					currentTargetAddress = currentURL.getUrl_address();
@@ -102,70 +102,76 @@ public class ProcessNewTargets extends HttpServlet {
 								+ currentTargetAddress + "ProcessNewTargets"
 								+ "- SEOMoz block. Exception - ";
 						log.warning(msg + e.getMessage());
-						
+
 						getLinksSuccessful = false;
-	
+
 
 					}
 					// this section below ONLY called if we have has a successful call to SEOMoz - even if there's no links for this target.
 					if(getLinksSuccessful){
-					// 2: for each new target - get its page & domain
-					// authority... .. and persist...
-					// : another hit to SEOMoz here.. need to delay....
-					try {
-						Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
-					} catch (InterruptedException e) {
-
-						log.warning( e.getMessage());
-					}
-					getAuthorityAndDomainData(currentURL.getUrl_address(),
-							seoMoz);
-
-					if (!backLinks.isEmpty()) { // if we have successfully
-						// got some data from SEOmoz
-						// TODO: write the new URLs and new Links as batch
-						// writes to DB ASAP...
-						// 3: write each backlink to url table. - with same
-						// data as target, BUT NOT get backlink data always
-						// = false.
-						linksToNewSEOMozURLs(backLinks, currentURL);
-
-						// 4: for each new source url - retrieve it's id and
-						// the target's id from DB and
-						// create new entry in link table, with target id
-						// and source id, anchor text, todays date and
-						// domain name extracted from url address.
-						linksToNewLinks(backLinks, currentURL);
-
-						// 5: Get PA and DA for single link from each unique
-						// domain....
-						// use getURLsPointingTo(currentURL) and retrieve
-						// first url, get its PA and DA... then loop through
-						// the next urls until currentBackLinkdomainName !=
-						// latestBackLinkDomainName
-						// then get PA and DA for that.....
-						// then queries to only unique domain backlinks can
-						// query those with only PA & DA that != null ????
-
-						// another hit to SEOMoz here.. need to delay....
+						// 2: for each new target - get its page & domain
+						// authority... .. and persist...
+						// : another hit to SEOMoz here.. need to delay....
 						try {
 							Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
 						} catch (InterruptedException e) {
+
 							log.warning( e.getMessage());
 						}
-						getDataForUniqueDomains(currentURL, seoMoz);
 
-					} else {
-						log.info("No backlinks from SEOMoz for: "
-								+ currentTargetAddress);
+						getAuthorityAndDomainData(currentURL.getUrl_address(),
+								seoMoz);
+
+						if (!backLinks.isEmpty()) { // if we have successfully
+							// got some data from SEOmoz
+							// TODO: write the new URLs and new Links as batch
+							// writes to DB ASAP...
+							// 3: write each backlink to url table. - with same
+							// data as target, BUT NOT get backlink data always
+							// = false.
+							try{
+								linksToNewSEOMozURLs(backLinks, currentURL);
+
+							// 4: for each new source url - retrieve it's id and
+							// the target's id from DB and
+							// create new entry in link table, with target id
+							// and source id, anchor text, todays date and
+							// domain name extracted from url address.
+							linksToNewLinks(backLinks, currentURL);
+
+							}catch(Exception e){
+								log.warning("Error in creating new links / urls. "  + e.getMessage());
+							}
+
+							// 5: Get PA and DA for single link from each unique
+							// domain....
+							// use getURLsPointingTo(currentURL) and retrieve
+							// first url, get its PA and DA... then loop through
+							// the next urls until currentBackLinkdomainName !=
+							// latestBackLinkDomainName
+							// then get PA and DA for that.....
+							// then queries to only unique domain backlinks can
+							// query those with only PA & DA that != null ????
+
+							// another hit to SEOMoz here.. need to delay....
+							try {
+								Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
+							} catch (InterruptedException e) {
+								log.warning( e.getMessage());
+							}
+							getDataForUniqueDomains(currentURL, seoMoz);
+
+						} else {
+							log.info("No backlinks from SEOMoz for: "
+									+ currentTargetAddress);
+						}
+						
+						//update the setbacklinks_got...... urlDBUnit.
+						//TODO: need to test this.... - doesnt seem to be working...
+						urlDBUnit.updateBackLinksGot(currentURL, true);
+						//currentURL.setBacklinks_got(true); 
+						// change flag - so this will not be included in further calls for backlinks
 					}
-
-					currentURL.setBacklinks_got(true); // change flag - so
-					// this will not be
-					// included in
-					// further calls for
-					// backlinks
-				}
 
 				}
 			}
@@ -228,13 +234,13 @@ public class ProcessNewTargets extends HttpServlet {
 		//////////////////
 		// comment this out for now..... think about moving this functionality to checkboxes in results table
 		//		so you can select specific links rather than general next layer...??
-//		
-//		// reduce the number of layers by 1, every round of backlinks, until we
-//		// are at 0.
+		//		
+		//		// reduce the number of layers by 1, every round of backlinks, until we
+		//		// are at 0.
 		Integer newNoOfLayers = currentURL.getNo_of_layers();
-//		if (newNoOfLayers > 0)
-//			newNoOfLayers--;
-		
+		//		if (newNoOfLayers > 0)
+		//			newNoOfLayers--;
+
 		newNoOfLayers = 0;
 		//////////////////////
 
@@ -250,7 +256,7 @@ public class ProcessNewTargets extends HttpServlet {
 			// entries in DB,
 			// this removes the possibility of bbc.co.uk and bbc.co.uk/ both
 			// being entered.
-			urlPlusHttp = TextUtil.addSlashToEndOfString(urlPlusHttp);
+			//urlPlusHttp = TextUtil.addSlashToEndOfString(urlPlusHttp);
 
 			URL url = new URL();
 			url.setUrl_address(urlPlusHttp);
@@ -259,7 +265,7 @@ public class ProcessNewTargets extends HttpServlet {
 			url.setDomain(domainName);
 			url.setSeomoz_url(true);
 			url.setBacklinks_got(false);
-			
+
 			//TODO: THIS IS SET TO ZERO for now - up above, as want to move this to the datatable page.
 			url.setNo_of_layers(newNoOfLayers);
 			if (newNoOfLayers > 0)
@@ -321,10 +327,12 @@ public class ProcessNewTargets extends HttpServlet {
 		// fill list of all url addresses of links pointing at target
 		if (!currentLinkIDs.isEmpty()) {
 			for (Integer currentLinkID : currentLinkIDs) {
+
 				currentLinksAddresses.add(urlDBUnit
 						.getURLAddressFromID(currentLinkID));
 			}
 		}
+
 
 		// run through all the backlinks....
 		for (URLPlusDataPoints currentURLBackLink : urlBackLinks) {
@@ -335,13 +343,19 @@ public class ProcessNewTargets extends HttpServlet {
 
 				// then finally... create new link...
 
-				// dealing with SEOMoz...
+				// dealing with SEOMoz supplied urls - so add http://...
 				httpURL = TextUtil.addHTTPToURL(currentURLBackLink
 						.getBackLinkURL());
 
 				Link link = new Link();
 
 				backLinkURL = urlDBUnit.getURL(httpURL);
+				
+				//////////////////
+				//TODO: delete: testing.
+				if(null == backLinkURL)
+					log.warning("backLinkURL == null ");
+				////////////
 
 				link.setSource_id(backLinkURL.getId());
 				link.setTarget_id(currentURL.getId());
@@ -531,7 +545,7 @@ public class ProcessNewTargets extends HttpServlet {
 
 		// 2: loop through checking to see if their social data has changed from
 		// previous entry... update if true.
-		
+
 		String noOfSocialURLs = String.valueOf(urls.size());
 		log.info("No of URLs to get social data for: " + noOfSocialURLs );
 		int i = 1;
@@ -547,7 +561,7 @@ public class ProcessNewTargets extends HttpServlet {
 			boolean sharedCountFailedNoSlash = false; 
 
 			urlAddress = currentURL.getUrl_address();
-			
+
 			log.info(String.valueOf(i) + " of " + noOfSocialURLs + " : " + urlAddress);
 
 			// remove final / if present...
@@ -579,10 +593,10 @@ public class ProcessNewTargets extends HttpServlet {
 			// get current social data from the url... - now without the trailing slash
 			try {
 				socialDataAPINoSlash = sharedCountAPI.getAllSocialData(urlAddressNoSlash);
-				
+
 				//also - have to get StumbleUpon data manually... as sharedcount is failing to get this data
 				socialDataAPINoSlash.setStumble_upon(manualSocialData.getStumbleUponData(urlAddressNoSlash));
-				
+
 			} catch (Exception e) {
 				String msg = "Shared Count API failed for: "
 						+ urlAddressNoSlash
@@ -689,7 +703,7 @@ public class ProcessNewTargets extends HttpServlet {
 
 		// if there's no difference between DB data and today's data: then dont create a new entry in DB:
 		if(socialDataFromDB.equals(assimilatedSocialData)){
-			
+
 			log.info("Todays social data no different from last saved data. url id:  " + String.valueOf(currentURLID));
 
 			/// 
@@ -783,7 +797,7 @@ public class ProcessNewTargets extends HttpServlet {
 			newSocialData.setTwitter(socialDataFromDB.getTwitter());
 
 		///////////////////////////////////////////////
-		
+
 		log.info("New social data entry for url: " + String.valueOf(currentURLID));
 		socialDataDBUnit.createNewSocialData(newSocialData);
 
