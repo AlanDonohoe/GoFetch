@@ -544,7 +544,7 @@ public class URLDBService{
 			URL urlDB = mgr.find(URL.class, url_id);
 			urlDB.setBacklinks_got(backLinksGot);
 
-			mgr.merge(url);
+			mgr.merge(urlDB);
 			mgr.getTransaction().commit();
 
 		}catch(Exception e){

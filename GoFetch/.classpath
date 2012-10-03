@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/gson-2.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/AnnotationRelationShip/lib/hibernate-validator.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/tools/orm/datanucleus-jpa-1.1.5.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.7.0/appengine-java-sdk-1.7.0/lib/tools/orm/geronimo-jpa_3.0_spec-1.1.1.jar"/>
 	<classpathentry kind="lib" path="/Applications/eclipse/plugins/eclipselink/jlib/jpa/eclipselink-jpa-modelgen_2.4.0.v20120608-r11652.jar"/>
@@ -34,5 +33,6 @@
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/poi-3.5-FINAL.jar"/>
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/primefaces-3.4.RC1.jar"/>
+	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/hibernate-validator.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

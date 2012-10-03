@@ -90,6 +90,7 @@ public class ProcessNewTargets extends HttpServlet {
 						} catch (InterruptedException e) {
 
 							log.warning( e.getMessage());
+
 						}
 					}
 
@@ -105,7 +106,6 @@ public class ProcessNewTargets extends HttpServlet {
 
 						getLinksSuccessful = false;
 
-
 					}
 					// this section below ONLY called if we have has a successful call to SEOMoz - even if there's no links for this target.
 					if(getLinksSuccessful){
@@ -118,9 +118,16 @@ public class ProcessNewTargets extends HttpServlet {
 
 							log.warning( e.getMessage());
 						}
+						try{
+							getAuthorityAndDomainData(currentURL.getUrl_address(),
+									seoMoz);
+						}catch(Exception e) {
+							String msg = "Exception thrown getting authority data for: "
+									+ currentTargetAddress + "ProcessNewTargets"
+									+ "- SEOMoz block. Exception - ";
+							log.warning(msg + e.getMessage());
 
-						getAuthorityAndDomainData(currentURL.getUrl_address(),
-								seoMoz);
+						}
 
 						if (!backLinks.isEmpty()) { // if we have successfully
 							// got some data from SEOmoz
@@ -132,12 +139,12 @@ public class ProcessNewTargets extends HttpServlet {
 							try{
 								linksToNewSEOMozURLs(backLinks, currentURL);
 
-							// 4: for each new source url - retrieve it's id and
-							// the target's id from DB and
-							// create new entry in link table, with target id
-							// and source id, anchor text, todays date and
-							// domain name extracted from url address.
-							linksToNewLinks(backLinks, currentURL);
+								// 4: for each new source url - retrieve it's id and
+								// the target's id from DB and
+								// create new entry in link table, with target id
+								// and source id, anchor text, todays date and
+								// domain name extracted from url address.
+								linksToNewLinks(backLinks, currentURL);
 
 							}catch(Exception e){
 								log.warning("Error in creating new links / urls. "  + e.getMessage());
@@ -165,12 +172,10 @@ public class ProcessNewTargets extends HttpServlet {
 							log.info("No backlinks from SEOMoz for: "
 									+ currentTargetAddress);
 						}
-						
-						//update the setbacklinks_got...... urlDBUnit.
-						//TODO: need to test this.... - doesnt seem to be working...
-						urlDBUnit.updateBackLinksGot(currentURL, true);
-						//currentURL.setBacklinks_got(true); 
+
 						// change flag - so this will not be included in further calls for backlinks
+						urlDBUnit.updateBackLinksGot(currentURL, true);
+
 					}
 
 				}
@@ -350,7 +355,7 @@ public class ProcessNewTargets extends HttpServlet {
 				Link link = new Link();
 
 				backLinkURL = urlDBUnit.getURL(httpURL);
-				
+
 				//////////////////
 				//TODO: delete: testing.
 				if(null == backLinkURL)
@@ -399,13 +404,24 @@ public class ProcessNewTargets extends HttpServlet {
 			log.warning(msg + e.getMessage());
 		}
 
-		if ((null != resultingURLDAPA.getDocTitle())
-				|| (null != resultingURLDAPA)) {
+		//		if ((null != resultingURLDAPA.getDocTitle())
+		//				|| (null != resultingURLDAPA)) {
+		//			docTitle = resultingURLDAPA.getDocTitle();
+		//			
+		// replaced the above code with:
+		if(null != resultingURLDAPA){
+
 			docTitle = resultingURLDAPA.getDocTitle();
-			if (docTitle.length() > 44)
-				miniDocTitle = resultingURLDAPA.getDocTitle().substring(0, 44);
-			else
-				miniDocTitle = docTitle;
+
+			if(null!=docTitle){
+
+				if (docTitle.length() > 44)
+					miniDocTitle = resultingURLDAPA.getDocTitle().substring(0, 44);
+				else
+					miniDocTitle = docTitle;
+			}else{
+				miniDocTitle = "";
+			}
 
 			// now persist the domain and page authority to the correct url in
 			// the DB.
