@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
+import com.gofetch.GoFetchConstants;
 import com.gofetch.entities.*;
 import com.gofetch.seomoz.*;
 import com.gofetch.socialdata.*;
@@ -29,18 +30,19 @@ public class ProcessNewTargets extends HttpServlet {
 	private static Logger log = Logger.getLogger(ProcessNewTargets.class
 			.getName());
 
-	private static Integer pcDiffAllowed = 2; //represents the %age difference allowed btwn urls's social data
-	// Necessary as urls have different social metrics with trailing slashes at end or not
-
 	/**
 	 * Pre-conditions:
 	 * 
 	 * Post-conditions: upon exit, all the target urls that were entered by
-	 * user(s) yesterday will: 1) have all their backlinks (known by SEOMoz
-	 * server at least) entered into the url table. 2) all these backlinks will
-	 * have the same get_social_data value as their target url. true/false. 3)
+	 * user(s) will: 
+	 * 1) have all their backlinks (known by SEOMoz server at least) entered into the url table. And if the call to SEOMoz is successful, then these target url's 
+	 * 		backlink_got field's are set to true.
+	 * 2) all these backlinks will
+	 * have the same get_social_data value as their target url. true/false. 
+	 * 3)
 	 * for every backlink, an entry will be made into the links table, which
-	 * records source and target url for each link 4) for every entry into the
+	 * records source and target url for each link 
+	 * 4) for every entry into the
 	 * link table, a final_target_url will be assigned from each target url to
 	 * source url. - this will be the url address of the final target in the
 	 * tree of linked urls. = The root of the tree, which is - the url that was
@@ -64,21 +66,19 @@ public class ProcessNewTargets extends HttpServlet {
 
 		List<URLPlusDataPoints> backLinks = null;
 		URLDBService urlDBUnit = new URLDBService();
-		SEOMoz seoMoz = new SEOMozImplFreeAPI();
+		SEOMoz seoMoz = new SEOMozImplFreeAPI();	
+		
+		/////////
+		// SEOMoz processing of URLs.
 
-		// TODO: replace this with... get urls who get_backlinks = true backlinks_got = false.
-		// get all the urls entered by users yesterday.
-		//List<URL> urlListYest = urlDBUnit.getTargetURLsFrom(DateUtil
-		//		.getTodaysDate());
-		// replace this ....
 
-		//new implementation: returns all the urls that have get_backlinks = true backlinks_got = false
+		//new implementation: returns all the urls that have get_backlinks = true && backlinks_got = false
 		List<URL> unprocessedURLs = urlDBUnit.getUnproccessedTargetURLs();
 
 
 		if (!unprocessedURLs.isEmpty()) {
 			for (URL currentURL : unprocessedURLs) {
-				if (currentURL.isGet_backlinks()) {
+				//if (currentURL.isGet_backlinks()) { - already taken into account in the getUnproccessedTargetURLs(); call
 
 					boolean getLinksSuccessful = true;
 
@@ -178,7 +178,7 @@ public class ProcessNewTargets extends HttpServlet {
 
 					}
 
-				}
+				//} // end of......... if (currentURL.isGet_backlinks()) 
 			}
 
 		} else {
@@ -187,9 +187,11 @@ public class ProcessNewTargets extends HttpServlet {
 
 			log.info("No Target URLs entered yesterday.");
 		}
-		// end of checking yesterday's URLs
+		// end of SEOMoz processing URLs
 		// /////////////
 
+		//////////////////////////////////
+		// Social metric crawl / processing of URLs...
 		// Now we have all the backlinks from SEOMoz entered into the DB, now
 		// get all the social data urls in DB that have FB and Twitter data
 		// selected...
@@ -267,6 +269,9 @@ public class ProcessNewTargets extends HttpServlet {
 			url.setUrl_address(urlPlusHttp);
 			url.setDate(todaysDate);
 			url.setGet_social_data(currentURL.isGet_social_data());
+			
+			url.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);
+
 			url.setDomain(domainName);
 			url.setSeomoz_url(true);
 			url.setBacklinks_got(false);
@@ -557,8 +562,14 @@ public class ProcessNewTargets extends HttpServlet {
 		MiscSocialData socialDataAPISlash = null;
 		MiscSocialData assimilatedSocialData = null;
 
-		urls = urlDBUnit.getSociallyTrackedURLs();
-
+		//urls = urlDBUnit.getSociallyTrackedURLs();
+		
+		// replaced the above with:
+		// get urls where get social data = true 
+		//	and social data date <= todays date (not just = today's date, in case there was an error with updating the social date some urls would be left behind & lost)
+		urls = urlDBUnit.getTodaysSocialCrawlURLs();
+		
+		
 		// 2: loop through checking to see if their social data has changed from
 		// previous entry... update if true.
 
@@ -575,6 +586,7 @@ public class ProcessNewTargets extends HttpServlet {
 			boolean manualSocialDataGot = true; 
 			boolean sharedCountFailedSlash = false; 
 			boolean sharedCountFailedNoSlash = false; 
+			double pcDifferenceBtwnSocialData;
 
 			urlAddress = currentURL.getUrl_address();
 
@@ -675,7 +687,9 @@ public class ProcessNewTargets extends HttpServlet {
 				// if social data from DB, is empty or different from most
 				// recent social data from APIs... then persist new social data
 
-				persistSocialData(socialDataFromDB, assimilatedSocialData, socialDataDBUnit, currentURL.getId());
+				pcDifferenceBtwnSocialData = persistSocialData(socialDataFromDB, assimilatedSocialData, socialDataDBUnit, currentURL.getId());
+				
+				updateSocialCrawlFrequency(currentURL, pcDifferenceBtwnSocialData, urlDBUnit);
 
 				//TODO: here add the code that will check and set the frequency of check_freq: for every url.
 				//	daily = 1, weekly = 2, monthly =3, daily - get all urls that have check_freq < 2, weekly get all urls with check_freq < 3, etc
@@ -696,15 +710,75 @@ public class ProcessNewTargets extends HttpServlet {
 			}
 		}
 	}
+	
+	private void updateSocialCrawlFrequency(URL currentURL,
+			double pcDifferenceBtwnSocialData, URLDBService urlDBUnit) {
+		
+		int socialFreq = currentURL.getSocial_data_freq();
+		
+		//need to check if it just new URL with no previous social data - so pcDifference would be set to 0, but shouldnt be...
+		if(pcDifferenceBtwnSocialData < 0){
+			currentURL.setSocial_data_date(DateUtil.getTommorrowsDate());
+			urlDBUnit.updateSocialFrequencyData(currentURL);
+			return;
+		}
+		
+		if(pcDifferenceBtwnSocialData < GoFetchConstants.SOCIAL_DATA_RANGE_MIN){
+			
+			currentURL.decreaseSocialCrawlFrequency();
 
-	/*
-	 * either returns 0, or if there's no change in the number of days since there was any new data, this can be used
-	 * to self-regulate the rate at which this url is checked for social data... daily, weekly or monthly...
-	 * so will return the number of days since the last update.
+		}
+		
+		if(pcDifferenceBtwnSocialData > GoFetchConstants.SOCIAL_DATA_RANGE_MAX){
+
+			currentURL.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);
+		}
+		
+		// now update the URL's next date to be included in the social data crawl
+		// if may of been increased or decreased:
+		socialFreq = currentURL.getSocial_data_freq();
+			
+		if(GoFetchConstants.DAILY_FREQ==socialFreq){
+			// then make social data date tmw.
+			currentURL.setSocial_data_date(DateUtil.getTommorrowsDate());
+			
+		}
+		
+		if(GoFetchConstants.WEEKLY_FREQ==socialFreq){
+			// then make social data date next week.
+			currentURL.setSocial_data_date(DateUtil.getNextWeeksDate());
+		}
+		
+		if(GoFetchConstants.MONTHLY_FREQ==socialFreq){
+			
+			//TODO: implement this...
+			if(0 ==pcDifferenceBtwnSocialData){
+				//then.. check difference btwn dates?? and if there's x days or weeks.. set getSocialData(false)???
+				// this is typically socially dead backlinks...
+				
+			}
+			
+			// then make social data date next month.
+			currentURL.setSocial_data_date(DateUtil.getNextMonthsDate());
+		}
+		
+		urlDBUnit.updateSocialFrequencyData(currentURL);
+		
+		
+	}
+
+	/* If there is new social data - then persists this...
+	 * returns the percentage difference between the new social data and the previous entry. Returns 0, if no change and -1 if no previous entry in DB for this URL. 
 	 */
-	@SuppressWarnings("unused")
-	private Integer persistSocialData(MiscSocialData socialDataFromDB, MiscSocialData assimilatedSocialData, MiscSocialDataDBService socialDataDBUnit,  Integer currentURLID){
+	private double persistSocialData(MiscSocialData socialDataFromDB, MiscSocialData assimilatedSocialData, MiscSocialDataDBService socialDataDBUnit,  Integer currentURLID){
 
+		
+		//used as running total of all social data- so we can check the %age difference below
+		double totalSocialDataDB, totalSocialDataToday; 
+		double pcDifference;
+		Integer deliciousDB, deliciousToday, fbTotalCountDB, fbTotalCountToday, googlePlusDB, googlePlusToday, 
+				linkedInDB, linkedInToday, pinterestDB, pinterestToday, stumbleUponDB, stumbleUponToday, twitterDB, twitterToday;
+		
 		// if there's no social data for this URL in DB yet - just add this as first entry
 		if (null == socialDataFromDB){
 
@@ -714,43 +788,22 @@ public class ProcessNewTargets extends HttpServlet {
 
 			socialDataDBUnit.createNewSocialData(assimilatedSocialData);
 
-			return 0;
+			return -1;
 		}
 
-		// if there's no difference between DB data and today's data: then dont create a new entry in DB:
+		// if there's no difference between DB data and today's data: then don't create a new entry in DB:
 		if(socialDataFromDB.equals(assimilatedSocialData)){
 
 			log.info("Todays social data no different from last saved data. url id:  " + String.valueOf(currentURLID));
-
-			/// 
-			// get difference in days btwn the 2: - this is where we check and can adjust the rate of frequency of the social data we check
-
-			Calendar calendar1 = Calendar.getInstance();
-			Calendar calendar2 = Calendar.getInstance();
-			calendar1.setTime(socialDataFromDB.getDate());
-			calendar2.setTime(DateUtil.getTodaysDate());
-			long milliseconds1 = calendar1.getTimeInMillis();
-			long milliseconds2 = calendar2.getTimeInMillis();
-			long diff = milliseconds2 - milliseconds1;
-			long diffSeconds = diff / 1000;
-			long diffMinutes = diff / (60 * 1000);
-			long diffHours = diff / (60 * 60 * 1000);
-			long diffDays = diff / (24 * 60 * 60 * 1000);
-
-			return (int) (diffDays);
+			
+			return 0;
 		}
-
-
-
-
 
 		// check individual properties of the assimilated social data against the socialDataDBUnit
 		//	- if the assimilated data has any entry that is a 0, and if the DBdata is NOT 0, then use the 
 		//	DB data in the new entry - this means the call to that particular social API has failed, 
 		// so rather than let the rest of the data go to waste, just use previous record and update the 
 		//	the social calls that DID work...
-		//|| (!socialDataFromDB.equals(assimilatedSocialData))) {
-		//}
 
 		MiscSocialData newSocialData = new MiscSocialData();
 
@@ -760,64 +813,97 @@ public class ProcessNewTargets extends HttpServlet {
 		/////////Assimilate individual social metrics//////////////////////////////////////////
 		//TODO: here we can get the new data and old data and look for a spike...
 		// if DB data is Less than most recent API data this means the social data has increased - use API data
-		if(socialDataFromDB.getDelicious() < assimilatedSocialData.getDelicious())
-			newSocialData.setDelicious(assimilatedSocialData.getDelicious());
+		
+		deliciousDB = socialDataFromDB.getDelicious();
+		deliciousToday = assimilatedSocialData.getDelicious();
+		
+		fbTotalCountDB = socialDataFromDB.getFb_total_Count(); 
+		fbTotalCountToday = assimilatedSocialData.getFb_total_Count();
+		
+		googlePlusDB = socialDataFromDB.getGoogle_plus_one(); 
+		googlePlusToday = assimilatedSocialData.getGoogle_plus_one();
+		
+		linkedInDB = socialDataFromDB.getLinkedin(); 
+		linkedInToday = assimilatedSocialData.getLinkedin();
+		
+		pinterestDB = socialDataFromDB.getPinterest(); 
+		pinterestToday = assimilatedSocialData.getPinterest();
+		
+		stumbleUponDB = socialDataFromDB.getStumble_upon(); 
+		stumbleUponToday = assimilatedSocialData.getStumble_upon();
+		
+		twitterDB = socialDataFromDB.getTwitter(); 
+		twitterToday = assimilatedSocialData.getTwitter();
+		
+		// get summation of social data for both DB and current social data
+		totalSocialDataDB = deliciousDB + fbTotalCountDB + googlePlusDB + linkedInDB + pinterestDB + stumbleUponDB + twitterDB;
+		totalSocialDataToday = deliciousToday + fbTotalCountToday + googlePlusToday + linkedInToday + pinterestToday + stumbleUponToday + twitterToday;
+		
+		// work out %age difference...
+		pcDifference = (double) ((totalSocialDataToday - totalSocialDataDB)/ totalSocialDataDB) * 100;
+		
+			
+		////////////////////////
+		// delicious.....
+		if(deliciousDB < deliciousToday)
+			newSocialData.setDelicious(deliciousToday);
 		else
-			newSocialData.setDelicious(socialDataFromDB.getDelicious()); // else API call has failed or its not changed from DB data
+			newSocialData.setDelicious(deliciousDB); // else API call has failed or its not changed from DB data
 
 		// Facebook
-		if(socialDataFromDB.getFb_total_Count() < assimilatedSocialData.getFb_total_Count()){
+		if(fbTotalCountDB < fbTotalCountToday){
 			newSocialData.setFb_click_Count(assimilatedSocialData.getFb_click_Count());
 			newSocialData.setFb_comment_Count(assimilatedSocialData.getFb_comment_Count());
 			newSocialData.setFb_commentsbox_count(assimilatedSocialData.getFb_commentsbox_count());
 			newSocialData.setFb_like_Count(assimilatedSocialData.getFb_like_Count());
 			newSocialData.setFb_share_Count(assimilatedSocialData.getFb_share_Count());
-			newSocialData.setFb_total_Count(assimilatedSocialData.getFb_total_Count());
+			newSocialData.setFb_total_Count(fbTotalCountToday);
 		}else{ 
 			newSocialData.setFb_click_Count(socialDataFromDB.getFb_click_Count());
 			newSocialData.setFb_comment_Count(socialDataFromDB.getFb_comment_Count());
 			newSocialData.setFb_commentsbox_count(socialDataFromDB.getFb_commentsbox_count());
 			newSocialData.setFb_like_Count(socialDataFromDB.getFb_like_Count());
 			newSocialData.setFb_share_Count(socialDataFromDB.getFb_share_Count());
-			newSocialData.setFb_total_Count(socialDataFromDB.getFb_total_Count());
+			newSocialData.setFb_total_Count(fbTotalCountDB);
 		}
 
 		//Google+
-		if(socialDataFromDB.getGoogle_plus_one() < assimilatedSocialData.getGoogle_plus_one())
-			newSocialData.setGoogle_plus_one(assimilatedSocialData.getGoogle_plus_one());
+		if(googlePlusDB < googlePlusToday)
+			newSocialData.setGoogle_plus_one(googlePlusToday);
 		else
-			newSocialData.setGoogle_plus_one(socialDataFromDB.getGoogle_plus_one());
+			newSocialData.setGoogle_plus_one(googlePlusDB);
 
 		//LinkedIn
-		if(socialDataFromDB.getLinkedin() < assimilatedSocialData.getLinkedin())
-			newSocialData.setLinkedin(assimilatedSocialData.getLinkedin());
+		if(linkedInDB < linkedInToday)
+			newSocialData.setLinkedin(linkedInToday);
 		else
-			newSocialData.setLinkedin(socialDataFromDB.getLinkedin());
+			newSocialData.setLinkedin(linkedInDB);
 
 		// Pinterest
-		if(socialDataFromDB.getPinterest() < assimilatedSocialData.getPinterest())
-			newSocialData.setPinterest(assimilatedSocialData.getPinterest());
+		if(pinterestDB < pinterestToday)
+			newSocialData.setPinterest(pinterestToday);
 		else
-			newSocialData.setPinterest(socialDataFromDB.getPinterest());
+			newSocialData.setPinterest(pinterestDB);
 
 		//StumbleUpon
-		if(socialDataFromDB.getStumble_upon() < assimilatedSocialData.getStumble_upon())
-			newSocialData.setStumble_upon(assimilatedSocialData.getStumble_upon());
+		if(stumbleUponDB < stumbleUponToday)
+			newSocialData.setStumble_upon(stumbleUponToday);
 		else
-			newSocialData.setStumble_upon(socialDataFromDB.getStumble_upon());
+			newSocialData.setStumble_upon(stumbleUponDB);
 
 		//Twitter
-		if(socialDataFromDB.getTwitter() < assimilatedSocialData.getTwitter())
-			newSocialData.setTwitter(assimilatedSocialData.getTwitter());
+		if(twitterDB < twitterToday)
+			newSocialData.setTwitter(twitterToday);
 		else
-			newSocialData.setTwitter(socialDataFromDB.getTwitter());
+			newSocialData.setTwitter(twitterDB);
 
 		///////////////////////////////////////////////
 
 		log.info("New social data entry for url: " + String.valueOf(currentURLID));
 		socialDataDBUnit.createNewSocialData(newSocialData);
+	
 
-		return 0;
+		return pcDifference;
 
 	}
 
@@ -828,19 +914,19 @@ public class ProcessNewTargets extends HttpServlet {
 		/////////////////////////
 
 		// run through every data type... using assimilateHelper method to return one or sum of the values from the sharedCount objects...
-		assimilatedData.setDelicious(			assimilateHelper(data1.getDelicious(),		 data2.getDelicious(),pcDiffAllowed));
-		assimilatedData.setGoogle_plus_one(		assimilateHelper(data1.getGoogle_plus_one(), data2.getGoogle_plus_one(),pcDiffAllowed));
-		assimilatedData.setLinkedin(			assimilateHelper(data1.getLinkedin(),		 data2.getLinkedin(),pcDiffAllowed));
-		assimilatedData.setPinterest(			assimilateHelper(data1.getPinterest(),		 data2.getPinterest(),pcDiffAllowed));
-		assimilatedData.setStumble_upon(		assimilateHelper(data1.getStumble_upon(),	 data2.getStumble_upon(),pcDiffAllowed));
-		assimilatedData.setTwitter(				assimilateHelper(data1.getTwitter(),		 data2.getTwitter(),pcDiffAllowed));	
+		assimilatedData.setDelicious(			assimilateHelper(data1.getDelicious(),		 data2.getDelicious(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setGoogle_plus_one(		assimilateHelper(data1.getGoogle_plus_one(), data2.getGoogle_plus_one(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setLinkedin(			assimilateHelper(data1.getLinkedin(),		 data2.getLinkedin(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setPinterest(			assimilateHelper(data1.getPinterest(),		 data2.getPinterest(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setStumble_upon(		assimilateHelper(data1.getStumble_upon(),	 data2.getStumble_upon(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setTwitter(				assimilateHelper(data1.getTwitter(),		 data2.getTwitter(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));	
 		//facebook data:
-		assimilatedData.setFb_click_Count(			assimilateHelper(data1.getFb_click_Count(),		 data2.getFb_click_Count(),pcDiffAllowed));
-		assimilatedData.setFb_comment_Count(		assimilateHelper(data1.getFb_comment_Count(), 	 data2.getFb_comment_Count(),pcDiffAllowed));
-		assimilatedData.setFb_commentsbox_count(	assimilateHelper(data1.getFb_commentsbox_count(),data2.getFb_commentsbox_count(),pcDiffAllowed));
-		assimilatedData.setFb_like_Count(			assimilateHelper(data1.getFb_like_Count(),		 data2.getFb_like_Count(),pcDiffAllowed));
-		assimilatedData.setFb_share_Count(			assimilateHelper(data1.getFb_share_Count(),		 data2.getFb_share_Count(),pcDiffAllowed));
-		assimilatedData.setFb_total_Count(			assimilateHelper(data1.getFb_total_Count(),		 data2.getFb_total_Count(),pcDiffAllowed));
+		assimilatedData.setFb_click_Count(			assimilateHelper(data1.getFb_click_Count(),		 data2.getFb_click_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setFb_comment_Count(		assimilateHelper(data1.getFb_comment_Count(), 	 data2.getFb_comment_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setFb_commentsbox_count(	assimilateHelper(data1.getFb_commentsbox_count(),data2.getFb_commentsbox_count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setFb_like_Count(			assimilateHelper(data1.getFb_like_Count(),		 data2.getFb_like_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setFb_share_Count(			assimilateHelper(data1.getFb_share_Count(),		 data2.getFb_share_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+		assimilatedData.setFb_total_Count(			assimilateHelper(data1.getFb_total_Count(),		 data2.getFb_total_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
 
 		return assimilatedData;
 

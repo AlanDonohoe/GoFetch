@@ -3,11 +3,13 @@ package com.gofetch.entities;
 import java.io.Serializable;
 import java.lang.Integer;
 import java.lang.String;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.*;
 import org.hibernate.validator.NotNull;
+//import java.util.ArrayList;
+//import java.util.List;
+
+import com.gofetch.GoFetchConstants;
 
 /**
  * Entity implementation class for Entity: URL
@@ -25,12 +27,14 @@ public class URL implements Serializable {
 	private Integer url_id;
 	private static final long serialVersionUID = 1L;
 
-
 	@NotNull private String url_address;
 	@NotNull private String user_id;
 
 	@Temporal(TemporalType.DATE) 
 	@NotNull private Date date;
+
+	@Temporal(TemporalType.DATE) 
+	private Date social_data_date;
 
 	private String category;
 	private String domain;
@@ -45,6 +49,9 @@ public class URL implements Serializable {
 	private Integer no_of_layers;
 
 	private boolean seomoz_url;
+	
+	private Integer social_data_freq;
+
 
 	// can not work out how to use JPAnnotation to make all the related objects delete when related url is deleted,
 	//	so i'm doing it programmatically...
@@ -78,7 +85,7 @@ public class URL implements Serializable {
 	public Integer getNo_of_layers() {
 		return no_of_layers;
 	}
-	
+
 	public void setNo_of_layers(Integer no_of_layers) {
 		this.no_of_layers = no_of_layers;
 	}
@@ -186,12 +193,54 @@ public class URL implements Serializable {
 		this.url_id = id;
 	}
 
-	 @Override
-	    public String toString() {
-		 
-		 return String.format("\"URL\":\"%s\"", url_address);
-		 
-	 }
-	 
+
+	public Date getSocial_data_date() {
+		return social_data_date;
+	}
+
+	public void setSocial_data_date(Date social_data_date) {
+		this.social_data_date = social_data_date;
+	}
+
+	public Integer getSocial_data_freq() {
+		return social_data_freq;
+	}
+
+	public void setSocial_data_freq(Integer social_data_freq) {
+		this.social_data_freq = social_data_freq;
+	}
+
+	@Override
+	public String toString() {
+
+		return String.format("\"URL\":\"%s\"", url_address);
+
+	}
+
+	/*
+	 * decreases social_data_freq by 1. 
+	 * if its already at max - then remains at max
+	 */
+	public void decreaseSocialCrawlFrequency() {
+			
+		if(GoFetchConstants.MONTHLY_FREQ == social_data_freq) // if at max, just return
+			return;
+		//else drop down to check at weekly or monthly.
+		social_data_freq--;
+
+	}
+
+	/*
+	 * increases social_data_freq by 1
+	 * if its already checking at daily, 
+	 */
+	public void increaseSocialCrawlFrequency() {
+			
+		if(GoFetchConstants.DAILY_FREQ == social_data_freq ) // if already checking daily - just return
+			return;
+		
+		social_data_freq++;
+
+	}
 
 }

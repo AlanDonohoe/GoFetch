@@ -3,6 +3,7 @@ package com.gofetch.beans;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -302,8 +303,12 @@ public class GoFetchRequestBean implements Serializable {
 		for (String newURL : urlListPassed) {
 
 			URL url = new URL();
+			
+			Date todaysDate = DateUtil.getTodaysDate();
 
-			url.setDate(DateUtil.getTodaysDate());
+			url.setDate(todaysDate);
+			url.setSocial_data_date(todaysDate);
+			url.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);
 			url.setUrl_address(newURL);
 			url.setUser_id(user_id);
 
@@ -312,7 +317,7 @@ public class GoFetchRequestBean implements Serializable {
 			url.setNo_of_layers(noOfLayers);
 			url.setBacklinks_got(false); // turns to true, when ProcessNewTargets have got this url's backlinks
 
-			// URLDBService urlDBUnit = new URLDBService();
+			
 			urlDB.createURL(url);
 
 			// add to report:

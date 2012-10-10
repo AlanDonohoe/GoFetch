@@ -29,10 +29,10 @@ public class URLDBService{
 	EntityManagerFactory emf;
 
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
-	
+
 	//TODO: dont know if this works - JQPL Selecting single field.. rather than whole entity...
 	public List<String> getURLAddresses(){
-		
+
 		log.info("Entering getURLAddresses");
 		List<String> result = null;
 
@@ -43,7 +43,7 @@ public class URLDBService{
 			result= (List<String>) mgr.createQuery("SELECT u.url_address FROM url u").getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLAddresses";
-			
+
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -55,7 +55,7 @@ public class URLDBService{
 		log.info("Exiting getURLAddresses");
 		return result;
 	}
-	
+
 	//TODO: writing URLs to DB is v v slow - takes about 2 secs per record... why????
 	//	maybe create a method: void createURLs(List<URL> listURLs) method and have a loop within that to include only: if(!urlInDB(url)){...persist.... }
 	//	use batch processing of URLs to DB.
@@ -89,7 +89,6 @@ public class URLDBService{
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: createURL";
-			//logger.logp(Level.SEVERE, "URLService", "createURL",msg ,e);
 			log.severe(msg + e.getMessage());
 
 		}
@@ -156,7 +155,7 @@ public class URLDBService{
 		}
 
 		log.info("Exiting getURL");
-		
+
 		if((null == url) || (url.isEmpty()))
 			return null;
 		else
@@ -208,7 +207,7 @@ public class URLDBService{
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLs";
-			
+
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -291,8 +290,8 @@ public class URLDBService{
 		return result;
 
 	}
-	
-	
+
+
 
 	/*
 	 * Returns a list of URLs that were added between the 2 dates
@@ -313,7 +312,7 @@ public class URLDBService{
 
 		}catch(Exception e){
 			String msg = "Exception thrown: URLService: getURLsBetween";
-			//logger.logp(Level.SEVERE, "URLService", "getURLsBetween",msg ,e);
+
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -490,6 +489,38 @@ public class URLDBService{
 
 	}
 
+	public void updateSocialFrequencyData(URL url){
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		try {
+
+			mgr.getTransaction().begin();
+
+			URL urlDB = mgr.find(URL.class, url.getId());
+			urlDB.setSocial_data_freq(url.getSocial_data_freq());
+			urlDB.setSocial_data_date(url.getSocial_data_date());
+
+			mgr.merge(urlDB);
+			//mgr.flush();
+			mgr.getTransaction().commit();
+			
+
+
+
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: updateSocialFrequencyData";
+			//logger.logp(Level.SEVERE, "URLService", "updateDomainNames",msg ,e);
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+
+
+	}
+
 	public void updateDomainNames(List<URL> urls){
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -519,8 +550,8 @@ public class URLDBService{
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * Updates record with url address with new page authority (pa) & domain authority (da) data
 	 * 
@@ -549,7 +580,7 @@ public class URLDBService{
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: updateURLData";
-		
+
 			log.severe(msg + e.getMessage());
 
 		}  finally {
@@ -557,8 +588,8 @@ public class URLDBService{
 		}
 
 	}
-	
-	
+
+
 
 
 	/*
@@ -591,8 +622,8 @@ public class URLDBService{
 		return result;
 
 	}
-	
-	
+
+
 	public List<URL> getURLsFromIDs(List<Integer> idList){
 
 		log.info("Entering getURLsFromIDs");
@@ -601,25 +632,25 @@ public class URLDBService{
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-		
+
 		//TODO: decide: 2 options: - need to check in optimization....
-		
+
 		//1: one call to DB and search list for idList
 		//		get list of all urls and then use java selection process to retrieve urls from this list that are in idList
-		
+
 		//2: multiple calls to DB:
 		//	loop through all idList and make repeat calls to DB retrieving URL for each.
-		
+
 
 		try {
-			
+
 			//2: 
 			for(int i = 0; i < idList.size(); i++){
-				
+
 				urls.add(mgr.find(URL.class, idList.get(i)));
-							
+
 			}
-	
+
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLsFromIDs";
@@ -635,49 +666,49 @@ public class URLDBService{
 
 	}
 
-//	/**
-//	 * Method checks that urlAddress is in DB, and if it is, deletes that URL from the DB.
-//	 * @param urlAddress string address of url to be deleted
-//	 */
-//	public void deleteURL(String urlAddress){
-//
-//		log.info("Entering deleteURL. Deleting " + urlAddress);
-//
-//		URL url;
-//
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-//
-//		url = getURL(urlAddress);
-//
-//		if(url != null){
-//
-//			try{
-//				mgr.getTransaction().begin();
-//
-//				mgr.createQuery("DELETE FROM URL u WHERE u.url_id = :url_id")
-//				.setParameter("url_id", url_id)
-//				.executeUpdate();
-//
-//				mgr.getTransaction().commit();
-//
-//			}catch(Exception e){
-//				String msg = "Exception thrown deleting: " + urlAddress;
-//				logger.logp(Level.SEVERE, "URLService", "deleteURL",msg ,e);
-//
-//			} finally {
-//				mgr.close();
-//			}
-//
-//		}
-//		else{
-//			log.info(urlAddress + " Not in DB.");
-//		}
-//
-//		log.info("Exiting deleteURL.");
-//
-//	}
-//
+	//	/**
+	//	 * Method checks that urlAddress is in DB, and if it is, deletes that URL from the DB.
+	//	 * @param urlAddress string address of url to be deleted
+	//	 */
+	//	public void deleteURL(String urlAddress){
+	//
+	//		log.info("Entering deleteURL. Deleting " + urlAddress);
+	//
+	//		URL url;
+	//
+	//		emf = Persistence.createEntityManagerFactory("GoFetch");
+	//		EntityManager mgr = emf.createEntityManager();
+	//
+	//		url = getURL(urlAddress);
+	//
+	//		if(url != null){
+	//
+	//			try{
+	//				mgr.getTransaction().begin();
+	//
+	//				mgr.createQuery("DELETE FROM URL u WHERE u.url_id = :url_id")
+	//				.setParameter("url_id", url_id)
+	//				.executeUpdate();
+	//
+	//				mgr.getTransaction().commit();
+	//
+	//			}catch(Exception e){
+	//				String msg = "Exception thrown deleting: " + urlAddress;
+	//				logger.logp(Level.SEVERE, "URLService", "deleteURL",msg ,e);
+	//
+	//			} finally {
+	//				mgr.close();
+	//			}
+	//
+	//		}
+	//		else{
+	//			log.info(urlAddress + " Not in DB.");
+	//		}
+	//
+	//		log.info("Exiting deleteURL.");
+	//
+	//	}
+	//
 
 	public void deleteURL(int url_id){
 
@@ -687,46 +718,46 @@ public class URLDBService{
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
-			try{
-				mgr.getTransaction().begin();
+		try{
+			mgr.getTransaction().begin();
 
-				mgr.createQuery("DELETE FROM URL u WHERE u.url_id = :url_id")
-				.setParameter("url_id", url_id)
-				.executeUpdate();
+			mgr.createQuery("DELETE FROM URL u WHERE u.url_id = :url_id")
+			.setParameter("url_id", url_id)
+			.executeUpdate();
 
-				mgr.getTransaction().commit();
+			mgr.getTransaction().commit();
 
-			}catch(Exception e){
-				String msg = "Exception thrown deleting: " + url_id + ". URLService: deleteURL";
-				//logger.logp(Level.SEVERE, "URLService", "deleteURL",msg ,e);
-				log.severe(msg + e.getMessage());
+		}catch(Exception e){
+			String msg = "Exception thrown deleting: " + url_id + ". URLService: deleteURL";
+			//logger.logp(Level.SEVERE, "URLService", "deleteURL",msg ,e);
+			log.severe(msg + e.getMessage());
 
-			} finally {
-				mgr.close();
-			}
+		} finally {
+			mgr.close();
+		}
 
 
 		log.info("Exiting deleteURL.");
 
 	}
-	
+
 	/*
 	 * Returns list of urls that have had their get_backlinks flag checked, but have not yet got their backlink data eg: from SEOMoz
 	 */
 	public List<URL> getUnproccessedTargetURLs(){
 
 		log.info("Entering getUnproccessedTargetURLs");
-		
+
 		List<URL> urls = null; 
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-	
+
 		try {
-			
+
 			urls = mgr.createQuery("SELECT u FROM URL u WHERE u.get_backlinks = TRUE and u.backlinks_got = false")
 					.getResultList();
-	
+
 		}catch(Exception e){
 			String msg = "Exception thrown. URLDBService: getUnproccessedTargetURLs";
 			log.severe(msg + e.getMessage());
@@ -737,6 +768,40 @@ public class URLDBService{
 
 		log.info("Exiting getUnproccessedTargetURLs");
 		return urls;
+
+	}
+
+	/*
+	 * returns all URLs that have a social_data_date less than or equal to todays date and get_social_data = true
+	 */
+	public List<URL> getTodaysSocialCrawlURLs() {
+
+		log.info("Entering getTodaysSocialCrawlURLs");
+		List<URL> result = null;
+		Date date = DateUtil.getTodaysDate();
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		
+
+		try {
+			result =  mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date")
+					.setParameter("date", date, TemporalType.DATE)
+					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getURLs";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			log.warning("No URLs returned");
+		}
+		log.info("Exiting getURLs");
+		return result;
 
 	}
 }

@@ -4,6 +4,16 @@ public class GoFetchConstants {
 
 	public static final int MIN_VALID_URL_LENGTH = 12;			 // used for user input validation - min = http://a.com 
 
+	public static final double SOCIAL_DATA_RANGE_MIN = 5; 		// if social data difference in % is below this, then the url's social data frequency is decremented
+	
+	public static final double SOCIAL_DATA_RANGE_MAX = 10; 		// if social data difference in % is above this, then the url's social data frequency is incremented
+	
+	public static final Integer DAILY_FREQ   = 3;						// Social data freq
+	public static final Integer WEEKLY_FREQ  = 2;						//having problems getting correct data back from persisted URLs  - remove the final from these to see if that helps
+	public static final Integer MONTHLY_FREQ = 1;
+	
+	public static final int ALLOWED_SOCIAL_DATA_DIFFERENCE = 2;	// %age difference allowed between url with trailing slash and url without trailing slash		
+	
 	///////////////////
 	// used when hitting social services for data - url goes in between preEndpoint and postEndPoint
 
@@ -25,6 +35,7 @@ public class GoFetchConstants {
 	
 	public static final String twitterPreEndPoint  = "http://urls.api.twitter.com/1/urls/count.json?url="; 
 	public static final String twitterPostEndPoint = "&callback=twttr.receiveCount";
+	
 	
 	
 	

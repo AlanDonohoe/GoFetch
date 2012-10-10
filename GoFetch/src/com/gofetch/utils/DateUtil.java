@@ -38,4 +38,24 @@ public class DateUtil {
 
 		return yesterdaysDate; 
 	}
+	
+	public static Date getTommorrowsDate(){
+		Date tmwDate = new java.sql.Date(new java.util.Date().getTime() + MILLIS_IN_A_DAY); 
+
+		return tmwDate; 
+	}
+	
+	public static Date getNextWeeksDate(){
+		Date tmwDate = new java.sql.Date(new java.util.Date().getTime() + (MILLIS_IN_A_DAY * 7)); 
+
+		return tmwDate; 
+	}
+	
+	
+	public static Date getNextMonthsDate(){
+		Date tmwDate = new java.sql.Date(new java.util.Date().getTime() + (MILLIS_IN_A_DAY * 30)); 
+
+		return tmwDate; 
+	}
+	
 }
