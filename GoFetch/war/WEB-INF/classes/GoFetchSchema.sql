@@ -14,8 +14,6 @@ CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `url_address` VARCHAR(500) NOT NULL ,
   `get_social_data` TINYINT(1) NOT NULL ,
   `get_backlinks` TINYINT(1) NOT NULL COMMENT 'If true, this indicates this is a target url and its id should be added to links table as a target' ,
-  `backlinks_got` TINYINT(1) NULL ,
-  `no_of_layers` TINYINT(1) NOT NULL ,
   `date` DATE NOT NULL ,
   `page_authority` INT NULL ,
   `domain_authority` INT NULL ,
@@ -24,10 +22,13 @@ CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `domain` VARCHAR(200) NULL ,
   `doc_title` VARCHAR(45) NULL ,
   `seomoz_url` TINYINT(1) NULL COMMENT 'If true, this source url was detected by SEOMoz.' ,
+  `social_data_date` DATE NULL ,
+  `social_data_freq` TINYINT NULL ,
   PRIMARY KEY (`url_id`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
+
 
 
 -- -----------------------------------------------------
@@ -82,7 +83,7 @@ CREATE  TABLE IF NOT EXISTS `url`.`links` (
   `source_id` INT NOT NULL COMMENT 'Represents hyperlinks btwn source which points at target.' ,
   `anchor_text` VARCHAR(200) NOT NULL ,
   `date_detected` DATE NOT NULL ,
-  `final_target_url` VARCHAR(200) NOT NULL ,
+  `final_target_url` VARCHAR(500) NOT NULL ,
   `date_expired` DATE NULL ,
   `user_category` VARCHAR(45) NULL ,
   `user_assigned_to` VARCHAR(45) NULL ,
@@ -120,7 +121,9 @@ CREATE  TABLE IF NOT EXISTS `url`.`misc_social_data` (
   `social_data_id` INT NOT NULL AUTO_INCREMENT ,
   `url_id` INT NOT NULL ,
   `date` DATE NOT NULL ,
+  `stumble_upon` INT NULL ,
   `delicious` INT NULL ,
+  `buzz` INT NULL ,
   `pinterest` INT NULL ,
   `linkedin` INT NULL ,
   `google_plus_one` INT NULL ,
@@ -130,6 +133,7 @@ CREATE  TABLE IF NOT EXISTS `url`.`misc_social_data` (
   `fb_comment_count` INT NULL ,
   `fb_share_count` INT NULL ,
   `fb_click_count` INT NULL ,
+  `fb_commentsbox_count` INT NULL ,
   PRIMARY KEY (`social_data_id`, `url_id`) ,
   INDEX `fk_misc_social_data_url1` (`url_id` ASC) ,
   CONSTRAINT `fk_misc_social_data_url1`
