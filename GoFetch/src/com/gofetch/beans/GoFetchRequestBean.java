@@ -37,8 +37,8 @@ public class GoFetchRequestBean implements Serializable {
 	private List<String> urlAddressesInDB = new ArrayList<String>();
 	private List<String> results = new ArrayList<String>(); //used in autocomplete
 
-	URLDBService urlDB = null;
-	List<URL> urlsinDB = null;
+	private URLDBService urlDB = null;
+	private List<URL> urlsinDB = null;
 
 
 
