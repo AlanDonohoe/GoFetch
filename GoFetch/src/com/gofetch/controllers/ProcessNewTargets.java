@@ -259,18 +259,14 @@ public class ProcessNewTargets extends HttpServlet {
 			urlPlusHttp = TextUtil.addHTTPToURL(currentBackLink
 					.getBackLinkURL());
 
-			// make sure the url has a trailing slash - to standardize all
-			// entries in DB,
-			// this removes the possibility of bbc.co.uk and bbc.co.uk/ both
-			// being entered.
-			//urlPlusHttp = TextUtil.addSlashToEndOfString(urlPlusHttp);
-
+			
 			URL url = new URL();
 			url.setUrl_address(urlPlusHttp);
 			url.setDate(todaysDate);
 			url.setGet_social_data(currentURL.isGet_social_data());
 			
 			url.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);
+			url.setSocial_data_date(todaysDate);
 
 			url.setDomain(domainName);
 			url.setSeomoz_url(true);
