@@ -37,8 +37,69 @@ public class Link implements Serializable {
 	
 	@NotNull
 	private String final_target_url;
+	
+	private String user_category;
+	
+	private String user_assigned_to;
+	
+	private String user_campaign;
+	
+	private Integer user_id; // points to a client's id. so can assign this link to a client.
+	
+	private Integer data_entered_by; // 0 = sourced from SeoMoz, 1 = user entered, 2 = ?? majestic ??
+	
+
+	public Integer getData_entered_by() {
+		return data_entered_by;
+	}
 
 
+	public void setData_entered_by(Integer data_entered_by) {
+		this.data_entered_by = data_entered_by;
+	}
+
+
+	public String getUser_category() {
+		return user_category;
+	}
+
+
+	public void setUser_category(String user_category) {
+		this.user_category = user_category;
+	}
+
+
+	public String getUser_assigned_to() {
+		return user_assigned_to;
+	}
+
+
+	public void setUser_assigned_to(String user_assigned_to) {
+		this.user_assigned_to = user_assigned_to;
+	}
+
+
+	public String getUser_campaign() {
+		return user_campaign;
+	}
+
+
+	public void setUser_campaign(String user_campaign) {
+		this.user_campaign = user_campaign;
+	}
+
+
+	public Integer getUser_id() {
+		return user_id;
+	}
+
+
+	public void setUser_id(Integer user_id) {
+		this.user_id = user_id;
+	}
+
+
+	//TODO: why is there here???  - there's no superclass???
 	public Link() {
 		super();
 	}   

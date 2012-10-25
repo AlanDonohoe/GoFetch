@@ -74,6 +74,9 @@ public class ProcessNewTargets extends HttpServlet {
 
 		//new implementation: returns all the urls that have get_backlinks = true && backlinks_got = false
 		List<URL> unprocessedURLs = urlDBUnit.getUnproccessedTargetURLs();
+		
+		//TODO: REMOVE! REMOVE! - JUST FOR DEBUGGING  - 23-10-12:
+		unprocessedURLs.clear();
 
 
 		if (!unprocessedURLs.isEmpty()) {
@@ -100,7 +103,7 @@ public class ProcessNewTargets extends HttpServlet {
 						backLinks = seoMoz.getLinks(currentTargetAddress);
 					} catch (Exception e) {
 						String msg = "Exception thrown getting backlink data for: "
-								+ currentTargetAddress + "ProcessNewTargets"
+								+ currentTargetAddress + " ProcessNewTargets"
 								+ "- SEOMoz block. Exception - ";
 						log.warning(msg + e.getMessage());
 
@@ -183,9 +186,9 @@ public class ProcessNewTargets extends HttpServlet {
 
 		} else {
 
-			reportSummary = "No Target URLs entered yesterday.\n";
+			reportSummary = "No Target URLs.\n";
 
-			log.info("No Target URLs entered yesterday.");
+			log.info("No Target URLs");
 		}
 		// end of SEOMoz processing URLs
 		// /////////////
@@ -571,7 +574,7 @@ public class ProcessNewTargets extends HttpServlet {
 
 		String noOfSocialURLs = String.valueOf(urls.size());
 		log.info("No of URLs to get social data for: " + noOfSocialURLs );
-		int i = 1;
+		int i = 0;
 
 		for (URL currentURL : urls) {
 
@@ -585,6 +588,8 @@ public class ProcessNewTargets extends HttpServlet {
 			double pcDifferenceBtwnSocialData;
 
 			urlAddress = currentURL.getUrl_address();
+			
+			i++;
 
 			log.info(String.valueOf(i) + " of " + noOfSocialURLs + " : " + urlAddress);
 

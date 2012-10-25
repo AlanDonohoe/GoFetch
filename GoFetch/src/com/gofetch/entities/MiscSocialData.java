@@ -31,6 +31,7 @@ public class MiscSocialData {
 
 	@Temporal(TemporalType.DATE)
 	@NotNull private Date date;
+	
 	@NotNull private int url_id;
 	//facebook
 	private int fb_total_Count;

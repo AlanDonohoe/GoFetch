@@ -380,8 +380,9 @@
 
 
 
-			<h:form >
+			
 				<!--  forceSelection="true" -->
+				<h:form >
 			
 				<p:tabView effect="fold" effectDuration="normal">
 
@@ -453,31 +454,26 @@
 							that other sources have missed</strong>
 											
 						<br/><br/>
-						<p:panelGrid columns="3">
+						<p:panelGrid columns="3" >
 
 
 							<h:outputLabel value="Target/Client URL:" />
-							<p:autoComplete value="#{dataEntryBacking.targetURL}"
-								id="targetURL2" completeMethod="#{dataEntryBacking.complete}"
-								size="75" maxResults="5" minQueryLength="10" />
+							
+							    <p:selectCheckboxMenu value="#{dataEntryBacking.selectedClients}" label="#{dataEntryBacking.selectedClients}" filter="true" filterText="Filter" filterMatchMode="startsWith" panelStyle="width:220px">  
+	<f:selectItems value="#{dataEntryBacking.clients}"/>
+    </p:selectCheckboxMenu>
 							<h:outputLabel value="?" id="targetURLHelp2" />
 
-							<h:outputLabel value="Your Email/ID:" />
 
-							<h:inputText value="#{dataEntryBacking.user_id}" maxlength="200"
-								size="76"></h:inputText>
-							<h:outputLabel value="?" id="idHelp2" />
 						</p:panelGrid>
 						<p:tooltip for="targetURLHelp2"
 							value="The URL that you want to monitor for backlink and social metric data. 
 							Enter a single URL or copy &amp; paste multiple URLs from excel. "
 							showEffect="fade" hideEffect="fade" targetPosition="topRight"
 							position="topRight" />
-						<p:tooltip for="idHelp2"
-							value="Entering your email will help personalise your GoFetch experience"
-							showEffect="fade" hideEffect="fade" targetPosition="topRight"
-							position="topRight" />
-
+							
+						<p:separator style="margin-bottom:10px"/>  
+						
 						<br />
 							
 						<p:panelGrid columns="3" style="width:700px">
@@ -488,7 +484,7 @@
 							<h:outputLabel value="?" id="idBacklinkHelp" />
 							
 							<h:outputLabel value="Anchor Text:" />
-
+	
 							<h:inputText value="#{dataEntryBacking.anchorText}" maxlength="200"
 								size="76"></h:inputText>
 							<h:outputLabel value="?" id="idAnchorTextHelp" />
@@ -508,6 +504,8 @@
 							<p:calendar value="#{dataEntryBacking.dateOfLink}" mode="inline"
 								id="inlineCal" />
 								</p:panelGrid>
+								
+								
 						
 						<h:commandButton action="#{dataEntryBacking.enterNewLinks}" style="position:relative; left:630px "
 							value="Add Links"></h:commandButton>
@@ -517,16 +515,17 @@
 							value="URL of backlink with content"
 							showEffect="fade" hideEffect="fade" targetPosition="topRight"
 							position="topRight" />
+							
 					</p:tab>
-
+			
 
 				</p:tabView>
-
+</h:form>
 
 				<!-- converter="URLConverter" var="p" itemLabel="#{p.name}" itemValue="#{p}" -->
 
 		
-			</h:form>
+			
 
 
 			<header class="clearfix">

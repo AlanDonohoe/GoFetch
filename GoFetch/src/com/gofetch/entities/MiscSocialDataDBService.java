@@ -132,14 +132,8 @@ public class MiscSocialDataDBService {
 		
 		log.info("Entering deleteSocialData.");
 
-		//List<MiscSocialData> socialDataList = null;
-
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
-//		socialDataList = getAllSocialData(url_id);
-
-//		if(!socialDataList.isEmpty()){
 
 			try{
 				
@@ -153,13 +147,12 @@ public class MiscSocialDataDBService {
 
 			}catch(Exception e){
 				String msg = "Exception thrown deleting SocialData. MiscSocialDataDBService: deleteSocialData. \n";
-				//logger.logp(Level.SEVERE, "MiscSocialDataDBService", "deleteSocialData",msg ,e);
+				
 				log.severe(msg + e.getMessage());
 			} finally {
 				mgr.close();
 			}
 
-		//}
 
 		log.info("Exiting deleteSocialData.");
 

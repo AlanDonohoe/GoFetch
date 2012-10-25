@@ -36,7 +36,7 @@ public class URL implements Serializable {
 	@Temporal(TemporalType.DATE) 
 	private Date social_data_date;
 
-	private String category;
+	private String category; // directory, newsite, etc.
 	private String domain;
 	private String doc_title;
 
@@ -48,9 +48,12 @@ public class URL implements Serializable {
 	private Integer domain_authority;
 	private Integer no_of_layers;
 
+	private Integer data_entered_by; // 0 = sourced from SeoMoz, 1 = user entered, 2 = ?? majestic ??
 	private boolean seomoz_url;
 	
 	private Integer social_data_freq;
+	
+	private String client_category;
 
 
 	// can not work out how to use JPAnnotation to make all the related objects delete when related url is deleted,
@@ -64,7 +67,7 @@ public class URL implements Serializable {
 	//	@OneToMany(cascade=CascadeType.ALL)
 	//	private List <MiscSocialData> MiscSocialDataList;
 
-
+	
 	public URL() {
 		super();
 
@@ -73,6 +76,32 @@ public class URL implements Serializable {
 		seomoz_url = false;
 
 	}   
+	
+	
+	
+	public String getClient_category() {
+		return client_category;
+	}
+
+
+
+	public void setClient_category(String client_category) {
+		this.client_category = client_category;
+	}
+
+
+
+	public Integer getData_entered_by() {
+		return data_entered_by;
+	}
+
+
+
+	public void setData_entered_by(Integer data_entered_by) {
+		this.data_entered_by = data_entered_by;
+	}
+
+
 
 	public boolean isBacklinks_got() {
 		return backlinks_got;
