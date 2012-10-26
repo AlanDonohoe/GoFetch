@@ -49,10 +49,13 @@
 
 	<link rel="shortcut icon"
 		href="http://www.propellernet.co.uk/favicon.ico" type="image/x-icon" />
+	
 
 	<link rel="stylesheet" href="css/style.css" />
+	<!--  
+	<link rel="stylesheet" href="css/custom-theme/skin.css" />
 
-
+-->
 
 	<style type="text/css">
 #twtr-widget-1 .twtr-avatar,#twtr-widget-1 .twtr-user {
@@ -99,7 +102,7 @@
 /* See license.txt for terms of usage */
 /** reset styling **/
 .firebugResetStyles {
-	z-index: 2147483646 top:  0 !important;
+	z-index: 2147483646 top:     0 !important;
 	left: 0 !important;
 	display: block !important;
 	border: 0 none !important;
@@ -380,152 +383,235 @@
 
 
 
-			
-				<!--  forceSelection="true" -->
-				<h:form >
-			
+
+			<!--  forceSelection="true" -->
+			<h:form>
+
 				<p:tabView effect="fold" effectDuration="normal">
 
 					<p:tab title="Monitor URLs">
-			<div class="center" id="monitorURLsTabContent" style=" margin-left: auto;   margin-right: auto;   width: 700px;">	
-						
-						<strong>	Enter the url you want to monitor and GoFetch all the data you want about that target. </strong>
-						<br/><br/>
-						<p:panelGrid columns="3">
+						<div class="center" id="monitorURLsTabContent"
+							style="margin-left: auto; margin-right: auto; width: 700px;">
+
+							<strong> Enter the url you want to monitor and GoFetch
+								all the data you want about that target. </strong> <br /> <br />
+							<p:panelGrid columns="3">
 
 
-							<h:outputLabel value="Target/Client URL:" />
-							<p:autoComplete value="#{dataEntryBacking.targetURL}"
-								id="targetURL" completeMethod="#{dataEntryBacking.complete}"
-								size="75" maxResults="5" minQueryLength="10" />
-							<h:outputLabel value="?" id="targetURLHelp" />
+								<h:outputLabel value="Target/Client URL:" />
+								<p:autoComplete value="#{dataEntryBacking.targetURL}"
+									id="targetURL" completeMethod="#{dataEntryBacking.complete}"
+									size="75" maxResults="5" minQueryLength="10" />
+								<h:outputLabel value="?" id="targetURLHelp" />
 
-							<h:outputLabel value="Your Email/ID:" />
+								<h:outputLabel value="Your Email/ID:" />
 
-							<h:inputText value="#{dataEntryBacking.user_id}" maxlength="200"
-								size="76"></h:inputText>
-							<h:outputLabel value="?" id="idHelp" />
-						</p:panelGrid>
-						<p:tooltip for="targetURLHelp"
-							value="The URL that you want to monitor for backlink and social metric data. 
+								<h:inputText value="#{dataEntryBacking.user_id}" maxlength="200"
+									size="76"></h:inputText>
+								<h:outputLabel value="?" id="idHelp" />
+							</p:panelGrid>
+							<p:tooltip for="targetURLHelp"
+								value="The URL that you want to monitor for backlink and social metric data. 
 							Enter a single URL or copy &amp; paste multiple URLs from excel. "
-							showEffect="fade" hideEffect="fade" targetPosition="topRight"
-							position="topRight" />
-						<p:tooltip for="idHelp"
-							value="Entering your email will help personalise your GoFetch experience"
-							showEffect="fade" hideEffect="fade" targetPosition="topRight"
-							position="topRight" />
+								showEffect="fade" hideEffect="fade" targetPosition="topRight"
+								position="topRight" />
+							<p:tooltip for="idHelp"
+								value="Entering your email will help personalise your GoFetch experience"
+								showEffect="fade" hideEffect="fade" targetPosition="topRight"
+								position="topRight" />
 
-						<br />
-						<p:panelGrid columns="3" style="width: 700px">
-							<f:facet name="header">  
+							<br />
+							<p:panelGrid columns="3" style="width: 700px">
+								<f:facet name="header">  
          Select the data you want to monitor and record: 
     </f:facet>
 
 
-							<h:selectBooleanCheckbox
-								value="#{goFetchRequestBean.backLinkData}" /> 
+								<h:selectBooleanCheckbox
+									value="#{goFetchRequestBean.backLinkData}" /> 
                     GoFetch Backlink Data 
 					<h:outputLabel value="?" id="backlinkHelp" />
 
-							<h:selectBooleanCheckbox value="#{goFetchRequestBean.socialData}" />
-					GoFetch Social Data  (Facebook, Twitter, etc...) 
+								<h:selectBooleanCheckbox
+									value="#{goFetchRequestBean.socialData}" />
+					GoFetch Social Data 
 					<h:outputLabel value="?" id="socialDataHelp" />
-						</p:panelGrid>
+							</p:panelGrid>
 
-						<p:tooltip for="backlinkHelp"
-							value="GoFetch will retrieve the links pointing to your target url then will monitor these daily for new data."
-							showEffect="fade" hideEffect="fade" targetPosition="topRight"
-							position="topRight" />
-						<p:tooltip for="socialDataHelp"
-							value="Facebook, Twitter, etc... GoFetch will monitor the above URL(s) and backlinks for changes in social data."
-							showEffect="fade" hideEffect="fade" targetPosition="topRight"
-							position="topRight" />
+							<p:tooltip for="backlinkHelp"
+								value="GoFetch will retrieve the links pointing to your target url then will monitor these daily for new data."
+								showEffect="fade" hideEffect="fade" targetPosition="topRight"
+								position="topRight" />
+							<p:tooltip for="socialDataHelp"
+								value="Facebook, Twitter, etc... GoFetch will monitor the above URL(s) and backlinks for changes in social data."
+								showEffect="fade" hideEffect="fade" targetPosition="topRight"
+								position="topRight" />
 
-					<br/>
-						<h:commandButton style="position:relative; left:630px " action="#{dataEntryBacking.enterNewLinks}"
-							value="GoFetch"></h:commandButton>
-					</div>
+							<br />
+							<p:commandButton style="position:relative; left:610px "
+								action="#{dataEntryBacking.enterNewLinks}" value="GoFetch"></p:commandButton>
+						</div>
 					</p:tab>
 
 					<p:tab title="Enter Links">
-					<div class="center" id="monitorURLsTabContent" style=" margin-left: auto;   margin-right: auto;   width: 700px;">	
-						<strong> Enter links to content that you have created or
-							that other sources have missed</strong>
-											
-						<br/><br/>
-						<p:panelGrid columns="3" >
+						<div class="center" id="monitorURLsTabContent"
+							style="margin-left: auto; margin-right: auto; width: 700px; ">
+							<strong> Enter links to content that you have created or
+								that other sources have missed</strong> <br /> <br />
+							<p:panelGrid columns="4">
 
 
-							<h:outputLabel value="Target/Client URL:" />
-							
-							    <p:selectCheckboxMenu value="#{dataEntryBacking.selectedClients}" label="#{dataEntryBacking.selectedClients}" filter="true" filterText="Filter" filterMatchMode="startsWith" panelStyle="width:220px">  
-	<f:selectItems value="#{dataEntryBacking.clients}"/>
-    </p:selectCheckboxMenu>
-							<h:outputLabel value="?" id="targetURLHelp2" />
 
 
-						</p:panelGrid>
-						<p:tooltip for="targetURLHelp2"
-							value="The URL that you want to monitor for backlink and social metric data. 
-							Enter a single URL or copy &amp; paste multiple URLs from excel. "
-							showEffect="fade" hideEffect="fade" targetPosition="topRight"
-							position="topRight" />
-							
-						<p:separator style="margin-bottom:10px"/>  
-						
-						<br />
-							
-						<p:panelGrid columns="3" style="width:700px">
-						<h:outputLabel value="Backlink URL:" />
+								<p:selectCheckboxMenu
+									value="#{dataEntryBacking.selectedClients}"
+									label="Client/Target URL" filter="true" filterText="Filter"
+									filterMatchMode="startsWith" panelStyle="width:300px"
+									style="width:300px">
+									<f:selectItems value="#{dataEntryBacking.clients}" />
+								</p:selectCheckboxMenu>
+								<h:outputLabel value="?" id="clientHelp1" />
+								<p:selectCheckboxMenu
+									value="#{dataEntryBacking.selectedCampaigns}" label="Campaign"
+									filter="true" filterText="Filter" filterMatchMode="startsWith"
+									panelStyle="width:300px" style="width:300px">
+									<f:selectItems value="#{dataEntryBacking.campaigns}" />
+								</p:selectCheckboxMenu>
+								<h:outputLabel value="?" id="campaign" />
 
-							<h:inputText value="#{dataEntryBacking.sourceURL}" maxlength="200"
-								size="76"></h:inputText>
-							<h:outputLabel value="?" id="idBacklinkHelp" />
-							
-							<h:outputLabel value="Anchor Text:" />
-	
-							<h:inputText value="#{dataEntryBacking.anchorText}" maxlength="200"
-								size="76"></h:inputText>
-							<h:outputLabel value="?" id="idAnchorTextHelp" />
-							
-							<h:outputLabel value="Link Activity:" />
-							
-							<h:outputLabel value="A drop down box here...." />
-							
-							<h:outputLabel value="?" id="idLinkActivityHelp" />
-							
-							<h:outputLabel value="Client:" />
 
-							<h:outputLabel value="Drop down box here?? or just use truncated domain name from URL?" />
-							<h:outputLabel value="?" id="idClientHelp" />
+							</p:panelGrid>
+							<p:tooltip for="clientHelp1"
+								value="The client that these links are attributed to"
+								showEffect="fade" hideEffect="fade" targetPosition="topRight"
+								position="topRight" />
 
-								<h:outputLabel value="Date:" />
-							<p:calendar value="#{dataEntryBacking.dateOfLink}" mode="inline"
-								id="inlineCal" />
-								</p:panelGrid>
-								
-								
-						
-						<h:commandButton action="#{dataEntryBacking.enterNewLinks}" style="position:relative; left:630px "
-							value="Add Links"></h:commandButton>
-							</div>
-													
-							<p:tooltip for="idBacklinkHelp"
-							value="URL of backlink with content"
-							showEffect="fade" hideEffect="fade" targetPosition="topRight"
-							position="topRight" />
-							
+							<br/>
+
+							<p:accordionPanel dynamic="true" style="border-style:solid">
+								<p:tab title="Link 1" style="padding:0em">
+									<p:panelGrid columns="3" style="width:700px; overflow:hidden">
+										<h:outputLabel value="Backlink URL:" />
+
+										<h:inputText value="#{dataEntryBacking.sourceURL}"
+											maxlength="200" size="76"></h:inputText>
+										<h:outputLabel value="?" id="idBacklinkHelp" />
+
+										<h:outputLabel value="Anchor Text:" />
+
+										<h:inputText value="#{dataEntryBacking.anchorText}"
+											maxlength="200" size="76"></h:inputText>
+										<h:outputLabel value="?" id="idAnchorTextHelp" />
+
+										<h:outputLabel value="Link Activity:" />
+
+										<p:selectOneMenu
+											value="#{dataEntryBacking.selectedLinkActivity}" style="width:150px">
+											<f:selectItems value="#{dataEntryBacking.linkActivity}" />
+										</p:selectOneMenu>
+
+
+										<h:outputLabel value="?" id="idLinkActivityHelp" />
+
+										<h:outputLabel value="Date:" />
+										<p:calendar value="#{dataEntryBacking.dateOfLink}"
+											id="popupCal2"/>
+											<h:outputLabel value="?" id="dataHelp1" />
+									</p:panelGrid>
+									<p:tooltip for="idBacklinkHelp"
+										value="URL of backlink with content" showEffect="fade"
+										hideEffect="fade" targetPosition="topRight"
+										position="topRight" />
+
+								</p:tab>
+								<p:tab title="Link 2" style="padding:0em">
+									<p:panelGrid columns="3" style="width:700px; overflow:hidden">
+										<h:outputLabel value="Backlink URL:" />
+
+										<h:inputText value="#{dataEntryBacking.sourceURL}"
+											maxlength="200" size="76"></h:inputText>
+										<h:outputLabel value="?" id="idBacklinkHelp2" />
+
+										<h:outputLabel value="Anchor Text:" />
+
+										<h:inputText value="#{dataEntryBacking.anchorText}"
+											maxlength="200" size="76"></h:inputText>
+										<h:outputLabel value="?" id="idAnchorTextHelp2" />
+
+										<h:outputLabel value="Link Activity:" />
+
+										<p:selectOneMenu
+											value="#{dataEntryBacking.selectedLinkActivity}" style="width:150px">
+											<f:selectItems value="#{dataEntryBacking.linkActivity}" />
+										</p:selectOneMenu>
+
+
+										<h:outputLabel value="?" id="idLinkActivityHelp2" />
+
+										<h:outputLabel value="Date:" />
+										<p:calendar value="#{dataEntryBacking.dateOfLink}"
+											id="popupCal"/>
+											<h:outputLabel value="?" id="dataHelp2" />
+									</p:panelGrid>
+									<p:tooltip for="idBacklinkHelp2"
+										value="URL of backlink with content" showEffect="fade"
+										hideEffect="fade" targetPosition="topRight"
+										position="topRight" />
+										</p:tab>
+
+								<p:tab title="Link 3" style="padding:0em">
+									<p:panelGrid columns="3" style="width:700px; overflow:hidden">
+										<h:outputLabel value="Backlink URL:" />
+
+										<h:inputText value="#{dataEntryBacking.sourceURL}"
+											maxlength="200" size="76"></h:inputText>
+										<h:outputLabel value="?" id="idBacklinkHelp3" />
+
+										<h:outputLabel value="Anchor Text:" />
+
+										<h:inputText value="#{dataEntryBacking.anchorText}"
+											maxlength="200" size="76"></h:inputText>
+										<h:outputLabel value="?" id="idAnchorTextHelp3" />
+
+										<h:outputLabel value="Link Activity:" />
+
+										<p:selectOneMenu
+											value="#{dataEntryBacking.selectedLinkActivity}" style="width:150px">
+											<f:selectItems value="#{dataEntryBacking.linkActivity}" />
+										</p:selectOneMenu>
+
+
+										<h:outputLabel value="?" id="idLinkActivityHelp3" />
+
+										<h:outputLabel value="Date:" />
+										<p:calendar value="#{dataEntryBacking.dateOfLink}"
+											id="popupCal3"/>
+											<h:outputLabel value="?" id="dataHelp3" />
+									</p:panelGrid>
+									<p:tooltip for="idBacklinkHelp3"
+										value="URL of backlink with content" showEffect="fade"
+										hideEffect="fade" targetPosition="topRight"
+										position="topRight" />
+										</p:tab>
+
+							</p:accordionPanel>
+
+					<br/>
+							<p:commandButton action="#{dataEntryBacking.enterNewLinks}"
+								style="position:relative; left:600px " value="Add Links"></p:commandButton>
+						</div>
+
+
 					</p:tab>
-			
+
 
 				</p:tabView>
-</h:form>
+			</h:form>
 
-				<!-- converter="URLConverter" var="p" itemLabel="#{p.name}" itemValue="#{p}" -->
+			<!-- converter="URLConverter" var="p" itemLabel="#{p.name}" itemValue="#{p}" -->
 
-		
-			
+
+
 
 
 			<header class="clearfix">
@@ -554,8 +640,8 @@
 
 
 			<footer>
-				<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
-				<br /> <br /> <br />
+				<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+				<br /> <br /> <br /> <br />
 
 				<p>
 					© Copyright Propellernet - Authentic Search Agency 2010. All Rights
