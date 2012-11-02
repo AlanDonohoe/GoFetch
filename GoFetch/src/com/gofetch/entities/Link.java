@@ -44,7 +44,7 @@ public class Link implements Serializable {
 	
 	private String user_campaign;
 	
-	private Integer user_id; // points to a client's id. so can assign this link to a client.
+	private Integer users_user_id; // points to a client's id. so can assign this link to a client.
 	
 	private Integer data_entered_by; // 0 = sourced from SeoMoz, 1 = user entered, 2 = ?? majestic ??
 	
@@ -89,17 +89,19 @@ public class Link implements Serializable {
 	}
 
 
-	public Integer getUser_id() {
-		return user_id;
+
+
+	public Integer getUsers_user_id() {
+		return users_user_id;
 	}
 
 
-	public void setUser_id(Integer user_id) {
-		this.user_id = user_id;
+	public void setUsers_user_id(Integer users_user_id) {
+		this.users_user_id = users_user_id;
 	}
 
 
-	//TODO: why is there here???  - there's no superclass???
+	//TODO: why is there here???  - there's no superclass??? // serializable...??
 	public Link() {
 		super();
 	}   

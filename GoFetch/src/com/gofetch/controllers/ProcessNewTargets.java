@@ -76,16 +76,21 @@ public class ProcessNewTargets extends HttpServlet {
 		List<URL> unprocessedURLs = urlDBUnit.getUnproccessedTargetURLs();
 		
 		//TODO: REMOVE! REMOVE! - JUST FOR DEBUGGING  - 23-10-12:
-		unprocessedURLs.clear();
+		//unprocessedURLs.clear();
 
 
 		if (!unprocessedURLs.isEmpty()) {
+			
+			log.info("No of unprocessed URLs: " + String.valueOf(unprocessedURLs.size()));
+			
 			for (URL currentURL : unprocessedURLs) {
 				//if (currentURL.isGet_backlinks()) { - already taken into account in the getUnproccessedTargetURLs(); call
 
 					boolean getLinksSuccessful = true;
 
 					currentTargetAddress = currentURL.getUrl_address();
+					
+					log.info("Current URL: " + currentTargetAddress);
 
 					if (!firstRun) {
 						try {
@@ -139,6 +144,9 @@ public class ProcessNewTargets extends HttpServlet {
 							// 3: write each backlink to url table. - with same
 							// data as target, BUT NOT get backlink data always
 							// = false.
+							
+							log.info("Getting backlinks for " + currentURL.getUrl_address() + "No of links = " + String.valueOf(backLinks.size()));
+							
 							try{
 								linksToNewSEOMozURLs(backLinks, currentURL);
 
@@ -247,11 +255,11 @@ public class ProcessNewTargets extends HttpServlet {
 		//		
 		//		// reduce the number of layers by 1, every round of backlinks, until we
 		//		// are at 0.
-		Integer newNoOfLayers = currentURL.getNo_of_layers();
+		//Integer newNoOfLayers = currentURL.getNo_of_layers();
 		//		if (newNoOfLayers > 0)
 		//			newNoOfLayers--;
 
-		newNoOfLayers = 0;
+		//newNoOfLayers = 0;
 		//////////////////////
 
 		for (URLPlusDataPoints currentBackLink : backLinks) {
@@ -267,21 +275,23 @@ public class ProcessNewTargets extends HttpServlet {
 			url.setUrl_address(urlPlusHttp);
 			url.setDate(todaysDate);
 			url.setGet_social_data(currentURL.isGet_social_data());
+			url.setGet_backlinks(false);
 			
 			url.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);
 			url.setSocial_data_date(todaysDate);
 
 			url.setDomain(domainName);
-			url.setSeomoz_url(true);
+			url.setSeomoz_url(true); //TODO: delete this field
 			url.setBacklinks_got(false);
+			url.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_SEOMOZ); 
 
 			//TODO: THIS IS SET TO ZERO for now - up above, as want to move this to the datatable page.
-			url.setNo_of_layers(newNoOfLayers);
-			if (newNoOfLayers > 0)
-				url.setGet_backlinks(true); // this is a source URL, not a
-			// target.
-			else
-				url.setGet_backlinks(false); // this is NOT a target URL, JUST  a source
+//			url.setNo_of_layers(newNoOfLayers);
+//			if (newNoOfLayers > 0)
+//				url.setGet_backlinks(true); // this is a source URL, not a
+//			// target.
+//			else
+//				url.setGet_backlinks(false); // this is NOT a target URL, JUST  a source
 
 			urlDBUnit.createURL(url);
 

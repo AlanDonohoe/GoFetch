@@ -256,7 +256,7 @@ public class GoFetchRequestBean implements Serializable {
 			} else if (!urls[i].startsWith("http://")) {
 
 				tempString = urls[i]
-						+ " -  \"http://\" has been added to the beginning of URL and has this URL been be added to GoFetch.";
+						+ " -  \"http://\" has been added to the beginning of URL and has been be added to GoFetch.";
 				successReport.add(tempString);
 
 				String temp = "http://" + urls[i];
@@ -314,9 +314,9 @@ public class GoFetchRequestBean implements Serializable {
 
 			url.setGet_backlinks(backLinkData);
 			url.setGet_social_data(socialData);
-			url.setNo_of_layers(noOfLayers);
+			//url.setNo_of_layers(noOfLayers);
 			url.setBacklinks_got(false); // turns to true, when ProcessNewTargets have got this url's backlinks
-
+			url.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_USER); 
 			
 			urlDB.createURL(url);
 

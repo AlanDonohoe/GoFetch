@@ -14,6 +14,9 @@ public class GoFetchConstants {
 	
 	public static final int ALLOWED_SOCIAL_DATA_DIFFERENCE = 2;	// %age difference allowed between url with trailing slash and url without trailing slash		
 	
+	public static final int URL_ENTERED_BY_SEOMOZ = 0;
+	public static final int URL_ENTERED_BY_USER = 1;
+	
 	///////////////////
 	// used when hitting social services for data - url goes in between preEndpoint and postEndPoint
 
@@ -35,6 +38,9 @@ public class GoFetchConstants {
 	
 	public static final String twitterPreEndPoint  = "http://urls.api.twitter.com/1/urls/count.json?url="; 
 	public static final String twitterPostEndPoint = "&callback=twttr.receiveCount";
+	
+	//
+	////////////////////////
 	
 	
 	

@@ -35,6 +35,8 @@ public class URL implements Serializable {
 
 	@Temporal(TemporalType.DATE) 
 	private Date social_data_date;
+	
+	private Integer social_data_freq;
 
 	private String category; // directory, newsite, etc.
 	private String domain;
@@ -46,14 +48,17 @@ public class URL implements Serializable {
 
 	private Integer page_authority;
 	private Integer domain_authority;
-	private Integer no_of_layers;
+	
+	//private Integer no_of_layers;
 
 	private Integer data_entered_by; // 0 = sourced from SeoMoz, 1 = user entered, 2 = ?? majestic ??
 	private boolean seomoz_url;
 	
-	private Integer social_data_freq;
+	private Integer users_user_id; // points to a client's id, so that this url can be assigned to a client
+	private Integer client_category_id; // points to a client-specific category, so this url can be assigned to a client's category
+	private Integer client_category_users_user_id; // allows a client's category, to have many url's assigned to it.
 	
-	private String client_category;
+	//private Integer client_category;
 
 
 	// can not work out how to use JPAnnotation to make all the related objects delete when related url is deleted,
@@ -79,15 +84,15 @@ public class URL implements Serializable {
 	
 	
 	
-	public String getClient_category() {
-		return client_category;
-	}
-
-
-
-	public void setClient_category(String client_category) {
-		this.client_category = client_category;
-	}
+//	public Integer getClient_category() {
+//		return client_category;
+//	}
+//
+//
+//
+//	public void setClient_category(Integer client_category) {
+//		this.client_category = client_category;
+//	}
 
 
 
@@ -111,13 +116,13 @@ public class URL implements Serializable {
 		this.backlinks_got = backlinks_got;
 	}
 
-	public Integer getNo_of_layers() {
-		return no_of_layers;
-	}
-
-	public void setNo_of_layers(Integer no_of_layers) {
-		this.no_of_layers = no_of_layers;
-	}
+//	public Integer getNo_of_layers() {
+//		return no_of_layers;
+//	}
+//
+//	public void setNo_of_layers(Integer no_of_layers) {
+//		this.no_of_layers = no_of_layers;
+//	}
 
 	public Date getDate() {
 		return date;
@@ -238,6 +243,45 @@ public class URL implements Serializable {
 	public void setSocial_data_freq(Integer social_data_freq) {
 		this.social_data_freq = social_data_freq;
 	}
+	
+	
+
+	public Integer getUsers_user_id() {
+		return users_user_id;
+	}
+
+
+
+	public void setUsers_user_id(Integer users_user_id) {
+		this.users_user_id = users_user_id;
+	}
+
+
+
+	public Integer getClient_category_id() {
+		return client_category_id;
+	}
+
+
+
+	public void setClient_category_id(Integer client_category_id) {
+		this.client_category_id = client_category_id;
+	}
+
+
+
+	public Integer getClient_category_users_user_id() {
+		return client_category_users_user_id;
+	}
+
+
+
+	public void setClient_category_users_user_id(
+			Integer client_category_users_user_id) {
+		this.client_category_users_user_id = client_category_users_user_id;
+	}
+
+
 
 	@Override
 	public String toString() {

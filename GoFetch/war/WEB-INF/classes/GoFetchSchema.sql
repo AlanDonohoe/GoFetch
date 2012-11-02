@@ -7,6 +7,37 @@ CREATE SCHEMA IF NOT EXISTS `url` DEFAULT CHARACTER SET utf8 ;
 USE `url` ;
 
 -- -----------------------------------------------------
+-- Table `url`.`users`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `url`.`users` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `username` VARCHAR(225) NOT NULL ,
+  `password` VARCHAR(225) NOT NULL ,
+  `email` VARCHAR(225) NULL ,
+  `client` TINYINT(1) NOT NULL ,
+  `displayed_name` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `url`.`client_category`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `url`.`client_category` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'refers to the subdomains or sub categories that may be assigned to a client. /dresses, /shoes, etc' ,
+  `category` VARCHAR(45) NOT NULL ,
+  `users_id` INT NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_client_category_users1` (`users_id` ASC) ,
+  CONSTRAINT `fk_client_category_users1`
+    FOREIGN KEY (`users_id` )
+    REFERENCES `url`.`users` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `url`.`url`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `url`.`url` (
@@ -24,39 +55,32 @@ CREATE  TABLE IF NOT EXISTS `url`.`url` (
   `seomoz_url` TINYINT(1) NULL COMMENT 'If true, this source url was detected by SEOMoz.' ,
   `social_data_date` DATE NULL ,
   `social_data_freq` TINYINT NULL ,
-  PRIMARY KEY (`url_id`) )
+  `backlinks_got` TINYINT(1) NULL ,
+  `users_user_id` INT NULL ,
+  `client_category_id` INT NULL ,
+  `client_category_users_user_id` INT NULL ,
+  PRIMARY KEY (`url_id`) ,
+  INDEX `fk_url_users1` (`users_user_id` ASC) ,
+  INDEX `fk_url_client_category1` (`client_category_id` ASC, `client_category_users_user_id` ASC) ,
+  CONSTRAINT `fk_url_users1`
+    FOREIGN KEY (`users_user_id` )
+    REFERENCES `url`.`users` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_url_client_category1`
+    FOREIGN KEY (`client_category_id` )
+    REFERENCES `url`.`client_category` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 
-
 -- -----------------------------------------------------
--- Table `url`.`twitter_mention`
+-- Table `url`.`linksafe_data`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`twitter_mention` (
-  `twitter_id` INT NOT NULL AUTO_INCREMENT ,
-  `url_id` INT NOT NULL ,
-  `date` DATE NOT NULL ,
-  `tweeter` VARCHAR(45) NOT NULL ,
-  `followers` INT NOT NULL ,
-  `followed` INT NOT NULL ,
-  `klout_score` INT NOT NULL ,
-  `tweet_text` VARCHAR(141) NOT NULL COMMENT 'Represents a twitter mention of the URL with associated data about the tweeter.' ,
-  PRIMARY KEY (`twitter_id`, `url_id`) ,
-  INDEX `fk_twitter_mention_url1` (`url_id` ASC) ,
-  CONSTRAINT `fk_twitter_mention_url1`
-    FOREIGN KEY (`url_id` )
-    REFERENCES `url`.`url` (`url_id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `url`.`seomoz_data`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`seomoz_data` (
+CREATE  TABLE IF NOT EXISTS `url`.`linksafe_data` (
   `seomoz_id` INT NOT NULL AUTO_INCREMENT ,
   `url_id` INT NOT NULL ,
   `rga_score` VARCHAR(10) NULL ,
@@ -88,8 +112,14 @@ CREATE  TABLE IF NOT EXISTS `url`.`links` (
   `user_category` VARCHAR(45) NULL ,
   `user_assigned_to` VARCHAR(45) NULL ,
   `user_campaign` VARCHAR(45) NULL ,
-  `client` VARCHAR(45) NULL ,
-  PRIMARY KEY (`links_id`) )
+  `users_user_id` INT NULL ,
+  PRIMARY KEY (`links_id`) ,
+  INDEX `fk_links_users1` (`users_user_id` ASC) ,
+  CONSTRAINT `fk_links_users1`
+    FOREIGN KEY (`users_user_id` )
+    REFERENCES `url`.`users` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -141,6 +171,16 @@ CREATE  TABLE IF NOT EXISTS `url`.`misc_social_data` (
     REFERENCES `url`.`url` (`url_id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `url`.`link_building_activity`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `url`.`link_building_activity` (
+  `id` INT NOT NULL COMMENT 'represents the different types of link building activity Pnet staff perform' ,
+  `activity` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
 

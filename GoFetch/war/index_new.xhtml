@@ -458,29 +458,43 @@
 							style="margin-left: auto; margin-right: auto; width: 700px; ">
 							<strong> Enter links to content that you have created or
 								that other sources have missed</strong> <br /> <br />
-							<p:panelGrid columns="4">
+							<p:panelGrid columns="6">
 
 
 
 
 								<p:selectCheckboxMenu
 									value="#{dataEntryBacking.selectedClients}"
-									label="Client/Target URL" filter="true" filterText="Filter"
-									filterMatchMode="startsWith" panelStyle="width:300px"
-									style="width:300px">
+									label="Client" filter="true" filterText="Filter"
+									filterMatchMode="startsWith" panelStyle="width:250px"
+									style="width:92px">
 									<f:selectItems value="#{dataEntryBacking.clients}" />
+									        <f:selectItem itemLabel="Add New Client" itemValue="" />
 								</p:selectCheckboxMenu>
 								<h:outputLabel value="?" id="clientHelp1" />
 								<p:selectCheckboxMenu
 									value="#{dataEntryBacking.selectedCampaigns}" label="Campaign"
 									filter="true" filterText="Filter" filterMatchMode="startsWith"
-									panelStyle="width:300px" style="width:300px">
+									panelStyle="width:300px" style="width:150px">
 									<f:selectItems value="#{dataEntryBacking.campaigns}" />
+									<f:selectItem itemLabel="Add New Campaign" itemValue="" />
 								</p:selectCheckboxMenu>
 								<h:outputLabel value="?" id="campaign" />
+								
+								<p:selectCheckboxMenu
+									value="#{dataEntryBacking.selectedClients}"
+									label="Target URL" filter="true" filterText="Filter"
+									filterMatchMode="startsWith" panelStyle="width:300px"
+									style="width:300px">
+									<f:selectItems value="#{dataEntryBacking.clients}" />
+									        <f:selectItem itemLabel="Add New Target URL" itemValue="" />
+								</p:selectCheckboxMenu>
+								<h:outputLabel value="?" id="targetURLHelp1" />
 
 
 							</p:panelGrid>
+							
+		
 							<p:tooltip for="clientHelp1"
 								value="The client that these links are attributed to"
 								showEffect="fade" hideEffect="fade" targetPosition="topRight"
