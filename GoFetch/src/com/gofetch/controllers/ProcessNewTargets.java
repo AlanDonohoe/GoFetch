@@ -145,7 +145,7 @@ public class ProcessNewTargets extends HttpServlet {
 							// data as target, BUT NOT get backlink data always
 							// = false.
 							
-							log.info("Getting backlinks for " + currentURL.getUrl_address() + "No of links = " + String.valueOf(backLinks.size()));
+							log.info("Getting backlinks for " + currentURL.getUrl_address() + ". No of links = " + String.valueOf(backLinks.size()));
 							
 							try{
 								linksToNewSEOMozURLs(backLinks, currentURL);
@@ -243,6 +243,9 @@ public class ProcessNewTargets extends HttpServlet {
 	 */
 	private void linksToNewSEOMozURLs(List<URLPlusDataPoints> backLinks,
 			URL currentURL) {
+		
+		Integer noOfLinks = backLinks.size();
+		Integer counter = 1;
 
 		URLDBService urlDBUnit = new URLDBService();
 		String domainName;
@@ -269,7 +272,8 @@ public class ProcessNewTargets extends HttpServlet {
 			// SEOMoz returns urls with no http:// prefix
 			urlPlusHttp = TextUtil.addHTTPToURL(currentBackLink
 					.getBackLinkURL());
-
+			
+			log.info(String.valueOf(counter) + " of " + String.valueOf(noOfLinks) + " links.");
 			
 			URL url = new URL();
 			url.setUrl_address(urlPlusHttp);

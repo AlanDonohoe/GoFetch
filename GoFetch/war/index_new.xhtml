@@ -482,15 +482,15 @@
 								<h:outputLabel value="?" id="campaign" />
 								
 								<p:selectCheckboxMenu
-									value="#{dataEntryBacking.selectedClients}"
+									value="#{dataEntryBacking.selectedTargetURLs}"
 									label="Target URL" filter="true" filterText="Filter"
-									filterMatchMode="startsWith" panelStyle="width:300px"
+									filterMatchMode="startsWith" panelStyle="width:600px"
 									style="width:300px">
-									<f:selectItems value="#{dataEntryBacking.clients}" />
+									<f:selectItems value="#{dataEntryBacking.targetURLs}" />
 									        <f:selectItem itemLabel="Add New Target URL" itemValue="" />
 								</p:selectCheckboxMenu>
 								<h:outputLabel value="?" id="targetURLHelp1" />
-
+				
 
 							</p:panelGrid>
 							
@@ -505,6 +505,12 @@
 							<p:accordionPanel dynamic="true" style="border-style:solid">
 								<p:tab title="Link 1" style="padding:0em">
 									<p:panelGrid columns="3" style="width:700px; overflow:hidden">
+									<h:outputLabel value="Target URL:" />
+
+										<h:inputText value="#{dataEntryBacking.selectedTargetURLs}"
+											maxlength="200" size="76"></h:inputText>
+										<h:outputLabel value="?" id="idTargetURLHelp" />
+										
 										<h:outputLabel value="Backlink URL:" />
 
 										<h:inputText value="#{dataEntryBacking.sourceURL}"
