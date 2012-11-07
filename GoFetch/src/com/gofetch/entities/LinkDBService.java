@@ -82,16 +82,16 @@ public class LinkDBService{
 	 * @param targetURL 
 	 * @return - list of ids of each url pointing to the target.
 	 */
-	public List<Integer> getLinkIDsPointingTo(URL targetURL){
+	public List<Integer> getSourceURLIDsPointingTo(URL targetURL){
 
-		log.info("Entering getLinkIDsPointingTo [" + targetURL.getUrl_address() + "]");
+		log.info("Entering getSourceURLIDsPointingTo [" + targetURL.getUrl_address() + "]");
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
 		Integer targetURLID = targetURL.getId();
 
-		List<Integer> linkIDs = new ArrayList<Integer>();
+		List<Integer> sourceURLIDs = new ArrayList<Integer>();
 		List<Link> links = null;
 
 		try {
@@ -101,20 +101,19 @@ public class LinkDBService{
 
 		}catch(Exception e){
 			String msg = "Exception thrown getting data for: " + targetURL.getUrl_address() + "LinkDBService: getLinkIDsPointingTo \n";
-			//logger.logp(Level.SEVERE, "LinkDBService", "getLinkIDsPointingTo",msg ,e);
-			log.severe(msg + e.getMessage());
+						log.severe(msg + e.getMessage());
 		} finally {
 			mgr.close();
 		}
 
 		// add all links' source id to list of ids
 		for(Link currentLink : links){
-			linkIDs.add(currentLink.getLinks_id());
+			sourceURLIDs.add(currentLink.getSource_id());
 		}
 
-		log.info("Exiting getLinkIDsPointingTo [" + targetURL + "]"); 
+		log.info("Exiting getSourceURLIDsPointingTo [" + targetURL + "]"); 
 
-		return linkIDs;
+		return sourceURLIDs;
 	}
 
 	/**

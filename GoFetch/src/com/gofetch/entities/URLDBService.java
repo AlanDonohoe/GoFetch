@@ -59,8 +59,10 @@ public class URLDBService{
 	//TODO: writing URLs to DB is v v slow - takes about 2 secs per record... why????
 	//	maybe create a method: void createURLs(List<URL> listURLs) method and have a loop within that to include only: if(!urlInDB(url)){...persist.... }
 	//	use batch processing of URLs to DB.
-	public void createURL(URL url){
+	public boolean createURL(URL url){
 		log.info("Entering url[" + url.getUrl_address() + "]");
+		
+		boolean urlInDB = false; // flag, set to true if URL already exists in DB.
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
@@ -84,6 +86,8 @@ public class URLDBService{
 
 				log.info("url already exists in DB: "
 						+ url.getUrl_address());
+				
+				urlInDB = true;
 			}
 
 
@@ -96,6 +100,7 @@ public class URLDBService{
 			mgr.close();
 		}
 		log.info("Exiting createURL");
+		return urlInDB;
 	}
 
 	/**
@@ -114,7 +119,7 @@ public class URLDBService{
 			result = mgr.find(URL.class, id);
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURL";
-			//logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
+			
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -803,5 +808,63 @@ public class URLDBService{
 		log.info("Exiting getURLs");
 		return result;
 
+	}
+	
+	public List<URL> getURLsOfClientCategory(Integer clientCategoryID){
+		
+		log.info("Entering getURLsOfClientCategory. Client Category = " + clientCategoryID);
+		List<URL> result = null;
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		try { // result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date")
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_id = :client_category_id")
+					.setParameter("client_category_id", clientCategoryID)
+					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown: URLService: getURLsOfClientCategory";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			log.info("No URLs returned");
+		}
+		log.info("Exiting getURLsOfClientCategory");
+		return result;
+	}
+	
+	public List<URL> getClientsTargetURLs(Integer clientID){
+		
+		log.info("Entering getClientsURLs. Client ID = " + clientID);
+		List<URL> result = null;
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		try {
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_users_user_id = :client_category_users_user_id")
+					.setParameter("client_category_users_user_id", clientID)
+					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown: URLService: getURLsOfClientCategory";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			log.info("No URLs returned");
+		}
+		log.info("Exiting getURLsOfClientCategory");
+		return result;
+		
+		
 	}
 }

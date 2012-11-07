@@ -468,20 +468,24 @@
 									label="Client" filter="true" filterText="Filter"
 									filterMatchMode="startsWith" panelStyle="width:250px"
 									style="width:92px">
+									<p:ajax listener="#{dataEntryBacking.filterCampaignsAndT_URLs}" update="campaignSelectItems,targetURLSelectItems" />
 									<f:selectItems value="#{dataEntryBacking.clients}" />
-									        <f:selectItem itemLabel="Add New Client" itemValue="" />
+									        <f:selectItem itemLabel="* Add New Client" itemValue="" />
 								</p:selectCheckboxMenu>
 								<h:outputLabel value="?" id="clientHelp1" />
-								<p:selectCheckboxMenu
+								<p:selectCheckboxMenu 
+									id="campaignSelectItems"
 									value="#{dataEntryBacking.selectedCampaigns}" label="Campaign"
 									filter="true" filterText="Filter" filterMatchMode="startsWith"
 									panelStyle="width:300px" style="width:150px">
+									<p:ajax listener="#{dataEntryBacking.filterTargetURLs}" update="targetURLSelectItems" />
 									<f:selectItems value="#{dataEntryBacking.campaigns}" />
-									<f:selectItem itemLabel="Add New Campaign" itemValue="" />
+									<f:selectItem itemLabel="* Add New Campaign" itemValue="" />
 								</p:selectCheckboxMenu>
-								<h:outputLabel value="?" id="campaign" />
+								<h:outputLabel value="?" id="campaignHelp" />
 								
 								<p:selectCheckboxMenu
+								id="targetURLSelectItems"
 									value="#{dataEntryBacking.selectedTargetURLs}"
 									label="Target URL" filter="true" filterText="Filter"
 									filterMatchMode="startsWith" panelStyle="width:600px"

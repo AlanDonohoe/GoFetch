@@ -56,7 +56,7 @@ public class URL implements Serializable {
 	
 	private Integer users_user_id; // points to a client's id, so that this url can be assigned to a client
 	private Integer client_category_id; // points to a client-specific category, so this url can be assigned to a client's category
-	private Integer client_category_users_user_id; // allows a client's category, to have many url's assigned to it.
+	private Integer client_category_users_user_id; // allows a client's category, to have many url's assigned to it...
 	
 	//private Integer client_category;
 

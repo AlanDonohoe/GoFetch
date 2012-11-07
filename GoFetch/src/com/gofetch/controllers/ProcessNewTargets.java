@@ -297,6 +297,8 @@ public class ProcessNewTargets extends HttpServlet {
 //			else
 //				url.setGet_backlinks(false); // this is NOT a target URL, JUST  a source
 
+			// returns true if DB not previously in DB and false if URL already in DB...
+			// need to do something here with the result - so that its not made into a new link....
 			urlDBUnit.createURL(url);
 
 		}
@@ -344,8 +346,8 @@ public class ProcessNewTargets extends HttpServlet {
 		// TODO: this seems v inefficent - the two steps....- need to look into
 		// alternatives... using SQL... joins??
 
-		// get all the links pointing to target
-		currentLinkIDs = linksDBUnit.getLinkIDsPointingTo(currentURL);
+		// get all the source URLs pointing to target
+		currentLinkIDs = linksDBUnit.getSourceURLIDsPointingTo(currentURL);
 
 		// fill list of all url addresses of links pointing at target
 		if (!currentLinkIDs.isEmpty()) {
@@ -359,16 +361,17 @@ public class ProcessNewTargets extends HttpServlet {
 
 		// run through all the backlinks....
 		for (URLPlusDataPoints currentURLBackLink : urlBackLinks) {
+			
+			// dealing with SEOMoz supplied urls - so add http://...
+			httpURL = TextUtil.addHTTPToURL(currentURLBackLink
+					.getBackLinkURL());
+			
+			log.info("Entering new link: " + httpURL);
 
 			// check that current backLink does not exist in target's links list
-			if (!currentLinksAddresses.contains(currentURLBackLink
-					.getBackLinkURL())) {
+			if (!currentLinksAddresses.contains(httpURL)) {
 
 				// then finally... create new link...
-
-				// dealing with SEOMoz supplied urls - so add http://...
-				httpURL = TextUtil.addHTTPToURL(currentURLBackLink
-						.getBackLinkURL());
 
 				Link link = new Link();
 
@@ -387,6 +390,9 @@ public class ProcessNewTargets extends HttpServlet {
 				link.setFinal_target_url(currentURL.getUrl_address());
 
 				linksDBUnit.createLink(link);
+			}
+			else{
+				log.info("Link already exists in DB: " + httpURL);
 			}
 
 		}
