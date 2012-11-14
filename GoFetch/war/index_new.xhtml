@@ -407,7 +407,8 @@
 								<h:outputLabel value="Your Email/ID:" />
 
 								<h:inputText value="#{dataEntryBacking.user_id}" maxlength="200"
-									size="76"></h:inputText>
+									size="76" required="true"   
+                        requiredMessage="Email is required" ></h:inputText>
 								<h:outputLabel value="?" id="idHelp" />
 							</p:panelGrid>
 							<p:tooltip for="targetURLHelp"
@@ -449,7 +450,7 @@
 
 							<br />
 							<p:commandButton style="position:relative; left:610px "
-								action="#{dataEntryBacking.enterNewLinks}" value="GoFetch"></p:commandButton>
+								action="#{dataEntryBacking.enterNewURLs}" value="GoFetch"></p:commandButton>
 						</div>
 					</p:tab>
 
@@ -489,8 +490,8 @@
 									value="#{dataEntryBacking.selectedTargetURLs}"
 									label="Target URL" filter="true" filterText="Filter"
 									filterMatchMode="startsWith" panelStyle="width:600px"
-									style="width:300px; height:20px; padding-top:2px; overflow:hidden">
-									<p:ajax listener="#{dataEntryBacking.updateLinksTargetURL}" update=":form1:j_idt7:linkspanel:linksTargetURL"/>
+									style="width:300px; height:20px; padding-top:2px; overflow:hidden">  
+									<p:ajax listener="#{dataEntryBacking.updateLinksTargetURL}" update=":form1:j_idt7:linkspanel"/>
 											<f:selectItems value="#{dataEntryBacking.targetURLs}" />
 									        <f:selectItem itemLabel="Add New Target URL" itemValue="" />
 								</p:selectCheckboxMenu>
@@ -506,10 +507,10 @@
 								position="topRight" />
 
 							<br/>
-
-							<p:accordionPanel value="#{dataEntryBacking.links}" var="link" id="linkspanel" dynamic="true" style="border-style:solid">
+					<h:panelGroup id="accordian_wrapper"> 
+							<p:accordionPanel value="#{dataEntryBacking.links}" var="link" id="linkspanel" style="border-style:solid"  multiple="true">
 								<p:tab title="Link" style="padding:0em">
-									<p:panelGrid columns="3" style="width:700px; overflow:hidden">
+									<p:panelGrid columns="3" style="width:700px; ">
 									<h:outputLabel value="Target URL:" />
 
 										<h:inputText id="linksTargetURL" value="#{link.targetURL}" 
@@ -525,7 +526,8 @@
 										<h:outputLabel value="Anchor Text:" />
 
 										<h:inputText value="#{link.anchorText}"
-											maxlength="200" size="76"></h:inputText>
+											maxlength="200" size="76">
+											<p:ajax listener="#{dataEntryBacking.addNewLinkTab}" update=":form1:j_idt7:accordian_wrapper"/></h:inputText>
 										<h:outputLabel value="?" id="idAnchorTextHelp" />
 
 										<h:outputLabel value="Link Activity:" />
@@ -620,6 +622,7 @@
 										</p:tab>
 
 							</p:accordionPanel>
+							</h:panelGroup>
 
 					<br/>
 							<p:commandButton action="#{dataEntryBacking.enterNewLinks}"
