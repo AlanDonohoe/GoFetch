@@ -385,7 +385,7 @@
 
 
 			<!--  forceSelection="true" -->
-			<h:form>
+			<h:form id="form1">
 
 				<p:tabView effect="fold" effectDuration="normal">
 
@@ -457,8 +457,8 @@
 						<div class="center" id="monitorURLsTabContent"
 							style="margin-left: auto; margin-right: auto; width: 700px; ">
 							<strong> Enter links to content that you have created or
-								that other sources have missed</strong> <br /> <br />
-							<p:panelGrid columns="6">
+								that other sources may have missed</strong> <br /> <br />
+							<p:panelGrid columns="6"  >
 
 
 
@@ -467,7 +467,7 @@
 									value="#{dataEntryBacking.selectedClients}"
 									label="Client" filter="true" filterText="Filter"
 									filterMatchMode="startsWith" panelStyle="width:250px"
-									style="width:92px">
+									style="width:92px; height:20px; padding-top:2px; overflow:hidden ">
 									<p:ajax listener="#{dataEntryBacking.filterCampaignsAndT_URLs}" update="campaignSelectItems,targetURLSelectItems" />
 									<f:selectItems value="#{dataEntryBacking.clients}" />
 									        <f:selectItem itemLabel="* Add New Client" itemValue="" />
@@ -477,7 +477,7 @@
 									id="campaignSelectItems"
 									value="#{dataEntryBacking.selectedCampaigns}" label="Campaign"
 									filter="true" filterText="Filter" filterMatchMode="startsWith"
-									panelStyle="width:300px" style="width:150px">
+									panelStyle="width:300px" style="width:150px; height:20px; padding-top:2px; overflow:hidden">
 									<p:ajax listener="#{dataEntryBacking.filterTargetURLs}" update="targetURLSelectItems" />
 									<f:selectItems value="#{dataEntryBacking.campaigns}" />
 									<f:selectItem itemLabel="* Add New Campaign" itemValue="" />
@@ -489,8 +489,9 @@
 									value="#{dataEntryBacking.selectedTargetURLs}"
 									label="Target URL" filter="true" filterText="Filter"
 									filterMatchMode="startsWith" panelStyle="width:600px"
-									style="width:300px">
-									<f:selectItems value="#{dataEntryBacking.targetURLs}" />
+									style="width:300px; height:20px; padding-top:2px; overflow:hidden">
+									<p:ajax listener="#{dataEntryBacking.updateLinksTargetURL}" update=":form1:j_idt7:linkspanel:linksTargetURL"/>
+											<f:selectItems value="#{dataEntryBacking.targetURLs}" />
 									        <f:selectItem itemLabel="Add New Target URL" itemValue="" />
 								</p:selectCheckboxMenu>
 								<h:outputLabel value="?" id="targetURLHelp1" />
@@ -506,31 +507,31 @@
 
 							<br/>
 
-							<p:accordionPanel dynamic="true" style="border-style:solid">
-								<p:tab title="Link 1" style="padding:0em">
+							<p:accordionPanel value="#{dataEntryBacking.links}" var="link" id="linkspanel" dynamic="true" style="border-style:solid">
+								<p:tab title="Link" style="padding:0em">
 									<p:panelGrid columns="3" style="width:700px; overflow:hidden">
 									<h:outputLabel value="Target URL:" />
 
-										<h:inputText value="#{dataEntryBacking.selectedTargetURLs}"
+										<h:inputText id="linksTargetURL" value="#{link.targetURL}" 
 											maxlength="200" size="76"></h:inputText>
 										<h:outputLabel value="?" id="idTargetURLHelp" />
 										
 										<h:outputLabel value="Backlink URL:" />
 
-										<h:inputText value="#{dataEntryBacking.sourceURL}"
+										<h:inputText value="#{link.sourceURL}"
 											maxlength="200" size="76"></h:inputText>
 										<h:outputLabel value="?" id="idBacklinkHelp" />
 
 										<h:outputLabel value="Anchor Text:" />
 
-										<h:inputText value="#{dataEntryBacking.anchorText}"
+										<h:inputText value="#{link.anchorText}"
 											maxlength="200" size="76"></h:inputText>
 										<h:outputLabel value="?" id="idAnchorTextHelp" />
 
 										<h:outputLabel value="Link Activity:" />
 
 										<p:selectOneMenu
-											value="#{dataEntryBacking.selectedLinkActivity}" style="width:150px">
+											value="#{link.linkActivity}" style="width:150px">
 											<f:selectItems value="#{dataEntryBacking.linkActivity}" />
 										</p:selectOneMenu>
 
@@ -538,7 +539,7 @@
 										<h:outputLabel value="?" id="idLinkActivityHelp" />
 
 										<h:outputLabel value="Date:" />
-										<p:calendar value="#{dataEntryBacking.dateOfLink}"
+										<p:calendar value="#{link.date}"
 											id="popupCal2"/>
 											<h:outputLabel value="?" id="dataHelp1" />
 									</p:panelGrid>
@@ -548,7 +549,7 @@
 										position="topRight" />
 
 								</p:tab>
-								<p:tab title="Link 2" style="padding:0em">
+								<p:tab title="Link" style="padding:0em">
 									<p:panelGrid columns="3" style="width:700px; overflow:hidden">
 										<h:outputLabel value="Backlink URL:" />
 
@@ -583,7 +584,7 @@
 										position="topRight" />
 										</p:tab>
 
-								<p:tab title="Link 3" style="padding:0em">
+								<p:tab title="Link" style="padding:0em">
 									<p:panelGrid columns="3" style="width:700px; overflow:hidden">
 										<h:outputLabel value="Backlink URL:" />
 

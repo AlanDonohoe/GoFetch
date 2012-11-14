@@ -56,9 +56,13 @@ public class ProcessNewTargets extends HttpServlet {
 			throws IOException {
 
 		resp.setContentType("text/plain");
+		
+		boolean testing = false; // if true, then no urls are processsed and no social data sweep occurs....
+		 // if false, then servlet does tasks its supposed to. - process new targets and get social data
 
 		boolean firstRun = true; // only here for the free SEOMoz API limiter.
-
+		
+		
 		String currentTargetAddress;
 		String reportSummary; // used to either email urls' "owner" via their
 		// user_id, or write to log/report after the
@@ -75,8 +79,8 @@ public class ProcessNewTargets extends HttpServlet {
 		//new implementation: returns all the urls that have get_backlinks = true && backlinks_got = false
 		List<URL> unprocessedURLs = urlDBUnit.getUnproccessedTargetURLs();
 		
-		//TODO: REMOVE! REMOVE! - JUST FOR DEBUGGING  - 23-10-12:
-		//unprocessedURLs.clear();
+		if(testing)
+			unprocessedURLs.clear();
 
 
 		if (!unprocessedURLs.isEmpty()) {
@@ -207,7 +211,9 @@ public class ProcessNewTargets extends HttpServlet {
 		// get all the social data urls in DB that have FB and Twitter data
 		// selected...
 		//TODO: move this to another servlet - and break it into daily, weekly and monthly checks.
-		getURLSocialData();
+
+		if(!testing)
+			getURLSocialData();
 
 		try {
 			getServletContext().getRequestDispatcher("/index.jsf").forward(
@@ -273,7 +279,7 @@ public class ProcessNewTargets extends HttpServlet {
 			urlPlusHttp = TextUtil.addHTTPToURL(currentBackLink
 					.getBackLinkURL());
 			
-			log.info(String.valueOf(counter) + " of " + String.valueOf(noOfLinks) + " links.");
+			log.info(String.valueOf(counter++) + " of " + String.valueOf(noOfLinks) + " links.");
 			
 			URL url = new URL();
 			url.setUrl_address(urlPlusHttp);
@@ -388,6 +394,7 @@ public class ProcessNewTargets extends HttpServlet {
 				link.setAnchor_text(currentURLBackLink.getBackLinkAnchorText());
 				link.setDate_detected(today);
 				link.setFinal_target_url(currentURL.getUrl_address());
+				link.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_SEOMOZ);
 
 				linksDBUnit.createLink(link);
 			}
