@@ -136,8 +136,8 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 
 		offSet = 0;
 
-		while (moreLinksLeft) {
-
+		while (moreLinksLeft) { // this is redundant in free api impl - just set to false below.... will be used in paid versions
+			moreLinksLeft = false;
 			if (calledOnce) /// no need to call the first time.. 
 			{
 				try {
