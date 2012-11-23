@@ -2732,3 +2732,11 @@ clear: left;
 .ui-accordion .ui-accordion-content {padding:0 !important}
 .ui-accordion .ui-accordion-content .ui-datepicker-week-end  {padding: 0px 0px !important}
 
+
+/********/
+
+.borderLessGrid tr, .borderLessGrid td {
+	border: none;
+	padding: 4px 3px;
+}
+

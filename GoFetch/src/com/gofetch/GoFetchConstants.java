@@ -42,7 +42,13 @@ public class GoFetchConstants {
 	//
 	////////////////////////
 	
+	////////////////////////
+	// used in link reporting:
 	
+	public static final String contentCreationText = "Content Creation";
+	
+	//
+	///////////////////
 	
 	
 	//

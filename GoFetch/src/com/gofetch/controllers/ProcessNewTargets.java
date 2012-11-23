@@ -252,6 +252,9 @@ public class ProcessNewTargets extends HttpServlet {
 		
 		Integer noOfLinks = backLinks.size();
 		Integer counter = 1;
+		Integer noNewURLs = 0; //TODO: include these in a report to monitor how many new links we have this time
+		Integer noPreviouslyEnteredURLs = 0; 	// ..compared to last time.
+		
 
 		URLDBService urlDBUnit = new URLDBService();
 		String domainName;
@@ -305,8 +308,10 @@ public class ProcessNewTargets extends HttpServlet {
 
 			// returns true if DB not previously in DB and false if URL already in DB...
 			// need to do something here with the result - so that its not made into a new link....
-			urlDBUnit.createURL(url);
-
+			if(urlDBUnit.createURL(url))
+				noNewURLs++;
+			else
+				noPreviouslyEnteredURLs++;
 		}
 	}
 
