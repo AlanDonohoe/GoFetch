@@ -2,9 +2,18 @@
 <cronentries>
    <cron>
     <url>/processnewtargets</url>
-    <target>api</target>
+    <target>backgroundprocess</target>
     <description>Get Yesterday's Target URLs' back links</description>
     <schedule>every day 09:00</schedule>
     <timezone>Europe/London</timezone>
   </cron>  
+  <!--
+   <cron>
+    <url>/socialdatacrawl</url>
+    <target>socialcrawl</target>
+    <description>Crawl all urls with correct date for new social data</description>
+    <schedule>every day 09:00</schedule>
+    <timezone>Europe/London</timezone>
+  </cron>  
+  -->
 </cronentries>

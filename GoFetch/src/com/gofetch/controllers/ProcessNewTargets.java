@@ -57,7 +57,7 @@ public class ProcessNewTargets extends HttpServlet {
 
 		resp.setContentType("text/plain");
 		
-		boolean testing = false; // if true, then no urls are processsed and no social data sweep occurs....
+		boolean testing = true; // if true, then no urls are processsed and JUST social data sweep occurs....
 		 // if false, then servlet does tasks its supposed to. - process new targets and get social data
 
 		boolean firstRun = true; // only here for the free SEOMoz API limiter.
@@ -210,9 +210,9 @@ public class ProcessNewTargets extends HttpServlet {
 		// Now we have all the backlinks from SEOMoz entered into the DB, now
 		// get all the social data urls in DB that have FB and Twitter data
 		// selected...
-		//TODO: move this to another servlet - and break it into daily, weekly and monthly checks.
+		//Moved this to socialdatacrawl.
 
-		if(!testing)
+//		if(!testing)
 			getURLSocialData();
 
 		try {
@@ -615,8 +615,8 @@ public class ProcessNewTargets extends HttpServlet {
 			socialDataAPISlash = null;
 			assimilatedSocialData = null;
 			boolean manualSocialDataGot = true; 
-			boolean sharedCountFailedSlash = false; 
-			boolean sharedCountFailedNoSlash = false; 
+			boolean sharedCountFailedSlash = true; // make true so that we call manual implementation - we are now bypassing sharedcount - keeps failing...
+			boolean sharedCountFailedNoSlash = true; 
 			double pcDifferenceBtwnSocialData;
 
 			urlAddress = currentURL.getUrl_address();
@@ -633,41 +633,41 @@ public class ProcessNewTargets extends HttpServlet {
 			urlAddressNoSlash = urlAddress;
 			urlAddressSlash = urlAddress + "/";
 
-			///////////
-			// shared count API
-			// get current social data from the url... first - WITH the trailing slash
-			try {
-
-				socialDataAPISlash = sharedCountAPI.getAllSocialData(urlAddressSlash);
-				//also - have to get StumbleUpon data manually... as sharedcount is failing to get this data
-				socialDataAPISlash.setStumble_upon(manualSocialData.getStumbleUponData(urlAddressSlash));
-
-			} catch (Exception e) {
-				String msg = "Shared Count API failed for: "
-						+ urlAddressSlash
-						+ ". ProcessNewTargets: getURLSocialData. Calling manual implementation \n";
-				log.warning(msg + e.getMessage());
-
-				sharedCountFailedSlash = true; // so now call manual implementation
-			}
-
-			// get current social data from the url... - now without the trailing slash
-			try {
-				socialDataAPINoSlash = sharedCountAPI.getAllSocialData(urlAddressNoSlash);
-
-				//also - have to get StumbleUpon data manually... as sharedcount is failing to get this data
-				socialDataAPINoSlash.setStumble_upon(manualSocialData.getStumbleUponData(urlAddressNoSlash));
-
-			} catch (Exception e) {
-				String msg = "Shared Count API failed for: "
-						+ urlAddressNoSlash
-						+ ". ProcessNewTargets: getURLSocialData. Calling manual implementation \n";
-				log.warning(msg + e.getMessage());
-
-				sharedCountFailedNoSlash = true; // so now call manual implementation
-			}
-			// end shared count API
-			//////////
+//			///////////
+//			// shared count API
+//			// get current social data from the url... first - WITH the trailing slash
+//			try {
+//
+//				socialDataAPISlash = sharedCountAPI.getAllSocialData(urlAddressSlash);
+//				//also - have to get StumbleUpon data manually... as sharedcount is failing to get this data
+//				socialDataAPISlash.setStumble_upon(manualSocialData.getStumbleUponData(urlAddressSlash));
+//
+//			} catch (Exception e) {
+//				String msg = "Shared Count API failed for: "
+//						+ urlAddressSlash
+//						+ ". ProcessNewTargets: getURLSocialData. Calling manual implementation \n";
+//				log.warning(msg + e.getMessage());
+//
+//				sharedCountFailedSlash = true; // so now call manual implementation
+//			}
+//
+//			// get current social data from the url... - now without the trailing slash
+//			try {
+//				socialDataAPINoSlash = sharedCountAPI.getAllSocialData(urlAddressNoSlash);
+//
+//				//also - have to get StumbleUpon data manually... as sharedcount is failing to get this data
+//				socialDataAPINoSlash.setStumble_upon(manualSocialData.getStumbleUponData(urlAddressNoSlash));
+//
+//			} catch (Exception e) {
+//				String msg = "Shared Count API failed for: "
+//						+ urlAddressNoSlash
+//						+ ". ProcessNewTargets: getURLSocialData. Calling manual implementation \n";
+//				log.warning(msg + e.getMessage());
+//
+//				sharedCountFailedNoSlash = true; // so now call manual implementation
+//			}
+//			// end shared count API
+//			//////////
 
 
 			////////////
@@ -675,7 +675,9 @@ public class ProcessNewTargets extends HttpServlet {
 			if (sharedCountFailedSlash) {
 
 				try {
-
+					//TODO: need to break calls into respective social services, then if first call to delicious and / or stumbled fails,
+					// 	then we can skip them in the subsequent call using urlAddressNoSlash.
+					//		need to bring up the construction of the miscsocialdata object up to this layer....
 					socialDataAPISlash = manualSocialData.getAllSocialData(urlAddressSlash);
 
 				} catch (Exception e) {
