@@ -57,7 +57,7 @@ public class ProcessNewTargets extends HttpServlet {
 
 		resp.setContentType("text/plain");
 		
-		boolean testing = true; // if true, then no urls are processsed and JUST social data sweep occurs....
+		boolean testing = false; // if true, then no urls are processsed and JUST social data sweep occurs....
 		 // if false, then servlet does tasks its supposed to. - process new targets and get social data
 
 		boolean firstRun = true; // only here for the free SEOMoz API limiter.
@@ -212,7 +212,7 @@ public class ProcessNewTargets extends HttpServlet {
 		// selected...
 		//Moved this to socialdatacrawl.
 
-//		if(!testing)
+		//if(!testing)
 			getURLSocialData();
 
 		try {

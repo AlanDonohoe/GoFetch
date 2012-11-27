@@ -385,7 +385,7 @@
 
 
 			<!--  forceSelection="true" -->
-			<h:form id="form1">
+			<h:form id="form1" enctype="multipart/form-data" >
 
 				<p:tabView effect="fold" effectDuration="normal">
 
@@ -581,7 +581,6 @@
 					<p:fileUpload fileUploadListener="#{dataEntryBacking.handleFileUpload}"  
             					mode="advanced"   
             					update="messages"  
-            					sizeLimit="10000000"   
             					allowTypes="/(\.|\/)(xls)$/" />  
             					<p:growl id="messages" showDetail="true"/> <br/>
             					
