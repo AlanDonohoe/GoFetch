@@ -72,6 +72,17 @@ public class ProcessNewTargets extends HttpServlet {
 		URLDBService urlDBUnit = new URLDBService();
 		SEOMoz seoMoz = new SEOMozImplFreeAPI();	
 		
+
+		//////////////////////////////////
+		// Social metric crawl / processing of URLs...
+		// Now we have all the backlinks from SEOMoz entered into the DB, now
+		// get all the social data urls in DB that have FB and Twitter data
+		// selected...
+		//Moved this to socialdatacrawl.
+
+		//if(!testing)
+			getURLSocialData();
+		
 		/////////
 		// SEOMoz processing of URLs.
 
@@ -205,15 +216,6 @@ public class ProcessNewTargets extends HttpServlet {
 		// end of SEOMoz processing URLs
 		// /////////////
 
-		//////////////////////////////////
-		// Social metric crawl / processing of URLs...
-		// Now we have all the backlinks from SEOMoz entered into the DB, now
-		// get all the social data urls in DB that have FB and Twitter data
-		// selected...
-		//Moved this to socialdatacrawl.
-
-		//if(!testing)
-			getURLSocialData();
 
 		try {
 			getServletContext().getRequestDispatcher("/index.jsf").forward(
