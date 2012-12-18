@@ -467,8 +467,8 @@
 									filter="true" filterText="Filter" filterMatchMode="startsWith"
 									panelStyle="width:250px"
 									style="width:92px; height:20px; padding-top:2px; overflow:hidden ">
-									<p:ajax listener="#{dataEntryBacking.filterCampaignsAndT_URLs}"
-										update="campaignSelectItems,targetURLSelectItems" />
+									<p:ajax listener="#{dataEntryBacking.processSelectedClient}"
+										update="campaignSelectItems,targetURLSelectItems, :form1:j_idt7:linkspanel" />
 									<f:selectItems value="#{dataEntryBacking.clients}" />
 									<f:selectItem itemLabel="* Add New Client" itemValue="" />
 								</p:selectCheckboxMenu>
@@ -481,8 +481,8 @@
 									filter="true" filterText="Filter" filterMatchMode="startsWith"
 									panelStyle="width:300px"
 									style="width:150px; height:20px; padding-top:2px; overflow:hidden">
-									<p:ajax listener="#{dataEntryBacking.filterTargetURLs}"
-										update="targetURLSelectItems" />
+									<p:ajax listener="#{dataEntryBacking.campaignSelectionChange}"
+										update="targetURLSelectItems,:form1:j_idt7:linkspanel" />
 									<f:selectItems value="#{dataEntryBacking.campaigns}" />
 									<f:selectItem itemLabel="* Add New Campaign" itemValue="" />
 								</p:selectCheckboxMenu>
@@ -520,24 +520,40 @@
 									id="linkspanel" style="border-style:solid" multiple="true" activeIndex="#{dataEntryBacking.size}, #{dataEntryBacking.previous}">
 									<p:tab title=' Link' style="padding:0em" closable="true">
 										<p:panelGrid columns="3" style="width:700px; ">
+										
+										<h:outputLabel value="Client:" />
+
+											<h:outputLabel id="selectedClientLabel" value="#{dataEntryBacking.selectedClientsKey}">
+												
+											</h:outputLabel>
+											<h:outputLabel value="?" id="clientHelp2" />
+											
+											
+											<h:outputLabel value="Campaign:" />
+
+											<h:outputLabel id="selectedCampaignLabel" value="#{link.campaign}">
+												
+											</h:outputLabel>
+											<h:outputLabel value="?" id="campaignHelp2" />
 
 											<h:outputLabel value="Link Activity:" />	
+											
 
-											<p:selectOneMenu value="#{link.linkActivity}"
-												style="width:170px">
+												
+												<p:selectOneMenu value="#{link.linkActivityKey}"
+												style="width:170px" >
 												<p:ajax listener="#{dataEntryBacking.upDateLinkBuildingActivity}" 
 												update=":form1:j_idt7:accordian_wrapper" />
 												<f:selectItem itemLabel="Choose Link Activity..."
 													itemValue="" />
 												<f:selectItems value="#{dataEntryBacking.linkActivity}" />
+												
 											</p:selectOneMenu>
-
-
 
 											<h:outputLabel value="?" id="idLinkActivityHelp" />
 
 											<h:outputLabel value="Date:" />
-											<p:calendar value="#{link.date}" id="popupCal2">
+											<p:calendar value="#{link.date}" id="popupCal2" pattern="dd/MM/yyyy">
 												<p:ajax event="dateSelect"
 													listener="#{dataEntryBacking.upDateLinkData}" />
 											</p:calendar>
@@ -545,15 +561,14 @@
 
 											<h:outputLabel value="Target URL:" />
 
-											<h:inputText id="linksTargetURL" value="#{link.targetUrl}"
-												maxlength="200" size="76">
-												<p:ajax listener="#{dataEntryBacking.upDateLinkData}" />
-											</h:inputText>
+											<h:outputLabel id="linksTargetURL" value="#{link.targetUrl}">
+												
+											</h:outputLabel>
 											<h:outputLabel value="?" id="idTargetURLHelp" />
 
 											<h:outputLabel value="Backlink URL:" />
 											
-												<h:inputText value="#{link.sourceUrl}" maxlength="200"
+												<h:inputText id="linksSourceURL" value="#{link.sourceUrl}" maxlength="200"
 													size="76">
 													<p:ajax listener="#{dataEntryBacking.upDateLinkData}" />
 													
@@ -580,13 +595,10 @@
 											
 											
 											<h:outputLabel value="?" id="idBacklinkMonitorHelp" rendered="#{link.contentCreation}"/>
-	
-	
-	
 
 											<h:outputLabel value="Anchor Text:" />
 
-											<h:inputText value="#{link.anchorText}" maxlength="200"
+											<h:inputText id="anchor_text" value="#{link.anchorText}" maxlength="200"
 												size="76">
 												<p:ajax listener="#{dataEntryBacking.addNewLinkTab}"
 													update=":form1:j_idt7:accordian_wrapper" />
@@ -598,11 +610,12 @@
 											value="URL of backlink with content" showEffect="fade"
 											hideEffect="fade" targetPosition="topRight"
 											position="topRight" />
+											
+											<p:watermark for="anchor_text" value="Leave blank if you are done entering links" /> 
 
 									</p:tab>
 
-
-								</p:accordionPanel>
+							</p:accordionPanel>
 							</h:panelGroup>
 
 

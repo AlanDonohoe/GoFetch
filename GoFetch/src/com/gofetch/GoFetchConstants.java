@@ -39,18 +39,5 @@ public class GoFetchConstants {
 	public static final String twitterPreEndPoint  = "http://urls.api.twitter.com/1/urls/count.json?url="; 
 	public static final String twitterPostEndPoint = "&callback=twttr.receiveCount";
 	
-	//
-	////////////////////////
-	
-	////////////////////////
-	// used in link reporting:
-	
-	public static final String contentCreationText = "Content Creation";
-	
-	//
-	///////////////////
-	
-	
-	//
-	/////////////////////
+
 }

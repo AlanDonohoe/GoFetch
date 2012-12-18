@@ -7,184 +7,179 @@ CREATE SCHEMA IF NOT EXISTS `url` DEFAULT CHARACTER SET utf8 ;
 USE `url` ;
 
 -- -----------------------------------------------------
--- Table `url`.`users`
+-- Table `url`.`SEQUENCE`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`users` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `username` VARCHAR(225) NOT NULL ,
-  `password` VARCHAR(225) NOT NULL ,
-  `email` VARCHAR(225) NULL ,
-  `client` TINYINT(1) NOT NULL ,
-  `displayed_name` VARCHAR(45) NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
+DROP TABLE IF EXISTS `url`.`SEQUENCE` ;
+
+CREATE  TABLE IF NOT EXISTS `url`.`SEQUENCE` (
+  `SEQ_NAME` varchar(50) DEFAULT NULL,
+  `SEQ_COUNT` decimal(15,0) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+INSERT INTO SEQUENCE(SEQ_NAME, SEQ_COUNT) values ('SEQ_GEN', 0);
 
 
 -- -----------------------------------------------------
 -- Table `url`.`client_category`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `url`.`client_category` ;
+
 CREATE  TABLE IF NOT EXISTS `url`.`client_category` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'refers to the subdomains or sub categories that may be assigned to a client. /dresses, /shoes, etc' ,
-  `category` VARCHAR(45) NOT NULL ,
-  `users_id` INT NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_client_category_users1` (`users_id` ASC) ,
-  CONSTRAINT `fk_client_category_users1`
-    FOREIGN KEY (`users_id` )
-    REFERENCES `url`.`users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT ''refers to the subdomains or sub categories that may be assigned to a client. /dresses, /shoes, etc'',
+  `category` varchar(45) NOT NULL,
+  `users_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_client_category_users1` (`users_id`),
+  CONSTRAINT `fk_client_category_users1` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8
 
 -- -----------------------------------------------------
--- Table `url`.`url`
+-- Table `url`.`keywords`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`url` (
-  `url_id` INT NOT NULL AUTO_INCREMENT ,
-  `url_address` VARCHAR(500) NOT NULL ,
-  `get_social_data` TINYINT(1) NOT NULL ,
-  `get_backlinks` TINYINT(1) NOT NULL COMMENT 'If true, this indicates this is a target url and its id should be added to links table as a target' ,
-  `date` DATE NOT NULL ,
-  `page_authority` INT NULL ,
-  `domain_authority` INT NULL ,
-  `user_id` VARCHAR(45) NULL COMMENT 'Ensures that each target url be associated with a user, source urls do not need to be assoc with a user id.' ,
-  `category` VARCHAR(45) NULL ,
-  `domain` VARCHAR(200) NULL ,
-  `doc_title` VARCHAR(45) NULL ,
-  `seomoz_url` TINYINT(1) NULL COMMENT 'If true, this source url was detected by SEOMoz.' ,
-  `social_data_date` DATE NULL ,
-  `social_data_freq` TINYINT NULL ,
-  `backlinks_got` TINYINT(1) NULL ,
-  `users_user_id` INT NULL ,
-  `client_category_id` INT NULL ,
-  `client_category_users_user_id` INT NULL ,
-  PRIMARY KEY (`url_id`) ,
-  INDEX `fk_url_users1` (`users_user_id` ASC) ,
-  INDEX `fk_url_client_category1` (`client_category_id` ASC, `client_category_users_user_id` ASC) ,
-  CONSTRAINT `fk_url_users1`
-    FOREIGN KEY (`users_user_id` )
-    REFERENCES `url`.`users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_url_client_category1`
-    FOREIGN KEY (`client_category_id` )
-    REFERENCES `url`.`client_category` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
+DROP TABLE IF EXISTS `url`.`keywords` ;
 
+CREATE  TABLE IF NOT EXISTS `url`.`keywords` (
+  `keyword` varchar(45) NOT NULL,
+  `search_volume` int(11) NOT NULL,
+  `vertical` varchar(45) NOT NULL,
+  PRIMARY KEY (`keyword`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 -- -----------------------------------------------------
--- Table `url`.`linksafe_data`
+-- Table `url`.`link_building_activity`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`linksafe_data` (
-  `seomoz_id` INT NOT NULL AUTO_INCREMENT ,
-  `url_id` INT NOT NULL ,
-  `rga_score` VARCHAR(10) NULL ,
-  `auditor_rank` INT NULL ,
-  `auditor_id` INT NULL ,
-  `last_question` INT NULL ,
-  `comment` VARCHAR(45) NULL ,
-  PRIMARY KEY (`seomoz_id`, `url_id`) ,
-  INDEX `fk_seomoz_data_url1` (`url_id` ASC) ,
-  CONSTRAINT `fk_seomoz_data_url1`
-    FOREIGN KEY (`url_id` )
-    REFERENCES `url`.`url` (`url_id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+DROP TABLE IF EXISTS `url`.`link_building_activity` ;
+
+CREATE  TABLE IF NOT EXISTS `url`.`link_building_activity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `activity` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8
 
 
 -- -----------------------------------------------------
 -- Table `url`.`links`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`links` (
-  `links_id` INT NOT NULL AUTO_INCREMENT ,
-  `target_id` INT NOT NULL ,
-  `source_id` INT NOT NULL COMMENT 'Represents hyperlinks btwn source which points at target.' ,
-  `anchor_text` VARCHAR(200) NOT NULL ,
-  `date_detected` DATE NOT NULL ,
-  `final_target_url` VARCHAR(500) NOT NULL ,
-  `date_expired` DATE NULL ,
-  `user_category` VARCHAR(45) NULL ,
-  `user_assigned_to` VARCHAR(45) NULL ,
-  `user_campaign` VARCHAR(45) NULL ,
-  `users_user_id` INT NULL ,
-  PRIMARY KEY (`links_id`) ,
-  INDEX `fk_links_users1` (`users_user_id` ASC) ,
-  CONSTRAINT `fk_links_users1`
-    FOREIGN KEY (`users_user_id` )
-    REFERENCES `url`.`users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+DROP TABLE IF EXISTS `url`.`links` ;
 
+CREATE  TABLE IF NOT EXISTS `url`.`links` (  
+  `links_id` int(11) NOT NULL AUTO_INCREMENT,
+  `target_id` int(11) NOT NULL,
+  `source_id` int(11) NOT NULL COMMENT ''Represents hyperlinks btwn source which points at target.'',
+  `anchor_text` varchar(200) NOT NULL,
+  `date_detected` date NOT NULL,
+  `final_target_url` varchar(200) NOT NULL,
+  `date_expired` date DEFAULT NULL,
+  `user_category` varchar(45) DEFAULT NULL,
+  `user_assigned_to` varchar(45) DEFAULT NULL,
+  `user_campaign` varchar(45) DEFAULT NULL,
+  `client` varchar(45) DEFAULT NULL,
+  `users_user_id` int(11) DEFAULT NULL,
+  `data_entered_by` tinyint(1) DEFAULT NULL,
+  `client_category_id` int(11) DEFAULT NULL,
+  `client_category_users_user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`links_id`),
+  KEY `fk_url_users1` (`users_user_id`),
+  KEY `fk_url_client_category1` (`client_category_id`,`client_category_users_user_id`),
+  CONSTRAINT `fk_link_client_category1` FOREIGN KEY (`client_category_id`) REFERENCES `client_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_link_users1` FOREIGN KEY (`users_user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=8511 DEFAULT CHARSET=utf8
 
--- -----------------------------------------------------
--- Table `url`.`keywords`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`keywords` (
-  `keyword` VARCHAR(45) NOT NULL ,
-  `search_volume` INT NOT NULL ,
-  `vertical` VARCHAR(45) NOT NULL ,
-  PRIMARY KEY (`keyword`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `url`.`SEQUENCE`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`SEQUENCE` (
-  `SEQ_NAME` VARCHAR(50) NULL ,
-  `SEQ_COUNT` DECIMAL(15) NULL )
-ENGINE = InnoDB;
-
-INSERT INTO SEQUENCE(SEQ_NAME, SEQ_COUNT) values ('SEQ_GEN', 0);
 
 -- -----------------------------------------------------
 -- Table `url`.`misc_social_data`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `url`.`misc_social_data` ;
+
 CREATE  TABLE IF NOT EXISTS `url`.`misc_social_data` (
-  `social_data_id` INT NOT NULL AUTO_INCREMENT ,
-  `url_id` INT NOT NULL ,
-  `date` DATE NOT NULL ,
-  `stumble_upon` INT NULL ,
-  `delicious` INT NULL ,
-  `buzz` INT NULL ,
-  `pinterest` INT NULL ,
-  `linkedin` INT NULL ,
-  `google_plus_one` INT NULL ,
-  `twitter` INT NULL ,
-  `fb_total_count` INT NULL ,
-  `fb_like_count` INT NULL ,
-  `fb_comment_count` INT NULL ,
-  `fb_share_count` INT NULL ,
-  `fb_click_count` INT NULL ,
-  `fb_commentsbox_count` INT NULL ,
-  PRIMARY KEY (`social_data_id`, `url_id`) ,
-  INDEX `fk_misc_social_data_url1` (`url_id` ASC) ,
-  CONSTRAINT `fk_misc_social_data_url1`
-    FOREIGN KEY (`url_id` )
-    REFERENCES `url`.`url` (`url_id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+  `social_data_id` int(11) NOT NULL AUTO_INCREMENT,
+  `url_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `stumble_upon` int(11) DEFAULT NULL,
+  `delicious` int(11) DEFAULT NULL,
+  `pinterest` int(11) DEFAULT NULL,
+  `linkedin` int(11) DEFAULT NULL,
+  `google_plus_one` int(11) DEFAULT NULL,
+  `twitter` int(11) DEFAULT NULL,
+  `fb_total_count` int(11) DEFAULT NULL,
+  `fb_like_count` int(11) DEFAULT NULL,
+  `fb_comment_count` int(11) DEFAULT NULL,
+  `fb_share_count` int(11) DEFAULT NULL,
+  `fb_click_count` int(11) DEFAULT NULL,
+  `fb_commentsbox_count` int(11) DEFAULT NULL,
+  PRIMARY KEY (`social_data_id`,`url_id`),
+  KEY `fk_misc_social_data_url1` (`url_id`),
+  CONSTRAINT `fk_misc_social_data_url1` FOREIGN KEY (`url_id`) REFERENCES `url` (`url_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8802 DEFAULT CHARSET=utf8
+
+-- -----------------------------------------------------
+-- Table `url`.`linksafe_data`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `url`.`linksafe_data` ;
+
+CREATE  TABLE IF NOT EXISTS `url`.`linksafe_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `url_id` int(11) NOT NULL,
+  `rga_score` varchar(10) DEFAULT NULL,
+  `auditor_rank` int(11) DEFAULT NULL,
+  `auditor_id` int(11) DEFAULT NULL,
+  `last_question` int(11) DEFAULT NULL,
+  `comment` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`,`url_id`),
+  KEY `fk_seomoz_data_url1` (`url_id`),
+  CONSTRAINT `fk_seomoz_data_url1` FOREIGN KEY (`url_id`) REFERENCES `url` (`url_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+-- -----------------------------------------------------
+-- Table `url`.`url`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `url`.`url` ;
+
+CREATE  TABLE IF NOT EXISTS `url`.`url` (
+  `url_id` int(11) NOT NULL AUTO_INCREMENT,
+  `url_address` varchar(500) NOT NULL,
+  `get_social_data` tinyint(1) NOT NULL,
+  `get_backlinks` tinyint(1) NOT NULL COMMENT ''If true, this indicates this is a target url and its id should be added to links table as a target'',
+  `date` date NOT NULL,
+  `page_authority` int(11) DEFAULT NULL,
+  `domain_authority` int(11) DEFAULT NULL,
+  `user_id` varchar(45) DEFAULT NULL COMMENT ''Ensures that each target url be associated with a user, source urls do not need to be assoc with a user id.'',
+  `category` varchar(45) DEFAULT NULL,
+  `domain` varchar(200) DEFAULT NULL,
+  `doc_title` varchar(45) DEFAULT NULL,
+  `seomoz_url` tinyint(1) DEFAULT NULL COMMENT ''If true, this source url was detected by SEOMoz.'',
+  `backlinks_got` tinyint(1) DEFAULT NULL,
+  `no_of_layers` tinyint(1) DEFAULT NULL,
+  `social_data_date` date DEFAULT NULL,
+  `social_data_freq` tinyint(4) DEFAULT NULL,
+  `users_user_id` int(11) DEFAULT NULL,
+  `client_category_id` int(11) DEFAULT NULL,
+  `client_category_users_user_id` int(11) DEFAULT NULL,
+  `data_entered_by` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`url_id`),
+  KEY `fk_url_users1` (`users_user_id`),
+  KEY `fk_url_client_category1` (`client_category_id`,`client_category_users_user_id`),
+  CONSTRAINT `fk_url_client_category1` FOREIGN KEY (`client_category_id`) REFERENCES `client_category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_url_users1` FOREIGN KEY (`users_user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=8764 DEFAULT CHARSET=utf8
 
 
 -- -----------------------------------------------------
--- Table `url`.`link_building_activity`
+-- Table `url`.`users`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `url`.`link_building_activity` (
-  `id` INT NOT NULL COMMENT 'represents the different types of link building activity Pnet staff perform' ,
-  `activity` VARCHAR(45) NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
+DROP TABLE IF EXISTS `url`.`users` ;
 
+CREATE  TABLE IF NOT EXISTS `url`.`users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(225) NOT NULL,
+  `password` varchar(225) NOT NULL,
+  `email` varchar(225) DEFAULT NULL,
+  `client` tinyint(1) NOT NULL,
+  `displayed_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;	
