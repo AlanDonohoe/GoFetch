@@ -40,6 +40,8 @@ public class ManualSocialDataImpl implements SocialData {
 
 	private static Logger log = Logger.getLogger(ManualSocialDataImpl.class
 			.getName());
+	
+	private boolean minimalLoging = true;
 
 
 	@Override
@@ -54,17 +56,24 @@ public class ManualSocialDataImpl implements SocialData {
 		try {
 			stumbleViews = getSingleSocialMetric(GoFetchConstants.stumbleUponEndPoint, url);
 		} catch (IOException e) {
+			if(!minimalLoging)
+			{
 			String errorMsg = "ManualSocialDataImp: Call to StumbleUpon failed to get data for: " + url;
 
 			log.warning(errorMsg);
+			}
 			
 			return null;
 		}
 
 		if(null == stumbleViews){
+			
+			if(!minimalLoging)
+			{
 			String errorMsg = "ManualSocialDataImp: Call to StumbleUpon failed to get data for: " + url;
 
 			log.warning(errorMsg);
+			}
 			
 			return null;
 
@@ -85,9 +94,12 @@ public class ManualSocialDataImpl implements SocialData {
 		Integer delicious = getSingleSocialMetric(GoFetchConstants.deliciousEndPoint, url);
 
 		if(null == delicious){
+			if(!minimalLoging)
+			{
 			String errorMsg = "ManualSocialDataImp: Call to Delicious failed to get data for: " + url;
 
 			log.warning(errorMsg);
+			}
 
 		}else{
 			miscSocialData.setDelicious(delicious);
@@ -102,7 +114,7 @@ public class ManualSocialDataImpl implements SocialData {
 		fbdataUnit = getFaceBookData(url);
 
 		if(null == fbdataUnit){
-
+			
 			String errorMsg = "ManualSocialDataImp: Call to facebook failed to get data for: " + url;
 
 			log.warning(errorMsg);
@@ -162,9 +174,12 @@ public class ManualSocialDataImpl implements SocialData {
 		Integer pinterest = getSingleSocialMetric(GoFetchConstants.pinterestEndPoint, url);
 
 		if(null == pinterest){
+			if(!minimalLoging)
+			{
 			String errorMsg = "ManualSocialDataImp: Call to Pinterest failed to get data for: " + url;
 
 			log.warning(errorMsg);
+			}
 
 		}else{
 			miscSocialData.setPinterest(pinterest);
@@ -178,9 +193,12 @@ public class ManualSocialDataImpl implements SocialData {
 		Integer stumbleViews = getSingleSocialMetric(GoFetchConstants.stumbleUponEndPoint, url);
 
 		if(null == stumbleViews){
+			if(!minimalLoging)
+			{
 			String errorMsg = "ManualSocialDataImp: Call to StumbleUpon failed to get data for: " + url;
 
 			log.warning(errorMsg);
+			}
 
 		}else{
 			miscSocialData.setStumble_upon(stumbleViews);

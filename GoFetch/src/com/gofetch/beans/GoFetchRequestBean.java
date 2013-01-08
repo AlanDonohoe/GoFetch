@@ -318,7 +318,13 @@ public class GoFetchRequestBean implements Serializable {
 			url.setBacklinks_got(false); // turns to true, when ProcessNewTargets have got this url's backlinks
 			url.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_USER); 
 			
-			urlDB.createURL(url);
+			
+			try {
+				urlDB.createURL(url);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				log.severe(e.getMessage());
+			}
 
 			// add to report:
 

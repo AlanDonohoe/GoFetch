@@ -118,6 +118,7 @@ public class ProcessNewTargets extends HttpServlet {
 					}
 
 					firstRun = false;
+					//TODO: do while loop - so that SEOMoz is hit up to 5 times or until backlinks are got...
 					try {
 
 						backLinks = seoMoz.getLinks(currentTargetAddress);
@@ -310,10 +311,16 @@ public class ProcessNewTargets extends HttpServlet {
 
 			// returns true if DB not previously in DB and false if URL already in DB...
 			// need to do something here with the result - so that its not made into a new link....
-			if(urlDBUnit.createURL(url))
-				noNewURLs++;
-			else
-				noPreviouslyEnteredURLs++;
+			
+			try {
+				if(urlDBUnit.createURL(url))
+					noNewURLs++;
+				else
+					noPreviouslyEnteredURLs++;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				log.severe(e.getMessage());
+			}
 		}
 	}
 

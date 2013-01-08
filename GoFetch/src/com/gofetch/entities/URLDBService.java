@@ -59,7 +59,7 @@ public class URLDBService{
 	//TODO: writing URLs to DB is v v slow - takes about 2 secs per record... why????
 	//	maybe create a method: void createURLs(List<URL> listURLs) method and have a loop within that to include only: if(!urlInDB(url)){...persist.... }
 	//	use batch processing of URLs to DB.
-	public boolean createURL(URL url){
+	public boolean createURL(URL url) throws Exception{
 		log.info("Entering url[" + url.getUrl_address() + "]");
 		
 		boolean urlInDB = false; // flag, set to true if URL already exists in DB.
@@ -94,6 +94,7 @@ public class URLDBService{
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: createURL";
 			log.severe(msg + e.getMessage());
+			throw(e);
 
 		}
 		finally {
@@ -333,30 +334,44 @@ public class URLDBService{
 
 	// TODO: make an efficient look up service here..... see:
 	// http://stackoverflow.com/questions/558978/most-efficient-way-to-see-if-an-arraylist-contains-an-object-in-java
-	private boolean urlInDB(URL urlCheck){
+	private boolean urlInDB(URL urlInDB){
+		
+		// new code - 
+		
+		return urlInDB(urlInDB.getUrl_address());
 
-		List<URL> urlList = getURLs();
-
-		for(URL urlCurrent: urlList){
-			if(urlCurrent.getUrl_address().equals(urlCheck.getUrl_address()))
-				return true;
-		}
-
-		return false;
+		// 	old code -  v inefficent....
+//		List<URL> urlList = getURLs();
+//
+//		for(URL urlCurrent: urlList){
+//			if(urlCurrent.getUrl_address().equals(urlCheck.getUrl_address()))
+//				return true;
+//		}
+//
+//		return false;
 	}
 
 	// TODO: make an efficient look up service here..... see:
 	// http://stackoverflow.com/questions/558978/most-efficient-way-to-see-if-an-arraylist-contains-an-object-in-java
 	public boolean urlInDB(String urlAddress){
-
-		List<URL> urlList = getURLs();
-
-		for(URL urlCurrent: urlList){
-			if(urlCurrent.getUrl_address().equals(urlAddress))
-				return true;
-		}
-
-		return false;
+		
+		//old code doesnt make any sense.... pulls all the urls into RAM - just query DB and return false if its not in DB
+		
+		//new code:
+		if(null == getURL(urlAddress))
+			return false;
+		else
+			return true;
+		
+		//OLD Code:
+//		List<URL> urlList = getURLs();
+//
+//		for(URL urlCurrent: urlList){
+//			if(urlCurrent.getUrl_address().equals(urlAddress))
+//				return true;
+//		}
+//
+//		return false;
 	}
 
 	public Integer getURLIDFromAddress(String urlAddress){
@@ -847,7 +862,7 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_users_user_id = :client_category_users_user_id")
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_users_user_id = :client_category_users_user_id AND u.client_target_url = TRUE")
 					.setParameter("client_category_users_user_id", clientID)
 					.getResultList();
 

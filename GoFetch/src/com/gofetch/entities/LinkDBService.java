@@ -23,31 +23,34 @@ public class LinkDBService{
 		log.info("Entering new link. Source: [" + link.getSource_id() + " Target: " + link.getTarget_id() + "]");
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
+		EntityManager mgr = emf.createEntityManager(); 
+		
+		// check that link does not already exist in DB with this target and source ID:
+		if(null == getLink(link.getSource_id(), link.getTarget_id()) ){
+			try {
 
-		try {
+				mgr.getTransaction().begin();
+				mgr.persist(link);
+				mgr.getTransaction().commit();
 
-			mgr.getTransaction().begin();
-			mgr.persist(link);
-			mgr.getTransaction().commit();
-
-		}catch(Exception e){
-			String msg = "Exception thrown. " + "LinkDBService: createLink";
-			//logger.logp(Level.SEVERE, "LinkDBService", "createLink",msg ,e);
-			log.severe(msg + e.getMessage());
-		}
-		finally {
-			mgr.close();
+			}catch(Exception e){
+				String msg = "Exception thrown. " + "LinkDBService: createLink";
+				//logger.logp(Level.SEVERE, "LinkDBService", "createLink",msg ,e);
+				log.severe(msg + e.getMessage());
+			}
+			finally {
+				mgr.close();
+			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param finalTargetURLAddress
 	 * @return list of Links that all have their final_target_url as finalTargetURLAddress
 	 */
 	public List<Link> getLinksInTreePointingTo(String finalTargetURLAddress){
-		
+
 		log.info("Entering getSourceURLsIDsPointingTo [" + finalTargetURLAddress + "]");
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -74,9 +77,9 @@ public class LinkDBService{
 		log.info("Exiting getSourceURLsIDsPointingTo [" + finalTargetURLAddress + "]"); 
 
 		return links;
-		
+
 	}
-	
+
 	/**
 	 * 
 	 * @param targetURL 
@@ -101,7 +104,7 @@ public class LinkDBService{
 
 		}catch(Exception e){
 			String msg = "Exception thrown getting data for: " + targetURL.getUrl_address() + "LinkDBService: getLinkIDsPointingTo \n";
-						log.severe(msg + e.getMessage());
+			log.severe(msg + e.getMessage());
 		} finally {
 			mgr.close();
 		}
@@ -233,11 +236,11 @@ public class LinkDBService{
 		try{
 
 			mgr.getTransaction().begin();
-			
+
 			mgr.createQuery("DELETE FROM Link u WHERE u.final_target_url = :final_target_url")
 			.setParameter("final_target_url",  finalTargetURL)
 			.executeUpdate();
-			
+
 			mgr.getTransaction().commit();
 
 
@@ -253,7 +256,7 @@ public class LinkDBService{
 		log.info("Exiting deleteLinksInTreeWithRoot.");
 
 	}
-	
+
 	public void deleteLinksPointingTo(int targetURLID){
 
 		log.info("Entering deleteLinksPointingTo. Deleting all links pointing to " + targetURLID);
@@ -266,11 +269,11 @@ public class LinkDBService{
 		try{
 
 			mgr.getTransaction().begin();
-			
+
 			mgr.createQuery("DELETE FROM Link u WHERE u.target_id = :targetURLID")
 			.setParameter("targetURLID",  targetURLID)
 			.executeUpdate();
-			
+
 			mgr.getTransaction().commit();
 
 
@@ -286,8 +289,8 @@ public class LinkDBService{
 		log.info("Exiting deleteLinksPointingTo.");
 
 	}
-	
-	
+
+
 	public void deleteLinkByLinkID(Integer links_id){
 
 		log.info("Entering deleteLinkByLinkID. Deleting " + links_id);
@@ -297,22 +300,22 @@ public class LinkDBService{
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
-			try{
-				mgr.getTransaction().begin();
-				mgr.createQuery("DELETE FROM Link u WHERE u.links_id = :links_id")
-				.setParameter("links_id",  links_id)
-				.executeUpdate();
-				
-				mgr.getTransaction().commit();
+		try{
+			mgr.getTransaction().begin();
+			mgr.createQuery("DELETE FROM Link u WHERE u.links_id = :links_id")
+			.setParameter("links_id",  links_id)
+			.executeUpdate();
 
-			}catch(Exception e){
-				String msg = "Exception thrown deleting: " + links_id + ". LinkDBService: deleteLinkByLinkID";
-				//logger.logp(Level.SEVERE, "LinkDBService", "deleteLinkByLinkID",msg ,e);
-				log.severe(msg + e.getMessage());
-				
-			} finally {
-				mgr.close();
-			}
+			mgr.getTransaction().commit();
+
+		}catch(Exception e){
+			String msg = "Exception thrown deleting: " + links_id + ". LinkDBService: deleteLinkByLinkID";
+			//logger.logp(Level.SEVERE, "LinkDBService", "deleteLinkByLinkID",msg ,e);
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
 
 		log.info("Exiting deleteLinkByLinkID.");
 	}
@@ -328,34 +331,34 @@ public class LinkDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 
-			try{
-				mgr.getTransaction().begin();
-				mgr.createQuery("DELETE FROM Link u WHERE u.source_id = :source_id")
-				.setParameter("source_id",  source_id)
-				.executeUpdate();
-				
-				mgr.getTransaction().commit();
+		try{
+			mgr.getTransaction().begin();
+			mgr.createQuery("DELETE FROM Link u WHERE u.source_id = :source_id")
+			.setParameter("source_id",  source_id)
+			.executeUpdate();
 
-			}catch(Exception e){
-				String msg = "Exception thrown deleting: " + source_id + ". LinkDBService + deleteLinkBySourceID";
-				//logger.logp(Level.SEVERE, "LinkDBService", "deleteLinkBySourceID",msg ,e);
-				log.severe(msg + e.getMessage());
+			mgr.getTransaction().commit();
 
-			} finally {
-				mgr.close();
-			}
+		}catch(Exception e){
+			String msg = "Exception thrown deleting: " + source_id + ". LinkDBService + deleteLinkBySourceID";
+			//logger.logp(Level.SEVERE, "LinkDBService", "deleteLinkBySourceID",msg ,e);
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
 
 
 		log.info("Exiting deleteLinkBySourceID.");
 	}
 
 	/**
-	 * returns list of all links that this link (id) occurs in...
+	 * returns list of all links that this link (id) occurs in as target_id
 	 * @param id
 	 * @return
 	 */
 	public List<Link> getAllLinks(Integer id){
-		
+
 		log.info("Entering getAllLinks");
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -373,7 +376,7 @@ public class LinkDBService{
 		}
 
 		log.info("Exiting getAllLinks"); 
-		
+
 		return links;
 	}
 
@@ -420,6 +423,67 @@ public class LinkDBService{
 
 
 		log.info("Exiting getURLIDsPointingTo");
+
+		return result;
+
+	}
+
+	public Link getLink(Integer sourceID, Integer targetID){
+
+		log.info("Entering getLink");
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		List<Link> links = null;
+
+
+
+		try {
+			links = (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :targetID AND u.source_id = :sourceID")
+					.setParameter("sourceID",  sourceID)
+					.setParameter("targetID",  targetID)
+					.getResultList();
+		}catch(Exception e){
+			String msg = "Exception thrown getting Link: Target id: " + targetID  + ". Source ID: " + sourceID + ". LinkDBService: getLink(...). ";
+			//logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+
+		log.info("Exiting getURL");
+
+		if((null == links) || (links.isEmpty()))
+			return null;
+		else
+			return links.get(0);
+
+	}
+
+	public Integer getLinkID(Integer sourceID, Integer targetID){
+
+		log.info("Entering getLink");
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		//List<Integer> result;
+		Integer result = 0;
+
+		try {
+			result = (Integer)mgr.createQuery("SELECT u.links_id FROM Link u WHERE u.target_id = :targetID AND u.source_id = :sourceID")
+					.setParameter("sourceID",  sourceID)
+					.setParameter("targetID",  targetID)
+					.getSingleResult();
+
+		} finally {
+			mgr.close();
+		}
+
+
+		log.info("Exiting getLink");
 
 		return result;
 

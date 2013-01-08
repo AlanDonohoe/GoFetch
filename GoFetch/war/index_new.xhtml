@@ -3,6 +3,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
 	class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions fontface video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"
 	lang="en">
 <h:head>
@@ -517,8 +518,10 @@
 							
 							<h:panelGroup id="accordian_wrapper">
 								<p:accordionPanel value="#{dataEntryBacking.links}" var="link"
-									id="linkspanel" style="border-style:solid" multiple="true" activeIndex="#{dataEntryBacking.size}, #{dataEntryBacking.previous}">
-									<p:tab title=' Link' style="padding:0em" closable="true">
+									id="linkspanel" style="border-style:solid" multiple="false" activeIndex="#{dataEntryBacking.activeTabIndex}" >
+									 <p:ajax event="tabChange" listener="#{dataEntryBacking.onTabChange}"  />
+									 
+									<p:tab title=' Link' style="padding:0em" closable="true" >
 										<p:panelGrid columns="3" style="width:700px; ">
 										
 										<h:outputLabel value="Client:" />
@@ -569,7 +572,7 @@
 											<h:outputLabel value="Backlink URL:" />
 											
 												<h:inputText id="linksSourceURL" value="#{link.sourceUrl}" maxlength="200"
-													size="76">
+													size="76" validatorMessage="Invalid URL. Must start with http:// ">
 													<p:ajax listener="#{dataEntryBacking.upDateLinkData}" />
 													
 												</h:inputText>
@@ -629,10 +632,19 @@
 								allowTypes="/(\.|\/)(xls)$/" />
 							<p:growl id="messages" showDetail="true" />
 							<br />
-
+	<ui:remove>  					
+							<p:commandButton process="@this"
+								action="#{dataEntryBacking.clearAllLinks}"
+								style="position:relative; left:300px " value="Don't Add Links"></p:commandButton>
+</ui:remove>
 							<p:commandButton process="@this"
 								action="#{dataEntryBacking.enterNewLinks}"
-								style="position:relative; left:600px " value="Add Links"></p:commandButton>
+								style="position:relative; left:600px " value="Add Links" id="enterNewLinksBtn"></p:commandButton>
+	 							<ui:remove>  
+								<p:progressBar widgetVar="pbAjax" ajax="true" value="#{dataEntryBacking.linkUploadProgress}" labelTemplate="{value}%" styleClass="animated">  
+        							<p:ajax event="complete" listener="#{dataEntryBacking.onLinksUploadComplete}" update="growl" oncomplete="enterNewLinksBtn.enable()"/>  
+    							</p:progressBar>  
+    							</ui:remove>	
 						</div>
 
 
@@ -657,7 +669,7 @@
 					<span class="line-2"><em> GoFetch.</em></span>
 				</h1>
 
-				<nav id="main-menu" class="clearfix" role="navigation">
+				<nav id="main-menu" class="clearfix" h:role="navigation">
 					<ul>
 
 						<li><a href="/index.jsf" title="Home">Home</a></li>

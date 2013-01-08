@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <backends>
 	<backend name="backgroundprocess">
-		<class>B2</class>
+		<class>B4</class>
 		<instances>1</instances>
 		<options>
 			<dynamic>true</dynamic>
-			<public>true</public>
+			<public>false</public>
 		</options>
 	</backend>
 	<backend name="api">

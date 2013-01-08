@@ -58,6 +58,8 @@ public class URL implements Serializable {
 	private Integer client_category_id; // points to a client-specific category, so this url can be assigned to a client's category
 	private Integer client_category_users_user_id; // allows a client's category, to have many url's assigned to it...
 	
+	private boolean client_target_url;
+	
 	//private Integer client_category;
 
 
@@ -82,18 +84,15 @@ public class URL implements Serializable {
 
 	}   
 	
-	
-	
-//	public Integer getClient_category() {
-//		return client_category;
-//	}
-//
-//
-//
-//	public void setClient_category(Integer client_category) {
-//		this.client_category = client_category;
-//	}
 
+	public boolean isClient_target_url() {
+		return client_target_url;
+	}
+
+
+	public void setClient_target_url(boolean client_target_url) {
+		this.client_target_url = client_target_url;
+	}
 
 
 	public Integer getData_entered_by() {
