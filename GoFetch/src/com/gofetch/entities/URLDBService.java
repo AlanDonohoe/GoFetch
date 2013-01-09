@@ -825,7 +825,7 @@ public class URLDBService{
 
 	}
 	
-	public List<URL> getURLsOfClientCategory(Integer clientCategoryID){
+	public List<URL> getURLsOfClientCategory(Integer clientCategoryID, boolean targetURLsOnly){
 		
 		log.info("Entering getURLsOfClientCategory. Client Category = " + clientCategoryID);
 		List<URL> result = null;
@@ -833,10 +833,18 @@ public class URLDBService{
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 
-		try { // result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date")
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_id = :client_category_id")
-					.setParameter("client_category_id", clientCategoryID)
-					.getResultList();
+		try { 
+			if(targetURLsOnly){
+				result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_id = :client_category_id AND u.client_target_url = true")
+						.setParameter("client_category_id", clientCategoryID)
+						.getResultList();
+			}else{
+				result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_id = :client_category_id")
+						.setParameter("client_category_id", clientCategoryID)
+						.getResultList();
+				
+			}
+			
 
 		}catch(Exception e){
 			String msg = "Exception thrown: URLService: getURLsOfClientCategory";
@@ -853,7 +861,7 @@ public class URLDBService{
 		return result;
 	}
 	
-	public List<URL> getClientsTargetURLs(Integer clientID){
+	public List<URL> getClientsTargetURLs(Integer clientID,  boolean targetURLsOnly){
 		
 		log.info("Entering getClientsURLs. Client ID = " + clientID);
 		List<URL> result = null;
@@ -862,9 +870,18 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_users_user_id = :client_category_users_user_id AND u.client_target_url = TRUE")
+			
+			if(targetURLsOnly){
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_users_user_id = :client_category_users_user_id AND u.client_target_url = true")
 					.setParameter("client_category_users_user_id", clientID)
 					.getResultList();
+			}else{
+				result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_users_user_id = :client_category_users_user_id")
+						.setParameter("client_category_users_user_id", clientID)
+						.getResultList();
+				
+			}
+			
 
 		}catch(Exception e){
 			String msg = "Exception thrown: URLService: getURLsOfClientCategory";
