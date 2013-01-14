@@ -796,7 +796,7 @@ public class URLDBService{
 	 */
 	public List<URL> getTodaysSocialCrawlURLs() {
 
-		log.info("Entering getTodaysSocialCrawlURLs");
+		//log.info("Entering getTodaysSocialCrawlURLs");
 		List<URL> result = null;
 		Date date = DateUtil.getTodaysDate();
 
@@ -805,7 +805,7 @@ public class URLDBService{
 		
 
 		try {
-			result =  mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date")
+			result =  mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date ORDER BY u.social_data_date")
 					.setParameter("date", date, TemporalType.DATE)
 					.getResultList();
 
@@ -820,7 +820,7 @@ public class URLDBService{
 		if (result == null) {
 			log.warning("No URLs returned");
 		}
-		log.info("Exiting getURLs");
+		//log.info("Exiting getURLs");
 		return result;
 
 	}

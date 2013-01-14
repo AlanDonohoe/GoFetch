@@ -633,6 +633,8 @@
 							<p:growl id="messages" showDetail="true" />
 							<br />
 	<ui:remove>  					
+	
+	 
 							<p:commandButton process="@this"
 								action="#{dataEntryBacking.clearAllLinks}"
 								style="position:relative; left:300px " value="Don't Add Links"></p:commandButton>
@@ -640,6 +642,7 @@
 							<p:commandButton process="@this"
 								action="#{dataEntryBacking.enterNewLinks}"
 								style="position:relative; left:600px " value="Add Links" id="enterNewLinksBtn"></p:commandButton>
+	 							
 	 							<ui:remove>  
 								<p:progressBar widgetVar="pbAjax" ajax="true" value="#{dataEntryBacking.linkUploadProgress}" labelTemplate="{value}%" styleClass="animated">  
         							<p:ajax event="complete" listener="#{dataEntryBacking.onLinksUploadComplete}" update="growl" oncomplete="enterNewLinksBtn.enable()"/>  

@@ -22,6 +22,8 @@ import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 
 /**
  * Servlet implementation class GetSocialData
+ * This is the first method of the API. - calls associated helper class (to allow the servlet to have member data)
+ * and produces JSON string of target URL, all backlink URLs and social history data.
  */
 
 public class GetSocialData extends HttpServlet {

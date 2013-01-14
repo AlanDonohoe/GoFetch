@@ -4,16 +4,14 @@
     <url>/processnewtargets</url>
     <target>backgroundprocess</target>
     <description>Get Yesterday's Target URLs' back links</description>
-    <schedule>every day 09:00</schedule>
+    <schedule>every day 12:00</schedule>
     <timezone>Europe/London</timezone>
   </cron>  
-  <!--
-   <cron>
-    <url>/socialdatacrawl</url>
-    <target>socialcrawl</target>
+  <cron>
+    <url>/urlssocialdatacrawl</url>
+    <target>backgroundprocess</target>
     <description>Crawl all urls with correct date for new social data</description>
     <schedule>every day 09:00</schedule>
     <timezone>Europe/London</timezone>
   </cron>  
-  -->
 </cronentries>

@@ -5,7 +5,7 @@
 		<instances>1</instances>
 		<options>
 			<dynamic>true</dynamic>
-			<public>false</public>
+			<public>true</public>
 		</options>
 	</backend>
 	<backend name="api">

@@ -279,6 +279,28 @@ public class ManualSocialDataImpl implements SocialData {
 			}
 
 		} 
+		
+		//deal with specific pinterest issue:
+		if(preEndPoint.contains("pinterest.com")){
+			
+			int countTextIndex = response.indexOf("\"count\":");
+			
+			int dashTextIndex = response.indexOf("\"-\"");
+			
+			int urlTextIndex = response.indexOf("\"url\"");
+					
+			if(countTextIndex < 1) // there's some serious problem  from Pinterest
+				return null;
+			else{
+				// pinterest returns count: "-" if the url is not in it system.
+				//	if its between the count and url text - then we have no entry.
+				if((countTextIndex < dashTextIndex) && (dashTextIndex < urlTextIndex)){
+					return null;
+				}
+				
+			}
+			
+		}
 
 		//get first integer out
 		Pattern intsOnly = Pattern.compile("\\d+");

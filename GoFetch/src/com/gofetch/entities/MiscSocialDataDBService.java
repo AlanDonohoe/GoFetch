@@ -2,14 +2,12 @@ package com.gofetch.entities;
 
 import java.util.Date;
 import java.util.List;
-//import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
-//import javax.persistence.TemporalType;
 import javax.persistence.TemporalType;
 
 public class MiscSocialDataDBService {
@@ -21,7 +19,7 @@ public class MiscSocialDataDBService {
 
 	public void createNewSocialData(MiscSocialData socialData){
 
-		log.info("Entering new MiscSocialData.");
+		//log.info("Entering new MiscSocialData.");
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
@@ -41,12 +39,12 @@ public class MiscSocialDataDBService {
 			mgr.close();
 		}
 
-		log.info("Exiting MiscSocialData"); 
+		//log.info("Exiting MiscSocialData"); 
 	}
 
 	public MiscSocialData getMostRecentSocialData(int url_id){
 
-		log.info("Entering getMostRecentSocialData");
+		//log.info("Entering getMostRecentSocialData");
 		List<MiscSocialData> result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -67,7 +65,7 @@ public class MiscSocialDataDBService {
 			log.info("Exiting getMostRecentSocialData. No social data in DB");
 			return null;
 		}else{
-			log.info("Exiting getMostRecentSocialData");
+			//log.info("Exiting getMostRecentSocialData");
 			return result.get(0);
 		}
 
@@ -75,7 +73,7 @@ public class MiscSocialDataDBService {
 
 	public List<MiscSocialData> getSocialDataBetween(int url_id, Date startDate, Date endDate){
 		
-		log.info("Entering getSocialDataBetween");
+		//log.info("Entering getSocialDataBetween");
 		List<MiscSocialData> result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -101,7 +99,7 @@ public class MiscSocialDataDBService {
 		if (result == null) {
 			log.warning("No Social Data returned");
 		}
-		log.info("Exiting getSocialDataBetween");
+		//log.info("Exiting getSocialDataBetween");
 		return result;
 	
 		
@@ -109,7 +107,7 @@ public class MiscSocialDataDBService {
 
 	public List<MiscSocialData> getAllSocialData(int url_id){
 
-		log.info("Entering getMostRecentSocialData");
+		//log.info("Entering getMostRecentSocialData");
 		List<MiscSocialData> result = null;
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
@@ -124,13 +122,13 @@ public class MiscSocialDataDBService {
 			mgr.close();
 		}
 
-		log.info("Exiting getMostRecentSocialData");
+		//log.info("Exiting getMostRecentSocialData");
 		return result;
 	}
 	
 	public void deleteSocialData(int url_id){
 		
-		log.info("Entering deleteSocialData.");
+		//log.info("Entering deleteSocialData.");
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
@@ -154,7 +152,7 @@ public class MiscSocialDataDBService {
 			}
 
 
-		log.info("Exiting deleteSocialData.");
+		//log.info("Exiting deleteSocialData.");
 
 	}
 
