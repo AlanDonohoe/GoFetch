@@ -9,7 +9,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 
 public class LinkBuildingActivityDBService {
-	
+ 	
 	@PersistenceUnit(unitName="GoFetch")
 	EntityManagerFactory emf;
 

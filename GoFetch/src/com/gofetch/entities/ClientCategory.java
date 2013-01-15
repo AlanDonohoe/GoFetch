@@ -14,7 +14,7 @@ import org.hibernate.validator.NotNull;
 @Entity
 @Table(name="client_category")
 public class ClientCategory implements Serializable {
-	
+	 
 	private static final long serialVersionUID = 1L;
 
 	@Id

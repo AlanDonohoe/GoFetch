@@ -14,7 +14,7 @@ public class ClientCategoryDBService {
 	EntityManagerFactory emf;
 
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
-	
+	 
 	
 	public List<ClientCategory> getClientsCategories(Integer clientID){
 		

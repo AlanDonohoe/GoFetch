@@ -70,7 +70,7 @@ public class UserDBService {
 	}
 	
 	public List<User> getUserByDisplayedName(String name){
-		
+	 	
 		log.info("Entering getUserByDisplayedName");
 		
 		List<User> clients = null;

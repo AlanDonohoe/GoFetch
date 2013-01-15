@@ -52,7 +52,7 @@ public class Link implements Serializable {
 	
 	private Integer data_entered_by; // 0 = sourced from SeoMoz, 1 = user entered, 2 = ?? majestic ??
 	
-	
+ 	
 	
 //	public Integer getClient_category_users_user_id() {
 //		return client_category_users_user_id;
