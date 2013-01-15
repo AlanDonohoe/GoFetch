@@ -45,7 +45,7 @@ public class Link implements Serializable {
 	private String user_campaign;
 	
 	private Integer users_user_id; // points to a client's id. so can assign this link to a client.
-	private Integer client_category_users_user_id; // same as above - but pointed to thru the client_category table... hence the seemingly duplication...
+	//private Integer client_category_users_user_id; // same as above - but pointed to thru the client_category table... hence the seemingly duplication...
 	private Integer client_category_id; 
 	
 	private Integer link_building_activity_id;
@@ -54,15 +54,15 @@ public class Link implements Serializable {
 	
 	
 	
-	public Integer getClient_category_users_user_id() {
-		return client_category_users_user_id;
-	}
-
-
-	public void setClient_category_users_user_id(
-			Integer client_category_users_user_id) {
-		this.client_category_users_user_id = client_category_users_user_id;
-	}
+//	public Integer getClient_category_users_user_id() {
+//		return client_category_users_user_id;
+//	}
+//
+//
+//	public void setClient_category_users_user_id(
+//			Integer client_category_users_user_id) {
+//		this.client_category_users_user_id = client_category_users_user_id;
+//	}
 
 
 	public Integer getLink_building_activity_id() {
