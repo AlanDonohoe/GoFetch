@@ -13,5 +13,5 @@
     <description>Crawl all urls with correct date for new social data</description>
     <schedule>every day 09:00</schedule>
     <timezone>Europe/London</timezone>
-  </cron>  
+  </cron>
 </cronentries>
