@@ -379,12 +379,6 @@
 
 		<div id="main" class="clearfix">
 
-
-
-
-
-
-
 			<!--  forceSelection="true" -->
 			<h:form id="form1" enctype="multipart/form-data">
 
@@ -400,15 +394,18 @@
 
 
 								<h:outputLabel value="Target/Client URL:" />
-								<p:autoComplete value="#{dataEntryBacking.targetURL}"
+								<p:autoComplete value="#{dataEntryBacking.urlBean.urlEntryTargetURL}"
 									id="targetURL" completeMethod="#{dataEntryBacking.complete}"
-									size="75" maxResults="5" minQueryLength="10" />
+									size="75" maxResults="5" minQueryLength="10" >
+									<p:ajax listener="#{dataEntryBacking.upDateLinkData}" /> 
+									</p:autoComplete>
 								<h:outputLabel value="?" id="targetURLHelp" />
 
 								<h:outputLabel value="Your Email/ID:" />
 
-								<h:inputText value="#{dataEntryBacking.user_id}" maxlength="200"
-									size="76" required="true" requiredMessage="Email is required"></h:inputText>
+								<h:inputText value="#{dataEntryBacking.urlBean.urlEntryUserName}" maxlength="200"
+									size="76" required="true" requiredMessage="Email is required">
+									<p:ajax listener="#{dataEntryBacking.upDateLinkData}" /></h:inputText>
 								<h:outputLabel value="?" id="idHelp" />
 							</p:panelGrid>
 							<p:tooltip for="targetURLHelp"
@@ -429,12 +426,12 @@
 
 
 								<h:selectBooleanCheckbox
-									value="#{goFetchRequestBean.backLinkData}" /> 
+									value="#{dataEntryBacking.urlBean.urlEntryBackLinkData}" /> 
                     GoFetch Backlink Data 
 					<h:outputLabel value="?" id="backlinkHelp" />
 
 								<h:selectBooleanCheckbox
-									value="#{goFetchRequestBean.socialData}" />
+									value="#{dataEntryBacking.urlBean.urlEntrySocialData}" />
 					GoFetch Social Data 
 					<h:outputLabel value="?" id="socialDataHelp" />
 							</p:panelGrid>
@@ -449,28 +446,28 @@
 								position="topRight" />
 
 							<br />
-							<p:commandButton process="@this"
-								style="position:relative; left:610px "
-								action="#{dataEntryBacking.enterNewURLs}" value="GoFetch"></p:commandButton>
+						<p:commandButton process="@this" action="#{dataEntryBacking.urlBean.enterNewURLs}"
+								style="position:relative; left:610px " update="messages, :form1:j_idt7:accordian_wrapper"
+								 value="GoFetch"></p:commandButton>
 						</div>
 					</p:tab>
 
 					<p:tab title="Enter Links">
-						<div class="center" id="monitorURLsTabContent"
+						<div class="center" id="monitorLinksTabContent"
 							style="margin-left: auto; margin-right: auto; width: 700px;">
 							<strong> Enter links to content that you have created or
 								that other sources may have missed. </strong> <br /> <br />
 
-							<p:panelGrid columns="6">
+							<p:panelGrid columns="6" id ="dropdownheader">
 
 								<p:selectCheckboxMenu
-									value="#{dataEntryBacking.selectedClients}" label="Client"
+									value="#{dataEntryBacking.linkBean.selectedClients}" label="Client"
 									filter="true" filterText="Filter" filterMatchMode="startsWith"
 									panelStyle="width:250px"
 									style="width:92px; height:20px; padding-top:2px; overflow:hidden ">
-									<p:ajax listener="#{dataEntryBacking.processSelectedClient}"
+									<p:ajax listener="#{dataEntryBacking.linkBean.processSelectedClient}"
 										update="campaignSelectItems,targetURLSelectItems, :form1:j_idt7:linkspanel" />
-									<f:selectItems value="#{dataEntryBacking.clients}" />
+									<f:selectItems value="#{dataEntryBacking.linkBean.clients}" />
 									<f:selectItem itemLabel="* Add New Client" itemValue="" />
 								</p:selectCheckboxMenu>
 
@@ -478,25 +475,25 @@
 
 								<h:outputLabel value="?" id="clientHelp1" />
 								<p:selectCheckboxMenu id="campaignSelectItems"
-									value="#{dataEntryBacking.selectedCampaigns}" label="Campaign"
+									value="#{dataEntryBacking.linkBean.selectedCampaigns}" label="Campaign"
 									filter="true" filterText="Filter" filterMatchMode="startsWith"
 									panelStyle="width:300px"
 									style="width:150px; height:20px; padding-top:2px; overflow:hidden">
-									<p:ajax listener="#{dataEntryBacking.campaignSelectionChange}"
+									<p:ajax listener="#{dataEntryBacking.linkBean.campaignSelectionChange}"
 										update="targetURLSelectItems,:form1:j_idt7:linkspanel" />
-									<f:selectItems value="#{dataEntryBacking.campaigns}" />
+									<f:selectItems value="#{dataEntryBacking.linkBean.campaigns}" />
 									<f:selectItem itemLabel="* Add New Campaign" itemValue="" />
 								</p:selectCheckboxMenu>
 								<h:outputLabel value="?" id="campaignHelp" />
 
 								<p:selectCheckboxMenu id="targetURLSelectItems"
-									value="#{dataEntryBacking.selectedTargetURLs}"
+									value="#{dataEntryBacking.linkBean.selectedTargetURLs}"
 									label="Target URL" filter="true" filterText="Filter"
 									filterMatchMode="startsWith" panelStyle="width:600px"
 									style="width:300px; height:20px; padding-top:2px; overflow:hidden">
-									<p:ajax listener="#{dataEntryBacking.updateLinksTargetURL}"
+									<p:ajax listener="#{dataEntryBacking.linkBean.updateLinksTargetURL}"
 										update=":form1:j_idt7:linkspanel" />
-									<f:selectItems value="#{dataEntryBacking.targetURLs}" />
+									<f:selectItems value="#{dataEntryBacking.linkBean.targetURLs}" />
 									<f:selectItem itemLabel="* Add New Target URL" itemValue="" />
 								</p:selectCheckboxMenu>
 								<h:outputLabel value="?" id="targetURLHelp1" />
@@ -517,16 +514,16 @@
 							
 							
 							<h:panelGroup id="accordian_wrapper">
-								<p:accordionPanel value="#{dataEntryBacking.links}" var="link"
-									id="linkspanel" style="border-style:solid" multiple="false" activeIndex="#{dataEntryBacking.activeTabIndex}" >
-									 <p:ajax event="tabChange" listener="#{dataEntryBacking.onTabChange}"  />
+								<p:accordionPanel value="#{dataEntryBacking.linkBean.links}" var="link"
+									id="linkspanel" style="border-style:solid" multiple="false" activeIndex="#{dataEntryBacking.linkBean.activeTabIndex}" >
+									 <p:ajax event="tabChange" listener="#{dataEntryBacking.linkBean.onTabChange}"  />
 									 
 									<p:tab title=' Link' style="padding:0em" closable="true" >
 										<p:panelGrid columns="3" style="width:700px; ">
 										
 										<h:outputLabel value="Client:" />
 
-											<h:outputLabel id="selectedClientLabel" value="#{dataEntryBacking.selectedClientsKey}">
+											<h:outputLabel id="selectedClientLabel" value="#{dataEntryBacking.linkBean.selectedClientsKey}">
 												
 											</h:outputLabel>
 											<h:outputLabel value="?" id="clientHelp2" />
@@ -545,11 +542,11 @@
 												
 												<p:selectOneMenu value="#{link.linkActivityKey}"
 												style="width:170px" >
-												<p:ajax listener="#{dataEntryBacking.upDateLinkBuildingActivity}" 
+												<p:ajax listener="#{dataEntryBacking.linkBean.upDateLinkBuildingActivity}" 
 												update=":form1:j_idt7:accordian_wrapper" />
 												<f:selectItem itemLabel="Choose Link Activity..."
 													itemValue="" />
-												<f:selectItems value="#{dataEntryBacking.linkActivity}" />
+												<f:selectItems value="#{dataEntryBacking.linkBean.linkActivity}" />
 												
 											</p:selectOneMenu>
 
@@ -558,7 +555,7 @@
 											<h:outputLabel value="Date:" />
 											<p:calendar value="#{link.date}" id="popupCal2" pattern="dd/MM/yyyy">
 												<p:ajax event="dateSelect"
-													listener="#{dataEntryBacking.upDateLinkData}" />
+													listener="#{dataEntryBacking.linkBean.upDateLinkData}" />
 											</p:calendar>
 											<h:outputLabel value="?" id="dataHelp1" />
 
@@ -573,7 +570,7 @@
 											
 												<h:inputText id="linksSourceURL" value="#{link.sourceUrl}" maxlength="200"
 													size="76" validatorMessage="Invalid URL. Must start with http:// ">
-													<p:ajax listener="#{dataEntryBacking.upDateLinkData}" />
+													<p:ajax listener="#{dataEntryBacking.linkBean.upDateLinkData}" />
 													
 												</h:inputText>
 
@@ -589,9 +586,9 @@
 												columns="4" rendered="#{link.contentCreation}">
 										
 												<h:outputLabel value="Social Data" rendered="#{link.contentCreation}" />
-												<h:selectBooleanCheckbox value="#{link.socialData}" rendered="#{link.contentCreation}"> <p:ajax listener="#{dataEntryBacking.upDateLinkData}" /> </h:selectBooleanCheckbox>
+												<h:selectBooleanCheckbox value="#{link.socialData}" rendered="#{link.contentCreation}"> <p:ajax listener="#{dataEntryBacking.linkBean.upDateLinkData}" /> </h:selectBooleanCheckbox>
 												<h:outputLabel value="Backlinks" rendered="#{link.contentCreation}"/>
-												<h:selectBooleanCheckbox value="#{link.backLinks}" rendered="#{link.contentCreation}"> <p:ajax listener="#{dataEntryBacking.upDateLinkData}" /> </h:selectBooleanCheckbox>
+												<h:selectBooleanCheckbox value="#{link.backLinks}" rendered="#{link.contentCreation}"> <p:ajax listener="#{dataEntryBacking.linkBean.upDateLinkData}" /> </h:selectBooleanCheckbox>
 											</p:panelGrid>
 
 
@@ -603,10 +600,11 @@
 
 											<h:inputText id="anchor_text" value="#{link.anchorText}" maxlength="200"
 												size="76">
-												<p:ajax listener="#{dataEntryBacking.addNewLinkTab}"
+												<p:ajax listener="#{dataEntryBacking.linkBean.addNewLinkTab}"
 													update=":form1:j_idt7:accordian_wrapper" />
 											</h:inputText>
 											<h:outputLabel value="?" id="idAnchorTextHelp" />
+											
 
 										</p:panelGrid>
 										<p:tooltip for="idBacklinkHelp"
@@ -626,7 +624,7 @@
 							<br /> <strong> Or just drag and drop a link report here
 								(*.xls format) </strong> <br /> <br />
 							<p:fileUpload
-								fileUploadListener="#{dataEntryBacking.handleFileUpload}"
+								fileUploadListener="#{dataEntryBacking.linkBean.handleFileUpload}"
 								mode="advanced"
 								update="messages, :form1:j_idt7:accordian_wrapper"
 								allowTypes="/(\.|\/)(xls)$/" />
@@ -636,16 +634,19 @@
 	
 	 
 							<p:commandButton process="@this"
-								action="#{dataEntryBacking.clearAllLinks}"
+								action="#{dataEntryBacking.linkBean.clearAllLinks}"
 								style="position:relative; left:300px " value="Don't Add Links"></p:commandButton>
 </ui:remove>
 							<p:commandButton process="@this"
-								action="#{dataEntryBacking.enterNewLinks}"
+								action="#{dataEntryBacking.linkBean.enterNewLinks}" update="messages, :form1:j_idt7:accordian_wrapper, dropdownheader"
 								style="position:relative; left:600px " value="Add Links" id="enterNewLinksBtn"></p:commandButton>
+								
+								
+								
 	 							
 	 							<ui:remove>  
-								<p:progressBar widgetVar="pbAjax" ajax="true" value="#{dataEntryBacking.linkUploadProgress}" labelTemplate="{value}%" styleClass="animated">  
-        							<p:ajax event="complete" listener="#{dataEntryBacking.onLinksUploadComplete}" update="growl" oncomplete="enterNewLinksBtn.enable()"/>  
+								<p:progressBar widgetVar="pbAjax" ajax="true" value="#{dataEntryBacking.linkBean.linkUploadProgress}" labelTemplate="{value}%" styleClass="animated">  
+        							<p:ajax event="complete" listener="#{dataEntryBacking.linkBean.onLinksUploadComplete}" update="growl" oncomplete="enterNewLinksBtn.enable()"/>  
     							</p:progressBar>  
     							</ui:remove>	
 						</div>

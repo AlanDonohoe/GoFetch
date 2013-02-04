@@ -40,7 +40,7 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try { 
-			result= (List<String>) mgr.createQuery("SELECT u.url_address FROM url u").getResultList();
+			result= (List<String>) mgr.createQuery("SELECT u.url_address FROM URL u").getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLAddresses";
 
@@ -872,12 +872,12 @@ public class URLDBService{
 		try {
 			
 			if(targetURLsOnly){
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_users_user_id = :client_category_users_user_id AND u.client_target_url = true")
-					.setParameter("client_category_users_user_id", clientID)
+			result = mgr.createQuery("SELECT u FROM URL u WHERE u.users_user_id = :users_user_id AND u.client_target_url = true")
+					.setParameter("users_user_id", clientID)
 					.getResultList();
 			}else{
-				result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_users_user_id = :client_category_users_user_id")
-						.setParameter("client_category_users_user_id", clientID)
+				result = mgr.createQuery("SELECT u FROM URL u WHERE u.users_user_id = :users_user_id")
+						.setParameter("users_user_id", clientID)
 						.getResultList();
 				
 			}
@@ -897,6 +897,37 @@ public class URLDBService{
 		log.info("Exiting getURLsOfClientCategory");
 		return result;
 		
+		
+	}
+
+	//updates the corresponding URL in the DB with the client and campaign data passed as a parameter
+	//	and sets client_target_url = true.
+	public void updateURLClientAndCampaign(URL targetURLDB) {
+		
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		try {
+
+			mgr.getTransaction().begin();
+
+			URL url = mgr.find(URL.class, targetURLDB.getId());
+			url.setClient_category_id(targetURLDB.getClient_category_id());
+			url.setUsers_user_id(targetURLDB.getUsers_user_id());
+			url.setClient_target_url(true);
+
+			mgr.merge(url);
+			mgr.getTransaction().commit();
+
+		}catch(Exception e){
+			String msg = "Exception thrown: URLDBService: updateURLClientAndCampaign";
+			log.severe(msg + e.getMessage());
+
+		}  finally {
+			mgr.close();
+		}
+
 		
 	}
 }

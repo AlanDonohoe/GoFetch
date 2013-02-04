@@ -204,7 +204,7 @@ public class GoFetchRequestBean implements Serializable {
 
 		errorReport = new ArrayList<String>();
 		successReport = new ArrayList<String>();
-		urlAddressesInDB = new ArrayList<String>();
+//		urlAddressesInDB = new ArrayList<String>();
 		results =  new ArrayList<String>();
 
 
@@ -223,14 +223,17 @@ public class GoFetchRequestBean implements Serializable {
 
 		//TODO: replace this loop with a query that just returns all url's addresses in DB
 
-		//if(null == urlAddressesInDB){
-			urlsinDB = urlDB.getURLs();
+//		//if(null == urlAddressesInDB){
+//		// old code:
+//			urlsinDB = urlDB.getURLs();
+//
+//			for (URL url : urlsinDB) {
+//				urlAddressesInDB.add(url.getUrl_address());
+//			}
+//		//}
 
-			for (URL url : urlsinDB) {
-				urlAddressesInDB.add(url.getUrl_address());
-			}
-		//}
-
+		// new code:
+//		urlAddressesInDB = urlDB.getURLAddresses();
 		////////////
 
 		///////////////
@@ -253,7 +256,7 @@ public class GoFetchRequestBean implements Serializable {
 						+ " - is too short to be added to GoFetch's database.";
 				errorReport.add(tempString);
 
-			} else if (!urls[i].startsWith("http://")) {
+			} else if (!urls[i].startsWith("http")) {
 
 				tempString = urls[i]
 						+ " -  \"http://\" has been added to the beginning of URL and has been be added to GoFetch.";
@@ -281,7 +284,10 @@ public class GoFetchRequestBean implements Serializable {
 		for (int x = 0; x < urlList.size(); x++) {
 
 			// add trailing slash to all urls so they can be checked against normalised urls in DB
-			if ((urlAddressesInDB.contains(urlList.get(x)))||(urlAddressesInDB.contains(TextUtil.addSlashToEndOfString(urlList.get(x))))) { // check that url not already in DB....
+			// old code:
+			//if ((urlAddressesInDB.contains(urlList.get(x)))||(urlAddressesInDB.contains(TextUtil.addSlashToEndOfString(urlList.get(x))))) { // check that url not already in DB....
+			//new code:
+			if ((urlDB.urlInDB(urlList.get(x)))||(urlDB.urlInDB(TextUtil.addSlashToEndOfString(urlList.get(x))))) { // check that url not already in DB....
 
 				tempString = urlList.get(x)
 						+ " -  is already entered in GoFetch and is being monitored.";

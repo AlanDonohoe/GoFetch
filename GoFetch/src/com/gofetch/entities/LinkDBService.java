@@ -427,6 +427,40 @@ public class LinkDBService{
 		return result;
 
 	}
+	
+	
+	public Link getLink(Integer sourceID, Integer targetID, String anchortext){
+
+		log.info("Entering getLink");
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		List<Link> links = null;
+
+		try {
+			links = (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :targetID AND u.source_id = :sourceID and u.anchor_text = :anchortext")
+					.setParameter("sourceID",  sourceID)
+					.setParameter("targetID",  targetID)
+					.setParameter("anchortext",  anchortext)
+					.getResultList();
+		}catch(Exception e){
+			String msg = "Exception thrown getting Link: Target id: " + targetID  + ". Source ID: " + sourceID + ". Anchor Text: " + anchortext + ". LinkDBService: getLink(...). ";
+			
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+
+		log.info("Exiting getURL");
+
+		if((null == links) || (links.isEmpty()))
+			return null;
+		else
+			return links.get(0);
+
+	}
 
 	public Link getLink(Integer sourceID, Integer targetID){
 

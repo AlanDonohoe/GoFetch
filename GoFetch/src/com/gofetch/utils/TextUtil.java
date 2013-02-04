@@ -61,6 +61,28 @@ public class TextUtil {
 			return url;
 
 	}
+	
+	//String::trim() - doesnt seem to remove WS from the urls....
+	public static String removeWSFromStartAndEnd(String stringToClear){
+		
+		
+		//from: http://stackoverflow.com/questions/4728625/why-trim-is-not-working
+		stringToClear = stringToClear.replace(String.valueOf((char) 160), " ").trim();
+		
+//		int stringLength = stringToClear.length();		
+//		// remove the leading WS
+//		while(stringToClear.startsWith("\\s")){
+//			stringToClear = stringToClear.substring(1);
+//		}
+//		
+//		// remove the trailing WS
+//		while(stringToClear.endsWith("\\s")){
+//			stringLength--;
+//			stringToClear = stringToClear.substring(0, stringLength);
+//		}
+		
+		return stringToClear;
+	}
 
 
 }

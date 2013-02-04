@@ -340,6 +340,9 @@ public class ManualSocialDataImpl implements SocialData {
 
 			return null;
 		}
+		
+		if(response.isEmpty())
+			return null;
 
 		jsonArray = JsonPath.read(response, "$..total_count");
 		int total_count = (Integer) jsonArray.get(0);
