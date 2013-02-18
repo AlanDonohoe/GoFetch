@@ -17,16 +17,32 @@ public class LinkDBService{
 	EntityManagerFactory emf;
 
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
-
-	public void createLink(Link link){
+	
+	public void createLink(Link link, boolean checkAnchorText){
+		
+		if(!checkAnchorText){ // no need to check link's anchor text - just call createLink - 
+			createLink(link);
+		}
+		else{
+			if(null == getLink(link.getSource_id(), link.getTarget_id(), link.getAnchor_text())){
+				createLink(link);
+			}
+		}
+		
+	}
+	
+	// 5-2-13: made this private - so it can only be called by wrapper method that can be switched to check for anchor text uniqueness or not.
+	private void createLink(Link link){
 
 		log.info("Entering new link. Source: [" + link.getSource_id() + " Target: " + link.getTarget_id() + "]");
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager(); 
 		
-		// check that link does not already exist in DB with this target and source ID:
-		if(null == getLink(link.getSource_id(), link.getTarget_id()) ){
+		// check that link does not already exist in DB with this target and source ID
+		// 5-2-13: removed this check and moved it to wrapper method : createLink(Link link, boolean checkAnchorText)
+		//		which includes a switch to check for anchor text or not....
+		//if(null == getLink(link.getSource_id(), link.getTarget_id()) ){
 			try {
 
 				mgr.getTransaction().begin();
@@ -41,7 +57,7 @@ public class LinkDBService{
 			finally {
 				mgr.close();
 			}
-		}
+		//}
 	}
 
 	/**

@@ -26,6 +26,8 @@ public class ClientCategory implements Serializable {
 	
 	// points to the client's unique ID in the user table.
 	@NotNull private int users_id;
+	
+	private boolean client_default;
 
 	public Integer getId() {
 		return id;
@@ -50,5 +52,16 @@ public class ClientCategory implements Serializable {
 	public void setUser_id(int user_id) {
 		this.users_id = user_id;
 	}
+
+	public boolean isClient_default() {
+		return client_default;
+	}
+
+	public void setClient_default(boolean client_default) {
+		this.client_default = client_default;
+	}
+	
+	
+	
 
 }

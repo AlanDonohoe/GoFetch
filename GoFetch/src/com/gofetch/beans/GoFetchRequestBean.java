@@ -282,20 +282,24 @@ public class GoFetchRequestBean implements Serializable {
 		// /////////////////////
 		// run through passed urls and check that url not already in DB....
 		for (int x = 0; x < urlList.size(); x++) {
+			
+			//remove https: to avoid duplication:
+			String urlAddress = urlList.get(x);
+			urlAddress = TextUtil.replaceHttpsWithHttp(urlAddress);
 
 			// add trailing slash to all urls so they can be checked against normalised urls in DB
 			// old code:
 			//if ((urlAddressesInDB.contains(urlList.get(x)))||(urlAddressesInDB.contains(TextUtil.addSlashToEndOfString(urlList.get(x))))) { // check that url not already in DB....
 			//new code:
-			if ((urlDB.urlInDB(urlList.get(x)))||(urlDB.urlInDB(TextUtil.addSlashToEndOfString(urlList.get(x))))) { // check that url not already in DB....
+			if ((urlDB.urlInDB(urlAddress))||(urlDB.urlInDB(TextUtil.addSlashToEndOfString(urlAddress)))) { // check that url not already in DB....
 
-				tempString = urlList.get(x)
+				tempString = urlAddress
 						+ " -  is already entered in GoFetch and is being monitored.";
 				errorReport.add(tempString);
 
 			} else { // add to final list to add:
 
-				urlListPassed.add(urlList.get(x));
+				urlListPassed.add(urlAddress);
 
 			}
 		}

@@ -14,6 +14,36 @@ public class ClientCategoryDBService {
 	EntityManagerFactory emf;
 
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
+	
+	
+	public ClientCategory getClientsDefaultCategory(Integer clientID){
+		
+	log.info("Entering getClientsDefaultCategory() for client id: " + clientID);
+		
+		List <ClientCategory> clientsDefaultCategory = null;
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		
+		try {
+			
+			clientsDefaultCategory = mgr.createQuery("SELECT u FROM ClientCategory u WHERE u.users_id = :clientID AND u.client_default = true")
+					.setParameter("clientID", clientID)
+					.getResultList();
+		}catch(Exception e){
+			String msg = "Exception thrown. ClientCategoryDBService: getClientsDefaultCategory. ";
+			
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		
+		if(null == clientsDefaultCategory)
+			return null;
+		
+		return clientsDefaultCategory.get(0);	
+		
+	}
 	 
 	
 	public List<ClientCategory> getClientsCategories(Integer clientID){

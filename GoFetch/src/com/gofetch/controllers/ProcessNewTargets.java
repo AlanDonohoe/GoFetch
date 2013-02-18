@@ -407,10 +407,14 @@ public class ProcessNewTargets extends HttpServlet {
 				link.setTarget_id(currentURL.getId());
 				link.setAnchor_text(currentURLBackLink.getBackLinkAnchorText());
 				link.setDate_detected(today);
-				link.setFinal_target_url(currentURL.getUrl_address());
+				
+				//6 - 2- 13: legacy code - replace with subsequent line:
+				//link.setFinal_target_url(currentURL.getUrl_address());
+				link.setFinal_target_url_id(currentURL.getId());
+				
 				link.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_SEOMOZ);
 
-				linksDBUnit.createLink(link);
+				linksDBUnit.createLink(link, false);
 			}
 			else{
 				log.info("Link already exists in DB: " + httpURL);

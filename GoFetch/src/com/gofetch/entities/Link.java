@@ -35,8 +35,10 @@ public class Link implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date date_expired;
 	
-	@NotNull
 	private String final_target_url;
+	
+	//replace the above field with new field below:
+	private Integer final_target_url_id;
 	
 	private String user_category;
 	
@@ -142,7 +144,9 @@ public class Link implements Serializable {
 		super();
 	}   
 
-
+	/////////
+	// 6-2-13: legacy code: replace with final_target_url_id getters and setters below.. when the SEOMoz addition of links
+	//	has had its link- writing code changed to write the id of the final_target url rather than actual address...
 	public String getFinal_target_url() {
 		return final_target_url;
 	}
@@ -151,8 +155,24 @@ public class Link implements Serializable {
 	public void setFinal_target_url(String final_target_url) {
 		this.final_target_url = final_target_url;
 	}
+	//
+	//////////////
+	
+	///////
+	// new code to replace above:
+
+	public Integer getFinal_target_url_id() {
+		return final_target_url_id;
+	}
 
 
+	public void setFinal_target_url_id(Integer final_target_url_id) {
+		this.final_target_url_id = final_target_url_id;
+	}
+
+	//
+	/////////////
+	
 	public String getAnchor_text() {
 		return anchor_text;
 	}

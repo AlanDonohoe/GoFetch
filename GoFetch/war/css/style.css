@@ -198,7 +198,7 @@ header {
 
 #logo {
     float: right;
-    background: url(../images/logo.gif) no-repeat;
+    background: url(../images/logo.png) no-repeat;
     width: 255px;
     height: 122px;
     margin:0 0 20px 0;
@@ -2031,7 +2031,7 @@ clear: left;
 }
 
 
-.im-in-retail .introtext{Travel
+.im-in-retail .introtext{
     width: auto;
     margin: 0px 0px 20px 0px !important;
     font-size: 1.05em;

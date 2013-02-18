@@ -627,7 +627,7 @@
 								fileUploadListener="#{dataEntryBacking.linkBean.handleFileUpload}"
 								mode="advanced"
 								update="messages, :form1:j_idt7:accordian_wrapper"
-								allowTypes="/(\.|\/)(xls)$/" />
+								allowTypes="/(\.|\/)(xls|xlsx)$/" />
 							<p:growl id="messages" showDetail="true" />
 							<br />
 	<ui:remove>  					
@@ -660,8 +660,19 @@
 
 			<!-- converter="URLConverter" var="p" itemLabel="#{p.name}" itemValue="#{p}" -->
 
-
-
+<p:dialog id="new_client_dialog" header="New Client" widgetVar="dlg">  
+    <h:form>  
+  
+        <h:panelGrid columns="2" cellpadding="5">  
+            <h:outputLabel value="Client Name:" />  
+            <p:inputText value="#{dataEntryBacking.newClientBean.clientName}" 
+                    id="username" required="true" label="username" />  
+              
+       
+        </h:panelGrid>  
+          
+    </h:form>  
+</p:dialog>  
 
 
 			<header class="clearfix">

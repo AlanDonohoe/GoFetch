@@ -62,26 +62,54 @@ public class TextUtil {
 
 	}
 	
-	//String::trim() - doesnt seem to remove WS from the urls....
+	
+	public static String removeSlashFromEndOfString(String url){
+		
+		if(url.endsWith("/")){
+			
+			int newLength = url.length();
+			newLength--;
+			url = url.substring(0,newLength);
+		}
+		return url;
+		
+	}
+	
+	
+	public static String replaceHttpsWithHttp(String urlAddress){
+		
+		if(urlAddress.startsWith("https")){
+			urlAddress = urlAddress.replace("https", "http");
+		}
+		
+		return urlAddress;
+			
+	}
+	
 	public static String removeWSFromStartAndEnd(String stringToClear){
 		
 		
 		//from: http://stackoverflow.com/questions/4728625/why-trim-is-not-working
 		stringToClear = stringToClear.replace(String.valueOf((char) 160), " ").trim();
 		
-//		int stringLength = stringToClear.length();		
-//		// remove the leading WS
-//		while(stringToClear.startsWith("\\s")){
-//			stringToClear = stringToClear.substring(1);
-//		}
-//		
-//		// remove the trailing WS
-//		while(stringToClear.endsWith("\\s")){
-//			stringLength--;
-//			stringToClear = stringToClear.substring(0, stringLength);
-//		}
-		
 		return stringToClear;
+	}
+	
+	/*
+	 * returns same url passed as parameter, but with: 
+	 * 1) any white space removed from beginning and end, 
+	 * 2) and any trailing slash removed if present.
+	 */
+	public static String standardiseURL(String url){
+		
+		url = removeWSFromStartAndEnd(url);
+		url = removeSlashFromEndOfString(url);
+		
+		//Pending - see if there's erroneous duplication with http & https versions of same url... - but leave for user discretion for now.
+		
+		//url = replaceHttpsWithHttp(url);
+		
+		return url;
 	}
 
 
