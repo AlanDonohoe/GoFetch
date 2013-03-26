@@ -510,6 +510,8 @@ public class URLDBService{
 	}
 
 	public void updateSocialFrequencyData(URL url){
+		
+		log.info("Entering URLService::updateSocialFrequencyData");
 
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
@@ -796,7 +798,7 @@ public class URLDBService{
 	 */
 	public List<URL> getTodaysSocialCrawlURLs() {
 
-		//log.info("Entering getTodaysSocialCrawlURLs");
+		log.info("Entering getTodaysSocialCrawlURLs");
 		List<URL> result = null;
 		Date date = DateUtil.getTodaysDate();
 
@@ -820,7 +822,7 @@ public class URLDBService{
 		if (result == null) {
 			log.warning("No URLs returned");
 		}
-		//log.info("Exiting getURLs");
+		log.info("Exiting getURLs");
 		return result;
 
 	}
@@ -929,5 +931,62 @@ public class URLDBService{
 		}
 
 		
+	}
+
+	public List<String> getURLAddressesStartingWith(String query, int noOfResults) {
+		
+		//log.info("Entering getURLAddresses");
+		List<String> result = null;
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+		try { 
+			result= (List<String>) mgr.createQuery("SELECT u.url_address FROM URL u where u.url_address LIKE :query")
+					.setMaxResults(noOfResults)
+					.setParameter("query",query + "%")
+					.getResultList();
+		
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getURLAddresses";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+
+		return result;
+		
+	}
+
+	public List<URL> getTodaysSocialCrawlURLs(int noOfResults) {
+		log.info("Entering getTodaysSocialCrawlURLs");
+		List<URL> result = null;
+		Date date = DateUtil.getTodaysDate();
+
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		
+
+		try {
+			result =  mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date ORDER BY u.social_data_date")
+					.setParameter("date", date, TemporalType.DATE)
+					.setMaxResults(noOfResults)
+					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getURLs";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			log.warning("No URLs returned");
+		}
+		log.info("Exiting getURLs");
+		return result;
 	}
 }

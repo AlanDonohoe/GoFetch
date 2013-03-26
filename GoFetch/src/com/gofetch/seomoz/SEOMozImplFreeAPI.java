@@ -196,8 +196,9 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 
 	/**
 	 * retrieves Domain and Page authority for "url" - returns a URLPlusDataPoints object with DA and PA, domain name and doc title.
+	 * @throws Exception 
 	 */
-	public URLPlusDataPoints getURLMetricsData(URLPlusDataPoints url) {
+	public URLPlusDataPoints getURLMetricsData(URLPlusDataPoints url) throws Exception {
 
 		URLMetricsService urlMetricsService = new URLMetricsService();
 		Gson gson = new Gson();
@@ -230,8 +231,9 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 			log.warning(msg + e.getMessage());
 
 			//assume there's a time out error from SEOMoz server - forget about getting any data back and just return
-
-			return url;
+			//return url;
+			//26-23-13 AD:
+			throw (e);
 
 		}
 

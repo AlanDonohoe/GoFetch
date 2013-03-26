@@ -169,32 +169,41 @@ public class GoFetchRequestBean implements Serializable {
 
 	//TODO: change this to something faster like: http://igoro.com/archive/efficient-auto-complete-with-a-ternary-search-tree/
 	public List<String> completeURLs(String query) {
-
-		//if(urlAddressesInDB.isEmpty()){
-			urlDB = new URLDBService();
-			urlsinDB = urlDB.getURLs();
-
-			for (URL url : urlsinDB) {
-				urlAddressesInDB.add(url.getUrl_address());
-			}
-		//}
-
-		///////////////
-		// above replaced here:
-		//		getURLAddresses() - not working... JQPL - dont know if you can select a single field....
-		//		if( null == urlAddressesInDB){
-		//			urlDB = new URLDBService();
-		//			urlAddressesInDB = urlDB.getURLAddresses();
-		//		}
-
-		for (String possibleURL : urlAddressesInDB) {
-
-			if (possibleURL.startsWith(query)) {
-				results.add(possibleURL);
-			}
-		}
-
+		
+		// new code:
+		urlDB = new URLDBService();
+		
+		results = urlDB.getURLAddressesStartingWith(query, 5);
+		
 		return results;
+		
+		
+//		OLD code:
+//		//if(urlAddressesInDB.isEmpty()){
+//			urlDB = new URLDBService();
+//			urlsinDB = urlDB.getURLs();
+//
+//			for (URL url : urlsinDB) {
+//				urlAddressesInDB.add(url.getUrl_address());
+//			}
+//		//}
+//
+//		///////////////
+//		// above replaced here:
+//		//		getURLAddresses() - not working... JQPL - dont know if you can select a single field....
+//		//		if( null == urlAddressesInDB){
+//		//			urlDB = new URLDBService();
+//		//			urlAddressesInDB = urlDB.getURLAddresses();
+//		//		}
+//
+//		for (String possibleURL : urlAddressesInDB) {
+//
+//			if (possibleURL.startsWith(query)) {
+//				results.add(possibleURL);
+//			}
+//		}
+//
+//		return results;
 	}
 
 

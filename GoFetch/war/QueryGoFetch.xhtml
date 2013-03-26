@@ -8,6 +8,20 @@ class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-w
 lang="en"
 >
 	<h:head>
+	
+	<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38606779-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 		<style type="text/css"></style>
 
@@ -362,11 +376,13 @@ lang="en"
 			</p>
 			
 		<h:form> <!--  forceSelection="true" -->
+		
 				<p:autoComplete value="#{queryGoFetchBean.urlTarget}" id="queryURL"
 					completeMethod="#{queryGoFetchBean.complete}" 
 					 size="75" 
 					 maxResults="5"
-					 minQueryLength="10"/>
+					 minQueryLength="7"/> 
+			
 				<!-- converter="URLConverter" var="p" itemLabel="#{p.name}" itemValue="#{p}" -->
 
 					 <!--   

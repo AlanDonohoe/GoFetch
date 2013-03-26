@@ -451,6 +451,9 @@ public class ProcessNewTargets extends HttpServlet {
 					+ url + "\n";
 
 			log.warning(msg + e.getMessage());
+			//26-3-13: ADs
+			// and jsut cancel - 
+			return;
 		}
 
 		//		if ((null != resultingURLDAPA.getDocTitle())

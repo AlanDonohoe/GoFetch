@@ -199,9 +199,8 @@ header {
 #logo {
     float: right;
     background: url(../images/logo.png) no-repeat;
-    width: 255px;
+    width: 122px;
     height: 122px;
-    margin:0 0 20px 0;
 }
 
 #main-menu {
@@ -214,7 +213,13 @@ header {
     display: inline;
 }
 
-
+#logo_small_left{
+	float: left;
+    background: url(../images/logo.png) no-repeat;
+    width:128px;
+    height: 50px;
+    margin:0 0 0px 0;
+}
 .lavaLampBottomStyle {
     position: relative;
     
@@ -930,12 +935,13 @@ a.submit-button {
 }
 
 /* WHO WE ARE - NOT A SWEATSHOP */
-
+/*
 .who-we-are.not-a-sweatshop .left-column {
     background:url(../images/who-we-are/t-shirt.jpg)  no-repeat 358px 10px;
     width: 634px;
     padding-right: 30px;
 }
+*/
 
 .who-we-are.not-a-sweatshop .intro {
     padding-bottom: 50px;
@@ -960,7 +966,7 @@ a.submit-button {
     line-height: 1.2em;
     margin-bottom: 20px;
 }
-
+/*
 .who-we-are.not-a-sweatshop article h3 {
     background: #3C3437 url(../images/who-we-are/sweatshop-tiny-thumb-down.gif) no-repeat 213px 5px;
     color: #fff;
@@ -968,6 +974,7 @@ a.submit-button {
     font-weight: bold;
     font-size: 1.05em;
 }
+*/
 
 .who-we-are.not-a-sweatshop .text_columns {
     width: 500px;
@@ -983,10 +990,12 @@ a.submit-button {
     padding-left: 0;
 }
 
+/*
 .who-we-are.not-a-sweatshop .text_column_2 h3{
     background: #FFD305 url(../images/who-we-are/sweatshop-tiny-thumb-up.gif) no-repeat 213px 3px;
     color: #3C3437;
 }
+*/
 
 .who-we-are.not-a-sweatshop .text_columns ul {
     padding: 10px 0 0 6px;
@@ -1016,13 +1025,14 @@ a.submit-button {
     font-size: 1em;
     line-height: 1.2em;
 }
-
+/*
 .who-we-are.not-a-sweatshop .box-out span{
     display: block;
     background:  url(../images/box-out-bottom.gif) no-repeat left bottom;
     padding-bottom: 25px;
     margin-bottom: 30px;
 }
+*/
 
 .who-we-are.not-a-sweatshop .brown-bubble , .who-we-are.not-a-sweatshop .box-out {
     position: relative;
@@ -1055,13 +1065,14 @@ a.submit-button {
     width: auto;
     padding-right: 50px;
 }
-
+/*
 .who-we-are.the-rocketeers .contact-links {
     background: #3C3437  url(../images/brown-bubble-bottom.gif) no-repeat left bottom;
     color: #fff;
     text-shadow: none;
     padding-bottom: 45px;
 }
+*/
 
 .who-we-are.the-rocketeers .contact-links a {
     color: #fff;
@@ -1179,6 +1190,7 @@ a.submit-button {
     display: inline;
 }
 
+/*
 .who-we-are.the-rocketeers.team-member #people-menu li a{
     display: block;
     float: left;
@@ -1189,6 +1201,7 @@ a.submit-button {
     font-size: 0.8em;
     background: url(../images/who-we-are/person-menu-gradient.jpg) repeat-x;
 }
+*/
 
 .who-we-are.the-rocketeers.team-member .person  {
     position: relative;
@@ -1241,6 +1254,7 @@ a.submit-button {
     overflow: visible;
 }
 
+/*
 .who-we-are.the-rocketeers.team-member .person .info .contact{
     width: 174px;
     float: right;
@@ -1251,6 +1265,7 @@ a.submit-button {
     margin: 0 0 10px 0;
     text-shadow: 1px 1px 0px rgba(255,255,255,0.1);
 }
+*/
 
 .who-we-are.the-rocketeers.team-member .person .info .bio {
     width: 300px;
@@ -1333,12 +1348,13 @@ a.submit-button {
 .what-we-do #main-menu li ul {
     width: 500px;
 }
-
+/*
 .what-we-do.authentic-search .left-column {
     background: url(../images/what-we-do/authentic-search-bg.jpg) no-repeat;
     width: 634px;
     padding-right: 30px;
 }
+*/
 
 .what-we-do.authentic-search .introtext {
     width: 270px;
@@ -1378,14 +1394,14 @@ a.submit-button {
     font-size: 1em;
     line-height: 1.2em;
 }
-
+/*
 .what-we-do .box-out span{
     display: block;
     background:  url(../images/box-out-bottom.gif) no-repeat left bottom;
     padding-bottom: 25px;
     margin-bottom: 30px;
 }
-
+*/
 .what-we-do .box-out .header {
 	font-size: 1.3em;
 	padding-right: 60px;
@@ -1432,7 +1448,7 @@ a.submit-button {
     line-height: 1.2em;
     margin-bottom: 15px;
 }
-
+/*
 .what-we-do.sustained-search-advantage .ssa-chart {
 	background: url(../images/what-we-do/chart.jpg) no-repeat;
 	position: relative;
@@ -1440,6 +1456,7 @@ a.submit-button {
 	list-style-type: none;
 	padding: 80px 0 0 31px;
 }
+*/
 
 .what-we-do.sustained-search-advantage .ssa-chart li{
 	display: block; 
@@ -1450,10 +1467,11 @@ a.submit-button {
 	margin-bottom: 0px;
 	cursor: pointer;
 }
-
+/*
 .what-we-do.sustained-search-advantage .ssa-chart li:hover {
 	background: url(../images/what-we-do/chart-hover.png) no-repeat;
 }
+*/
 
 .what-we-do.sustained-search-advantage .ssa-chart li.what-google-values,
 .what-we-do.sustained-search-advantage .ssa-chart li.how-you-benefit
@@ -2738,5 +2756,88 @@ clear: left;
 .borderLessGrid tr, .borderLessGrid td {
 	border: none;
 	padding: 4px 3px;
+}
+
+#companyheader{
+	height: 50px;
+	border-bottom: solid;
+	border-bottom-width: 1px;
+	border-bottom-color:#CCC;
+}
+
+#leftContent\3A selectClientDropMenu{
+	float: left;
+}
+
+.float_left{
+	float: left;
+}
+
+.client_wrapper_text{
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size:14px;
+	font-weight: 500;
+	height: 16px;
+	padding-top:7px;
+	padding-left:2px;
+	padding-right:2px;
+
+}
+
+#client_team_selection{
+	padding-top:5px;
+}
+
+/* this is for styling the main buttons in the header section - need to make this big n bold...
+*/
+.header_button{
+	
+	  border: 1px solid #000;
+    background: #CCC;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+	  width: 70px;
+  height: 50px;
+  /*
+display: block; 
+  background-color: #f7f7f7;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#e7e7e7));
+  background-image: -webkit-linear-gradient(top, #f7f7f7, #e7e7e7); 
+  background-image: -moz-linear-gradient(top, #f7f7f7, #e7e7e7); 
+  background-image: -ms-linear-gradient(top, #f7f7f7, #e7e7e7); 
+  background-image: -o-linear-gradient(top, #f7f7f7, #e7e7e7); 
+  color: #a7a7a7;
+  margin: 36px;
+  width: 90px;
+  height: 90px;
+  position: relative;
+  text-align: center;
+  line-height: 90px;
+  border-radius: 50%;
+  box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
+  */
+}
+
+.ui-toolbar{
+	background-color:#ffcc00 !important;
+	
+}
+
+#north_content_form\3Atop_toolbar{
+	width: 1100px !important;
+	float: left !important;
+}
+
+#north_content_form\3url_add_search_btns{
+	display:inline !important;
+	margin-right: 0px !important;
+	margin-left: 7px !important;
+}
+
+#centre_content_panel{
+	 width:100%;
+	 height:100%;
+	 background-color:#ffcc00 !important;
 }
 

@@ -238,25 +238,33 @@ public class QueryGoFetchBean implements Serializable{
 
 	//TODO: change this to something faster like: http://igoro.com/archive/efficient-auto-complete-with-a-ternary-search-tree/
 	public List<String> complete(String query) {
-
-		//TODO: replace this with one call - get URLaddresses and use a native query in the URLDB's JPQL....
-		if(urlAddressesInDB.isEmpty()){
-			urlDB = new URLDBService();
-			urlsinDB = urlDB.getURLs();
-
-			for (URL url : urlsinDB) {
-				urlAddressesInDB.add(url.getUrl_address());
-			}
-
-		}
-
-		for (String possibleURL : urlAddressesInDB) {
-
-			if (possibleURL.startsWith(query)) {
-				results.add(possibleURL);
-			}
-		}
-
+		
+		// new code:
+		urlDB = new URLDBService();
+		
+		results = urlDB.getURLAddressesStartingWith(query, 5);
+		
 		return results;
+	
+//		old code
+//		//TODO: replace this with one call - get URLaddresses and use a native query in the URLDB's JPQL....
+//		if(urlAddressesInDB.isEmpty()){
+//			urlDB = new URLDBService();
+//			urlsinDB = urlDB.getURLs();
+//
+//			for (URL url : urlsinDB) {
+//				urlAddressesInDB.add(url.getUrl_address());
+//			}
+//
+//		}
+//
+//		for (String possibleURL : urlAddressesInDB) {
+//
+//			if (possibleURL.startsWith(query)) {
+//				results.add(possibleURL);
+//			}
+//		}
+//
+//		return results;
 	}
 }

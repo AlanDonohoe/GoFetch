@@ -14,7 +14,7 @@ public interface SEOMoz {
 	//public List<URLPlusDataPoints> getUniqueDomains(String urlTarget);
 	
 	// returns an equivalent URLPlusDataPoints object as "url" parameter, with Domain & Page Authority data, domain name and document title
-	public URLPlusDataPoints getURLMetricsData(URLPlusDataPoints url);
+	public URLPlusDataPoints getURLMetricsData(URLPlusDataPoints url) throws Exception;
 	
 	// fills the list parameter with page & domain authority and document title - for each url.
 	public List<URLPlusDataPoints> getAuthorityData(List<URLPlusDataPoints> urls);

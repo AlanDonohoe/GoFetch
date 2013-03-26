@@ -3,15 +3,21 @@
    <cron>
     <url>/processnewtargets</url>
     <target>backgroundprocess</target>
-    <description>Get Yesterday's Target URLs' back links</description>
+    <description>Check for new Target URLs' back links from SEOMoz server</description>
     <schedule>every day 12:00</schedule>
     <timezone>Europe/London</timezone>
   </cron>  
   <cron>
     <url>/urlssocialdatacrawl</url>
     <target>backgroundprocess</target>
-    <description>Crawl all urls with correct date for new social data</description>
-    <schedule>every day 09:00</schedule>
+    <description>Crawl all urls with correct date for new social data - limit of 500</description>
+    <schedule>every 20 minutes </schedule>
     <timezone>Europe/London</timezone>
   </cron>
+    <cron>
+    <url>/index.jsf</url>
+    <description>wake up the main app every 5 mins during work hours so there is no start up delay</description>
+    <schedule>every 5 minutes from 09:00 to 18:00</schedule>
+    <timezone>Europe/London</timezone>
+  </cron> 
 </cronentries>

@@ -7,6 +7,19 @@
 	class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions fontface video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"
 	lang="en">
 <h:head>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38606779-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<style type="text/css"></style>
 
@@ -372,8 +385,7 @@
 
 <h:body class="home">
 
-	<div id="numberRender.param" style="display: none;">
-		clientid:393;format:434;cookieExpiry:1;groupId:269</div>
+
 
 	<div id="container">
 
@@ -465,7 +477,7 @@
 									filter="true" filterText="Filter" filterMatchMode="startsWith"
 									panelStyle="width:250px"
 									style="width:92px; height:20px; padding-top:2px; overflow:hidden ">
-									<p:ajax listener="#{dataEntryBacking.linkBean.processSelectedClient}"
+									<p:ajax listener="#{dataEntryBacking.linkBean.filterSelectedClientsCampaignsAndT_URLs}"
 										update="campaignSelectItems,targetURLSelectItems, :form1:j_idt7:linkspanel" />
 									<f:selectItems value="#{dataEntryBacking.linkBean.clients}" />
 									<f:selectItem itemLabel="* Add New Client" itemValue="" />

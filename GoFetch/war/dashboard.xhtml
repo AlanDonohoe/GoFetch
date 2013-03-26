@@ -1,0 +1,123 @@
+<!DOCTYPE html [
+    <!ENTITY nbsp "&#160;"> 
+]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<f:view contentType="text/html">
+<link  type="text/css" rel="stylesheet" href="css/style.css"></link>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/dashboard.js"></script>
+	<h:head />
+	<h:body>
+		<p:layout fullPage="true" widgetVar="layoutWdgt">
+
+			<p:layoutUnit position="north" size="100">
+			
+			<h:form id = "north_content_form">
+			
+			<div id="companyheader">
+			<a id="logo_small_left" class="ir" href="http://www.propellernet.co.uk/"></a>
+            
+
+						<p:toolbar id="top_toolbar">
+                      
+					
+						<p:toolbarGroup align="left">
+								<p:commandButton widgetVar ="clientsDBBtn"  onclick="showClientDashboard()" type="push" value="Clients" 
+                                	/>
+								<p:separator />
+								<p:commandButton widgetVar ="contactsDBBtn" onclick="showContactsDashboard()" type="push" value="Contacts" 
+                                	/>
+                                <p:separator />
+                                <p:commandButton widgetVar ="urlsLinksDBBtn" onclick="showURLsLinksDashboard()" type="push" value="URLs/Links" 
+                                	/>
+                             
+								
+							</p:toolbarGroup>
+                             <p:toolbarGroup align="right">
+
+                             <p:autoComplete value="#{goFetchRequestBean.url}" id="targetURL"
+					completeMethod="#{goFetchRequestBean.completeURLs}" 
+					 size="75" 
+					 maxResults="5"
+					 minQueryLength="7" ></p:autoComplete>
+                     
+                     <span id="url_add_search_btns">
+					<p:commandButton widgetVar ="contactsDBBtn" onclick="#" type="push" value="Search" />
+                               
+                                <p:commandButton widgetVar ="urlsLinksDBBtn" onclick="#" type="push" value="Add" />
+                                </span>
+                             </p:toolbarGroup>
+							
+						</p:toolbar>
+                        
+                             
+			</div>
+				<div id="select_client" class="client_dashboard"> 
+			
+				<h:outputLabel class = "float_left client_wrapper_text">Select a </h:outputLabel>
+				
+				<p:selectCheckboxMenu id="selectClientDropMenu" styleClass="float_left"
+					value="#{fullScreenDashboardBean.selectedClients}"
+					label="Client" filter="true" filterText="Filter"
+					filterMatchMode="startsWith" panelStyle="width:280px"
+					style="width:73px; height:25px; padding-top:2px; padding-bottom:2px overflow:hidden "
+                    rendered="#{fullScreenDashboardBean.showClientsDashboard}">
+					<p:ajax
+						listener="#{fullScreenDashboardBean.clientSelectionChange}"
+						update=":leftContentForm" />
+					<f:selectItems value="#{fullScreenDashboardBean.clientsMenu}" />
+					<f:selectItem itemLabel="* Add New Client" itemValue="" />
+				</p:selectCheckboxMenu>
+				
+				<h:outputLabel class = "float_left client_wrapper_text" rendered="#{fullScreenDashboardBean.showClientsDashboard}"> to get started. </h:outputLabel>
+				</div>
+				</h:form>
+			</p:layoutUnit>
+            
+            
+            <!-- Left hand panel content -->
+            
+			<p:layoutUnit widgetvar = "west_content_widget"  id ="west_content_panel"  position="west" size="300" resizable="true" closable="true" collapsible="true" collapseSize="0" >
+            
+			<h:form id="leftContentForm">
+               
+                 <div id="url_tree" class="client_dashboard, urlLinks_dashboard">    
+                 
+                <p:growl id="growl1" showSummary="true" showDetail="true" autoUpdate="true"/>
+ 
+                <p:tree id="tree1" value="#{fullScreenDashboardBean.urlTreeBean.model}"
+                        var="node"
+                        selectionMode="single"
+                        selection="#{fullScreenDashboardBean.urlTreeBean.selectedNode}"
+                        >
+                    <p:ajax event="select"  listener="#{fullScreenDashboardBean.urlTreeBean.onNodeSelect}" />
+                    <p:ajax event="expand" listener="#{fullScreenDashboardBean.urlTreeBean.onNodeExpand}" />
+                    <p:ajax event="collapse" listener="#{fullScreenDashboardBean.urlTreeBean.onNodeCollapse}" />
+                    <p:treeNode type="node"
+                                expandedIcon="folder-open"
+                                collapsedIcon="folder-collapsed">
+                        <h:outputText value="#{node}"/>
+                    </p:treeNode>
+                    <p:treeNode type="leaf" icon="document-node">
+                        <h:outputText value="#{node}" />
+                    </p:treeNode>
+                </p:tree>
+                </div>
+         
+                    
+
+				</h:form>
+			</p:layoutUnit>
+			 
+			<p:layoutUnit position="center" id="centre_content_panel" closable="true" collapsible="true">
+				<h:outputText value="Centre Content" />
+			</p:layoutUnit>
+           
+		</p:layout>
+	</h:body>
+</f:view>
+</html>
