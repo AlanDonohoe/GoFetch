@@ -40,7 +40,7 @@
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/poi-ooxml-3.9-20121203.jar"/>
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/poi-ooxml-schemas-3.9-20121203.jar"/>
 	<classpathentry kind="lib" path="/Users/alandonohoe/Documents/git/GoFetch/GoFetch/war/WEB-INF/lib/mysql-connector-java-5.1.22-bin.jar"/>
+	<classpathentry kind="lib" path="/Applications/eclipse/plugins/appengine-java-sdk-1.7.6/lib/user/appengine-api-1.0-sdk-1.7.6.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Applications/eclipse/plugins/appengine-java-sdk-1.7.2.1/lib/user/appengine-api-1.0-sdk-1.7.2.1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

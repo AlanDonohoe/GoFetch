@@ -14,11 +14,6 @@ import javax.persistence.Table;
 
 public class URLPlusDataPoints implements Comparable<URLPlusDataPoints> {
 
-	//moved to seoMozData object....
-	
-    //private String score; // red, green or amber
-    //private String backLinkPA; // Page Authority
-   // private String backLinkDA; // domain authority
 	
     private String uu; // backlink URL
     private String cleanURL; // URL thats been cleaned of buggy escape characters

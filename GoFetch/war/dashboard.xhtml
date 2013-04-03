@@ -7,116 +7,215 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <f:view contentType="text/html">
-<link  type="text/css" rel="stylesheet" href="css/style.css"></link>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="js/dashboard.js"></script>
+	<link type="text/css" rel="stylesheet" href="css/style.css"></link>
+	<script
+		src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript" src="js/dashboard.js"></script>
+	<script type="text/javascript" src="js/dashboard_charts.js"></script>
+
+	<script type="text/javascript">
+
+	// move all this somehow to dashboard_charts.js
+	
+	  google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+		  
+		  // from server
+        var dataServer = ${fullScreenDashboardBean.testing};
+		
+		var data = google.visualization.arrayToDataTable(dataServer);
+		
+        var options = {
+          title: 'Links'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('links_chart'));
+        chart.draw(data, options);
+      }
+	 
+	
+	 </script>
 	<h:head />
 	<h:body>
 		<p:layout fullPage="true" widgetVar="layoutWdgt">
 
 			<p:layoutUnit position="north" size="100">
-			
-			<h:form id = "north_content_form">
-			
-			<div id="companyheader">
-			<a id="logo_small_left" class="ir" href="http://www.propellernet.co.uk/"></a>
-            
+
+				<h:form id="north_content_form">
+
+					<div id="companyheader">
+						<a id="logo_small_left" class="ir"
+							href="http://www.propellernet.co.uk/"></a>
 
 						<p:toolbar id="top_toolbar">
-                      
-					
-						<p:toolbarGroup align="left">
-								<p:commandButton widgetVar ="clientsDBBtn"  onclick="showClientDashboard()" type="push" value="Clients" 
-                                	/>
+
+							<p:toolbarGroup align="left">
+								<p:commandButton widgetVar="clientsDBBtn"
+									onclick="showClientDashboard()" type="push" value="Clients" />
 								<p:separator />
-								<p:commandButton widgetVar ="contactsDBBtn" onclick="showContactsDashboard()" type="push" value="Contacts" 
-                                	/>
-                                <p:separator />
-                                <p:commandButton widgetVar ="urlsLinksDBBtn" onclick="showURLsLinksDashboard()" type="push" value="URLs/Links" 
-                                	/>
-                             
-								
+								<p:commandButton widgetVar="contactsDBBtn"
+									onclick="showContactsDashboard()" type="push" value="Contacts" />
+								<p:separator />
+								<p:commandButton widgetVar="urlsLinksDBBtn"
+									onclick="showURLsLinksDashboard()" type="push"
+									value="URLs/Links" />
+
+
 							</p:toolbarGroup>
-                             <p:toolbarGroup align="right">
+							<p:toolbarGroup align="right">
 
-                             <p:autoComplete value="#{goFetchRequestBean.url}" id="targetURL"
-					completeMethod="#{goFetchRequestBean.completeURLs}" 
-					 size="75" 
-					 maxResults="5"
-					 minQueryLength="7" ></p:autoComplete>
-                     
-                     <span id="url_add_search_btns">
-					<p:commandButton widgetVar ="contactsDBBtn" onclick="#" type="push" value="Search" />
-                               
-                                <p:commandButton widgetVar ="urlsLinksDBBtn" onclick="#" type="push" value="Add" />
-                                </span>
-                             </p:toolbarGroup>
-							
+								<p:autoComplete value="#{goFetchRequestBean.url}" id="targetURL"
+									completeMethod="#{goFetchRequestBean.completeURLs}" size="75"
+									maxResults="5" minQueryLength="7"></p:autoComplete>
+
+								<span id="url_add_search_btns"> <p:commandButton
+										widgetVar="contactsDBBtn" onclick="#" type="push"
+										value="Search" /> <p:commandButton widgetVar="urlsLinksDBBtn"
+										onclick="#" type="push" value="Add" />
+								</span>
+							</p:toolbarGroup>
+
 						</p:toolbar>
-                        
-                             
-			</div>
-				<div id="select_client" class="client_dashboard"> 
-			
-				<h:outputLabel class = "float_left client_wrapper_text">Select a </h:outputLabel>
-				
-				<p:selectCheckboxMenu id="selectClientDropMenu" styleClass="float_left"
-					value="#{fullScreenDashboardBean.selectedClients}"
-					label="Client" filter="true" filterText="Filter"
-					filterMatchMode="startsWith" panelStyle="width:280px"
-					style="width:73px; height:25px; padding-top:2px; padding-bottom:2px overflow:hidden "
-                    rendered="#{fullScreenDashboardBean.showClientsDashboard}">
-					<p:ajax
-						listener="#{fullScreenDashboardBean.clientSelectionChange}"
-						update=":leftContentForm" />
-					<f:selectItems value="#{fullScreenDashboardBean.clientsMenu}" />
-					<f:selectItem itemLabel="* Add New Client" itemValue="" />
-				</p:selectCheckboxMenu>
-				
-				<h:outputLabel class = "float_left client_wrapper_text" rendered="#{fullScreenDashboardBean.showClientsDashboard}"> to get started. </h:outputLabel>
-				</div>
+
+
+					</div>
+					<div id="select_client" class="client_dashboard">
+
+						<h:outputLabel class="float_left client_wrapper_text">Select a </h:outputLabel>
+
+						<p:selectCheckboxMenu id="selectClientDropMenu"
+							styleClass="float_left"
+							value="#{fullScreenDashboardBean.selectedClients}" label="Client"
+							filter="true" filterText="Filter" filterMatchMode="startsWith"
+							panelStyle="width:280px"
+							style="width:73px; height:25px; padding-top:2px; padding-bottom:2px overflow:hidden ">
+							<p:ajax
+								listener="#{fullScreenDashboardBean.clientSelectionChange}"
+								update=":leftContentForm" />
+							<f:selectItems value="#{fullScreenDashboardBean.clientsMenu}" />
+							<f:selectItem itemLabel="* Add New Client" itemValue="" />
+						</p:selectCheckboxMenu>
+
+						<h:outputLabel class="float_left client_wrapper_text"> to get started. </h:outputLabel>
+					</div>
 				</h:form>
 			</p:layoutUnit>
-            
-            
-            <!-- Left hand panel content -->
-            
-			<p:layoutUnit widgetvar = "west_content_widget"  id ="west_content_panel"  position="west" size="300" resizable="true" closable="true" collapsible="true" collapseSize="0" >
-            
-			<h:form id="leftContentForm">
-               
-                 <div id="url_tree" class="client_dashboard, urlLinks_dashboard">    
-                 
-                <p:growl id="growl1" showSummary="true" showDetail="true" autoUpdate="true"/>
- 
-                <p:tree id="tree1" value="#{fullScreenDashboardBean.urlTreeBean.model}"
-                        var="node"
-                        selectionMode="single"
-                        selection="#{fullScreenDashboardBean.urlTreeBean.selectedNode}"
-                        >
-                    <p:ajax event="select"  listener="#{fullScreenDashboardBean.urlTreeBean.onNodeSelect}" />
-                    <p:ajax event="expand" listener="#{fullScreenDashboardBean.urlTreeBean.onNodeExpand}" />
-                    <p:ajax event="collapse" listener="#{fullScreenDashboardBean.urlTreeBean.onNodeCollapse}" />
-                    <p:treeNode type="node"
-                                expandedIcon="folder-open"
-                                collapsedIcon="folder-collapsed">
-                        <h:outputText value="#{node}"/>
-                    </p:treeNode>
-                    <p:treeNode type="leaf" icon="document-node">
-                        <h:outputText value="#{node}" />
-                    </p:treeNode>
-                </p:tree>
-                </div>
-         
-                    
+
+
+			<!-- Left hand panel content -->
+
+			<p:layoutUnit widgetvar="west_content_widget" id="west_content_panel"
+				position="west" size="300" resizable="true" closable="true"
+				collapsible="true" collapseSize="0">
+
+				<h:form id="leftContentForm">
+
+					<div id="url_tree" class="client_dashboard, urlLinks_dashboard">
+
+						<p:growl id="growl1" showSummary="true" showDetail="true"
+							autoUpdate="true" />
+
+						<p:tree id="tree1"
+							value="#{fullScreenDashboardBean.urlTreeBean.model}" var="node"
+							selectionMode="single"
+							selection="#{fullScreenDashboardBean.urlTreeBean.selectedNode}"
+							rendered="#{fullScreenDashboardBean.showTree}" dyanmic="true">
+
+
+
+
+							<p:ajax event="select"
+								listener="#{fullScreenDashboardBean.onNodeSelected}"
+								update=":centreContentForm" />
+							<p:ajax event="expand"
+								listener="#{fullScreenDashboardBean.urlTreeBean.onNodeExpand}" />
+							<p:ajax event="collapse"
+								listener="#{fullScreenDashboardBean.urlTreeBean.onNodeCollapse}" />
+							<p:treeNode type="node">
+								<h:outputText value="#{node}" />
+							</p:treeNode>
+							<p:treeNode type="leaf">
+								<h:outputText value="#{node}" />
+							</p:treeNode>
+						</p:tree>
+					</div>
+
+
 
 				</h:form>
 			</p:layoutUnit>
-			 
-			<p:layoutUnit position="center" id="centre_content_panel" closable="true" collapsible="true">
-				<h:outputText value="Centre Content" />
+
+			<p:layoutUnit position="center" id="centre_content_panel"
+				closable="true" collapsible="true">
+
+				<h:form id="centreContentForm">
+					<p:panel id="links_panel" header="Links" toggleable="true"
+						toggleSpeed="500" closeSpeed="500" widgetVar="links_panel">
+						<!--
+        <p:ajax event="close" listener="#{panelBean.handleClose}" update="growl" />  
+        <p:ajax event="toggle" listener="#{panelBean.handleToggle}" update="growl" />  
+        -->
+						<div id="links_chart"></div>
+					</p:panel>
+					<p:blockUI block="links_panel" trigger=":leftContentForm:tree1"> LOADING<br />
+						<p:graphicImage value="/images/ajax-loader.gif" />
+					</p:blockUI>
+					<p:panel id="social_history_panel" header="Social Data History"
+						toggleable="true" toggleSpeed="500" closeSpeed="500"
+						widgetVar="social_history_panel">
+
+						<div id="social_history_chart"></div>
+					</p:panel>
+
+					<p:panel id="datatable_panel" toggleable="true" toggleSpeed="500"
+						closeSpeed="500" widgetVar="datatable_panel">
+<!--
+						<p:dataTable var="link" value="#{fullScreenDashboardBean.links}">
+						<f:facet name="header"> 
+                        	Backlinks for  - client target URL
+						</f:facet>
+						<p:column>
+							<f:facet name="header">
+								URL
+                        	</f:facet>
+                            
+							#{link.address} 
+						</p:column>
+                        
+                        <p:column>
+							<f:facet name="header">
+								Anchor Text
+                        	</f:facet>
+                            
+							#{link.anchorText} 
+						</p:column>
+                        
+               			<p:column>
+							<f:facet name="header">
+								DA
+                        	</f:facet>
+                            
+							#{link.domainAuthority} 
+						</p:column>
+                        
+       					<p:column>
+							<f:facet name="header">
+								PA
+                        	</f:facet>
+                            
+							#{link.pageAuthority} 
+						</p:column>
+                        
+						</p:dataTable>
+                        -->
+					</p:panel>
+
+
+				</h:form>
 			</p:layoutUnit>
-           
+
 		</p:layout>
 	</h:body>
 </f:view>

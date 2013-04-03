@@ -1,4 +1,3 @@
-// JavaScript Document
 // contains custom JS code to back the dashboard page
 
 function showClientDashboard(){
@@ -8,6 +7,8 @@ function showClientDashboard(){
 	$("#url_tree").show();
 	$("#select_client").show();
 	//$("#west_content_panel").hide(1000);
+	
+	//if( $(".ui-tree-container").
 	
 	
 }

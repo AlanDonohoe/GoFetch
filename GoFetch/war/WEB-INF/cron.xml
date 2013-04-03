@@ -15,7 +15,7 @@
     <timezone>Europe/London</timezone>
   </cron>
     <cron>
-    <url>/index.jsf</url>
+    <url>/dashboard.jsf</url>
     <description>wake up the main app every 5 mins during work hours so there is no start up delay</description>
     <schedule>every 5 minutes from 09:00 to 18:00</schedule>
     <timezone>Europe/London</timezone>

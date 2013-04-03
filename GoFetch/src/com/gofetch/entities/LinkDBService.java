@@ -161,6 +161,7 @@ public class LinkDBService{
 			mgr.close();
 		}
 
+		//TODO: replace this with just retreiving the id field in the above query: eg: select u.id from ....
 		// add all links' source id to list of ids
 		for(Link currentLink : links){
 			backLinkIDs.add(currentLink.getSource_id());

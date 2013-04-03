@@ -444,6 +444,7 @@ public class ProcessNewTargets extends HttpServlet {
 		currentURLDAPA.setBackLinkURL(url);
 
 		try {
+
 			resultingURLDAPA = seoMoz.getURLMetricsData(currentURLDAPA);
 		} catch (Exception e) {
 			// deal with SEOMoz server time out
@@ -452,7 +453,7 @@ public class ProcessNewTargets extends HttpServlet {
 
 			log.warning(msg + e.getMessage());
 			//26-3-13: ADs
-			// and jsut cancel - 
+			// and just cancel - 
 			return;
 		}
 

@@ -29,6 +29,45 @@ public class URLDBService{
 	EntityManagerFactory emf;
 
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
+	
+	
+	/**
+	 * 
+	 * @param targetURL 
+	 * @return list of URLs that point to this target
+	 */
+	public List<URL> getBackLinkURLs(Integer targetURLid){
+		
+		log.info("Entering getBackLinkURLs");
+		
+		List<URL> result = null;
+		//Integer id = targetURL.getId();
+		
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+
+		try {   
+			result= mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = ANY (SELECT l.source_id FROM Link l WHERE l.target_id = :id)")
+					.setParameter("id", targetURLid)
+					.getResultList();
+			
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getBackLinkURLs. ";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		
+		
+		
+		return result; 
+		
+		
+		
+	}
 
 	//TODO: dont know if this works - JQPL Selecting single field.. rather than whole entity...
 	public List<String> getURLAddresses(){
