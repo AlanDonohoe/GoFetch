@@ -43,11 +43,23 @@
 
 			<p:layoutUnit position="north" size="100">
 
+				<div id="top_right_container">
+					<ul>
+						<li><strong> alan@propellernet.co.uk </strong> |</li>
+						<li><a href="#" target="_blank"> My Account </a> |</li>
+						<li><a href="/help.html" target="_blank"> Help </a></li>
+					</ul>
+				</div>
+
+				<div id="logo_container">
+							<a id="logo_small_left" class="ir float_left"
+								href="http://www.propellernet.co.uk/"></a>
+						</div>
+                        
 				<h:form id="north_content_form">
 
 					<div id="companyheader">
-						<a id="logo_small_left" class="ir"
-							href="http://www.propellernet.co.uk/"></a>
+						
 
 						<p:toolbar id="top_toolbar">
 
@@ -76,11 +88,11 @@
 										onclick="#" type="push" value="Add" />
 								</span>
 							</p:toolbarGroup>
-
+						
 						</p:toolbar>
-
-
 					</div>
+
+
 					<div id="select_client" class="client_dashboard">
 
 						<h:outputLabel class="float_left client_wrapper_text">Select a </h:outputLabel>
@@ -171,7 +183,7 @@
 
 					<p:panel id="datatable_panel" toggleable="true" toggleSpeed="500"
 						closeSpeed="500" widgetVar="datatable_panel">
-<!--
+						<!--
 						<p:dataTable var="link" value="#{fullScreenDashboardBean.links}">
 						<f:facet name="header"> 
                         	Backlinks for  - client target URL

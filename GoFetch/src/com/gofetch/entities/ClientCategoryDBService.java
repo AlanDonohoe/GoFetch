@@ -16,6 +16,7 @@ public class ClientCategoryDBService {
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
 	
 	
+	@SuppressWarnings("unchecked")
 	public ClientCategory getClientsDefaultCategory(Integer clientID){
 		
 	log.info("Entering getClientsDefaultCategory() for client id: " + clientID);
@@ -26,7 +27,7 @@ public class ClientCategoryDBService {
 		
 		try {
 			
-			clientsDefaultCategory = mgr.createQuery("SELECT u FROM ClientCategory u WHERE u.users_id = :clientID AND u.client_default = true")
+			clientsDefaultCategory = (List <ClientCategory>) mgr.createQuery("SELECT u FROM ClientCategory u WHERE u.users_id = :clientID AND u.client_default = true")
 					.setParameter("clientID", clientID)
 					.getResultList();
 		}catch(Exception e){
@@ -46,6 +47,7 @@ public class ClientCategoryDBService {
 	}
 	 
 	
+	@SuppressWarnings("unchecked")
 	public List<ClientCategory> getClientsCategories(Integer clientID){
 		
 		log.info("Entering getClientsCategories() for client id: " + clientID);
@@ -56,7 +58,7 @@ public class ClientCategoryDBService {
 		
 		try {
 			
-			clientsCategories = mgr.createQuery("SELECT u FROM ClientCategory u WHERE u.users_id = :clientID ORDER BY u.category ASC")
+			clientsCategories = (List <ClientCategory>) mgr.createQuery("SELECT u FROM ClientCategory u WHERE u.users_id = :clientID ORDER BY u.category ASC")
 					.setParameter("clientID", clientID)
 					.getResultList();
 		}catch(Exception e){

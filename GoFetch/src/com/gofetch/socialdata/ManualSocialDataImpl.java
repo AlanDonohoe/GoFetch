@@ -1,15 +1,7 @@
 package com.gofetch.socialdata;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,11 +10,9 @@ import net.minidev.json.JSONArray;
 
 import com.gofetch.GoFetchConstants;
 import com.gofetch.entities.MiscSocialData;
-import com.gofetch.entities.SocialDataUnit;
 import com.gofetch.entities.TwitterMention;
 import com.gofetch.entities.FaceBookDataUnit;
 import com.gofetch.utils.ConnectionUtil;
-import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 
 /**

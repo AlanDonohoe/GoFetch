@@ -6,12 +6,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
 
-import com.gofetch.entities.*;
+import com.gofetch.entities.Link;
+import com.gofetch.entities.LinkDBService;
+import com.gofetch.entities.MiscSocialData;
+import com.gofetch.entities.MiscSocialDataDBService;
+import com.gofetch.entities.URL;
+import com.gofetch.entities.URLDBService;
+import com.gofetch.entities.URLPlusSocialData;
 
 @ManagedBean
 @RequestScoped

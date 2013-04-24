@@ -5,22 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Logger;
-
-// old imports - glassfish....
-//import org.apache.http.client.ClientProtocolException;
-//import org.apache.http.client.HttpClient;
-//import org.apache.http.client.HttpResponseException;
-//import org.apache.http.client.ResponseHandler;
-//import org.apache.http.client.methods.HttpGet;
-//import org.apache.http.impl.client.BasicResponseHandler;
-//import org.apache.http.impl.client.DefaultHttpClient;
-
-// new GAE imports:
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 /**
  *

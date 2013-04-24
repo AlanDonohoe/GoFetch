@@ -42,6 +42,7 @@ public class MiscSocialDataDBService {
 		//log.info("Exiting MiscSocialData"); 
 	}
 
+	@SuppressWarnings("unchecked")
 	public MiscSocialData getMostRecentSocialData(int url_id){
 
 		//log.info("Entering getMostRecentSocialData");
@@ -51,7 +52,7 @@ public class MiscSocialDataDBService {
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id ORDER BY u.date desc")
+			result = (List<MiscSocialData>) mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id ORDER BY u.date desc")
 					.setParameter("url_id", url_id)
 					.getResultList();
 
@@ -71,6 +72,7 @@ public class MiscSocialDataDBService {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<MiscSocialData> getSocialDataBetween(int url_id, Date startDate, Date endDate){
 		
 		//log.info("Entering getSocialDataBetween");
@@ -81,7 +83,7 @@ public class MiscSocialDataDBService {
 
 		try {
 			
-			result = mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id AND u.date BETWEEN :startDate AND :endDate ORDER BY u.date desc")
+			result = (List<MiscSocialData>) mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id AND u.date BETWEEN :startDate AND :endDate ORDER BY u.date desc")
 					.setParameter("startDate", startDate, TemporalType.DATE)
 					.setParameter("endDate", endDate, TemporalType.DATE)
 					.setParameter("url_id", url_id)
@@ -105,6 +107,7 @@ public class MiscSocialDataDBService {
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<MiscSocialData> getAllSocialData(int url_id){
 
 		//log.info("Entering getMostRecentSocialData");
@@ -114,7 +117,7 @@ public class MiscSocialDataDBService {
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id ORDER BY u.date desc")
+			result = (List<MiscSocialData>) mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id ORDER BY u.date desc")
 					.setParameter("url_id", url_id)
 					.getResultList();
 

@@ -1,9 +1,5 @@
 package com.gofetch.seomoz;
 
-import java.util.Comparator;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  *

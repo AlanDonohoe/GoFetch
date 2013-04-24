@@ -65,6 +65,7 @@ public class LinkDBService{
 	 * @param finalTargetURLAddress
 	 * @return list of Links that all have their final_target_url as finalTargetURLAddress
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Link> getLinksInTreePointingTo(String finalTargetURLAddress){
 
 		log.info("Entering getSourceURLsIDsPointingTo [" + finalTargetURLAddress + "]");
@@ -78,7 +79,7 @@ public class LinkDBService{
 		List<Link> links = null;
 
 		try {
-			links =  mgr.createQuery("SELECT u FROM Link u WHERE u.final_target_url = :final_target_url")
+			links =  (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.final_target_url = :final_target_url")
 					.setParameter("final_target_url",  finalTargetURLAddress)
 					.getResultList();
 
@@ -101,6 +102,7 @@ public class LinkDBService{
 	 * @param targetURL 
 	 * @return - list of ids of each url pointing to the target.
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Integer> getSourceURLIDsPointingTo(URL targetURL){
 
 		log.info("Entering getSourceURLIDsPointingTo [" + targetURL.getUrl_address() + "]");
@@ -114,7 +116,7 @@ public class LinkDBService{
 		List<Link> links = null;
 
 		try {
-			links = mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :targetURLID")
+			links = (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :targetURLID")
 					.setParameter("targetURLID",  targetURLID)
 					.getResultList();
 
@@ -140,6 +142,7 @@ public class LinkDBService{
 	 * @param targetURL 
 	 * @return - list of ids of each url pointing to the target.
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Integer> getSourceURLsIDsPointingTo(URL targetURL){
 
 		log.info("Entering getSourceURLsIDsPointingTo [" + targetURL.getUrl_address() + "]");
@@ -153,7 +156,7 @@ public class LinkDBService{
 		List<Link> links;
 
 		try {
-			links = mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :targetURLID")
+			links = (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :targetURLID")
 					.setParameter("targetURLID",  targetURLID)
 					.getResultList();
 
@@ -179,6 +182,7 @@ public class LinkDBService{
 	 * @param urlID
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public Integer noOfTimesURLIsLinkedTo(Integer urlID){
 
 		log.info("Entering noOfTimesURLIsLinkedTo: " + urlID);
@@ -191,7 +195,7 @@ public class LinkDBService{
 		List<Link> links;
 
 		try {
-			links = mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :urlID OR u.source_id = :urlID")
+			links = (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :urlID OR u.source_id = :urlID")
 					.setParameter("urlID",  urlID)
 					.getResultList();
 
@@ -212,6 +216,7 @@ public class LinkDBService{
 	 * @param urlID
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public Integer noOfTimesURLIsSourceURL(Integer urlID){
 
 		log.info("Entering noOfTimesURLIsSourceURL: " + urlID);
@@ -224,7 +229,7 @@ public class LinkDBService{
 		List<Link> links;
 
 		try {
-			links = mgr.createQuery("SELECT u FROM Link u WHERE u.source_id = :urlID")
+			links = (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.source_id = :urlID")
 					.setParameter("urlID",  urlID)
 					.getResultList();
 
@@ -374,6 +379,7 @@ public class LinkDBService{
 	 * @param id
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Link> getAllLinks(Integer id){
 
 		log.info("Entering getAllLinks");
@@ -384,7 +390,7 @@ public class LinkDBService{
 		List<Link> links;
 
 		try {
-			links = mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :urlID OR u.source_id = :urlID")
+			links = (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :urlID OR u.source_id = :urlID")
 					.setParameter("urlID",  id)
 					.getResultList();
 
@@ -420,6 +426,7 @@ public class LinkDBService{
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Integer> getURLIDsPointingTo(URL url) {
 
 		log.info("Entering getURLIDsPointingTo");
@@ -446,6 +453,7 @@ public class LinkDBService{
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public Link getLink(Integer sourceID, Integer targetID, String anchortext){
 
 		log.info("Entering getLink");
@@ -479,6 +487,7 @@ public class LinkDBService{
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public Link getLink(Integer sourceID, Integer targetID){
 
 		log.info("Entering getLink");

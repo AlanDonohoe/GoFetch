@@ -1,22 +1,8 @@
 package com.gofetch.controllers;
 
-import com.gofetch.GoFetchConstants;
-import com.gofetch.beans.GoFetchRequestBean;
-import com.gofetch.entities.*;
-import com.gofetch.seomoz.Constants;
-import com.gofetch.utils.DateUtil;
-import com.gofetch.utils.TextUtil;
-
-import com.google.appengine.api.rdbms.AppEngineDriver;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.logging.Logger;
 
 import java.io.IOException;
-import java.sql.*;
-import java.util.logging.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 

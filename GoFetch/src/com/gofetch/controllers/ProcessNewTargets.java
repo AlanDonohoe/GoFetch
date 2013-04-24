@@ -2,21 +2,24 @@ package com.gofetch.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.gofetch.GoFetchConstants;
-import com.gofetch.entities.*;
-import com.gofetch.seomoz.*;
-import com.gofetch.socialdata.*;
-import com.gofetch.utils.ConnectionUtil;
+import com.gofetch.entities.Link;
+import com.gofetch.entities.LinkDBService;
+import com.gofetch.entities.URL;
+import com.gofetch.entities.URLDBService;
+import com.gofetch.seomoz.Constants;
+import com.gofetch.seomoz.SEOMoz;
+import com.gofetch.seomoz.SEOMozImplFreeAPI;
+import com.gofetch.seomoz.URLPlusDataPoints;
 import com.gofetch.utils.DateUtil;
 import com.gofetch.utils.TextUtil;
 

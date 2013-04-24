@@ -1,7 +1,5 @@
 package com.gofetch.socialdata;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class represents the interface of the sharedcount API.

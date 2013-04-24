@@ -41,6 +41,7 @@ public class UserDBService {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<User> getAllClients(){
 		
 		log.info("Entering getAllClients");
@@ -69,6 +70,7 @@ public class UserDBService {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<User> getUserByDisplayedName(String name){
 	 	
 		log.info("Entering getUserByDisplayedName");

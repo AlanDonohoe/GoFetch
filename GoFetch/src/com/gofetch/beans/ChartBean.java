@@ -5,17 +5,13 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import org.primefaces.model.chart.CartesianChartModel;  
-import org.primefaces.model.chart.ChartSeries;  
-import org.primefaces.model.chart.LineChartSeries;
-
 @ManagedBean
 @RequestScoped
 public class ChartBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private String beanData = "Hello hello";
+	private String beanData;
 	
 	public ChartBean(){
 		//beanData = "Hello hello";

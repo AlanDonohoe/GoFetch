@@ -15,6 +15,7 @@ public class LinkBuildingActivityDBService {
 
 	private static Logger log = Logger.getLogger(UserDBService.class.getName());
 	
+@SuppressWarnings("unchecked")
 public List<LinkBuildingActivity> getAllLinkActivities(){
 		
 		log.info("Entering getAllLinkActivities");

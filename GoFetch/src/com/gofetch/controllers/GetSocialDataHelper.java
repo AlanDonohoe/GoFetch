@@ -20,9 +20,6 @@ import com.gofetch.entities.URLNode;
 import com.gofetch.entities.URLPlusSocialData;
 import com.gofetch.entities.URLTree;
 import com.gofetch.utils.DateUtil;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 
 /*
  * Class performs all the work of the GetSocialData servlet - but allows us to have thread-safe member variables

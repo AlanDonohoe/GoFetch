@@ -3,19 +3,15 @@ package com.gofetch.entities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-//import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.Query;
-//import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
 import com.gofetch.utils.DateUtil;
-//import com.google.appengine.api.rdbms.AppEngineDriver;
 
 /**
  * Service class for CRUD operations on URL entity
@@ -36,9 +32,101 @@ public class URLDBService{
 	 * @param targetURL 
 	 * @return list of URLs that point to this target
 	 */
+	@SuppressWarnings("unchecked")
 	public List<URL> getBackLinkURLs(Integer targetURLid){
 		
 		log.info("Entering getBackLinkURLs");
+		
+		List<URL> result = null;
+		//Integer id = targetURL.getId();
+		
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+
+
+		try {   
+			result= (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = ANY (SELECT l.source_id FROM Link l WHERE l.target_id = :id)")
+					.setParameter("id", targetURLid)
+					.getResultList();
+			
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getBackLinkURLs. ";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+			
+		return result; 
+			
+	}
+	
+	/**
+	 * 
+	 * @param targetURL 
+	 * @return list of URLs that point to this target
+	 * Essentially a wrapper for getBackLinkURLs(Integer id)
+	 */
+	public List<URL> getBackLinkURLs(String targetURLAddress){
+		
+		log.info("Entering getBackLinkURLs - via URL Address wrapper");
+		
+		Integer id = getURLIDFromAddress(targetURLAddress);
+		
+		return(getBackLinkURLs(id));
+			
+	}
+	
+
+	
+	/**
+	 * 
+	 * @param targetURL_ID id of the target URL to get all urls and link data for 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<URLAndLinkData> getURLAndLinkData(Integer targetURLid){
+		
+		log.info("Entering getURLAndLinkData");
+		
+		List<URLAndLinkData> result = null;
+		
+		emf = Persistence.createEntityManagerFactory("GoFetch");
+		EntityManager mgr = emf.createEntityManager();
+		//JOIN l FROM Link l WHERE l.target_id = :id
+		// SELECT u FROM URL u JOIN Link l where l.target_id = :id
+		// SELECT l.source_id FROM Link l WHERE l.target_id = :id
+		
+		// actual working sql:
+		// select * from links INNER JOIN url ON links.target_id = url.url_id and links.target_id = 15051; 
+		try {   
+			result= (List<URLAndLinkData>) mgr.createQuery("SELECT l FROM Link l JOIN URL u where l.source_id = :u.url_id" )
+					.setParameter("id", targetURLid)
+					.getResultList();
+			
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getBackLinkURLs. ";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		
+		
+		log.info("Exiting getURLAndLinkData");
+		
+		return result;
+		
+		/*
+		 * Double max = (Double) em.createQuery("SELECT MAX(p.price) FROM PurchaseOrder 
+	                   o JOIN o.orderLineItems l JOIN l.product p JOIN p.supplier s WHERE s.sup_name = 'Tortuga Trading'")
+	                              .getSingleResult(); 
+	        out.println("The highest price for an ordered product supplied by Tortuga Trading: "+ max + "<br/>");
+		 
+		
+	log.info("Entering getBackLinkURLs");
 		
 		List<URL> result = null;
 		//Integer id = targetURL.getId();
@@ -60,16 +148,15 @@ public class URLDBService{
 		} finally {
 			mgr.close();
 		}
-		
-		
-		
+			
 		return result; 
 		
-		
-		
+		*/
+			
 	}
 
 	//TODO: dont know if this works - JQPL Selecting single field.. rather than whole entity...
+	@SuppressWarnings("unchecked")
 	public List<String> getURLAddresses(){
 
 		log.info("Entering getURLAddresses");
@@ -178,6 +265,7 @@ public class URLDBService{
 	 * @param id
 	 * @return URL
 	 */
+	@SuppressWarnings("unchecked")
 	public URL getURL(String address) {
 		log.info("Entering getURL[" + address + "]");
 
@@ -237,6 +325,7 @@ public class URLDBService{
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<URL> getURLs(Date date){
 
 		log.info("Entering getURLs");
@@ -246,7 +335,7 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date")
+			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date")
 					.setParameter("date", date, TemporalType.DATE)
 					.getResultList();
 
@@ -289,6 +378,7 @@ public class URLDBService{
 	/*
 	 * Returns a list of URLs that were added to the database today.
 	 */
+	@SuppressWarnings("unchecked")
 	public List<URL> getTargetURLsFrom(Date date){
 
 		log.info("Entering getTargetURLsFrom");
@@ -298,7 +388,7 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date AND u.get_backlinks = TRUE")
+			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date AND u.get_backlinks = TRUE")
 					.setParameter("date", date, TemporalType.DATE)
 					.getResultList();
 
@@ -341,6 +431,7 @@ public class URLDBService{
 	/*
 	 * Returns a list of URLs that were added between the 2 dates
 	 */
+	@SuppressWarnings("unchecked")
 	public List<URL> getURLsBetween(Date startDate, Date endDate){
 
 		log.info("Entering getURLsBetween");
@@ -350,7 +441,7 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.date BETWEEN :startDate AND :endDate")
+			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.date BETWEEN :startDate AND :endDate")
 					.setParameter("startDate", startDate, TemporalType.DATE)
 					.setParameter("endDate", endDate, TemporalType.DATE)
 					.getResultList();
@@ -413,6 +504,7 @@ public class URLDBService{
 //		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Integer getURLIDFromAddress(String urlAddress){
 
 		Integer url_id;
@@ -422,7 +514,7 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :urlAddress")
+			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :urlAddress")
 					.setParameter("urlAddress", urlAddress)
 					.getResultList();
 		}catch(Exception e){
@@ -442,6 +534,7 @@ public class URLDBService{
 		return url_id;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String getURLAddressFromID(Integer urlID){
 
 		String address;
@@ -451,7 +544,7 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = :urlID")
+			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = :urlID")
 					.setParameter("urlID", urlID)
 					.getResultList();
 		}catch(Exception e){
@@ -656,6 +749,7 @@ public class URLDBService{
 	/*
 	 * Returns a list of URLs that are to be monitored for social data...
 	 */
+	@SuppressWarnings("unchecked")
 	public List<URL> getSociallyTrackedURLs(){
 
 		log.info("Entering getSociallyTrackedURLs");
@@ -665,7 +759,7 @@ public class URLDBService{
 		EntityManager mgr = emf.createEntityManager();
 
 		try {
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = TRUE")
+			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = TRUE")
 					.getResultList();
 
 		}catch(Exception e){
@@ -805,6 +899,7 @@ public class URLDBService{
 	/*
 	 * Returns list of urls that have had their get_backlinks flag checked, but have not yet got their backlink data eg: from SEOMoz
 	 */
+	@SuppressWarnings("unchecked")
 	public List<URL> getUnproccessedTargetURLs(){
 
 		log.info("Entering getUnproccessedTargetURLs");
@@ -816,7 +911,7 @@ public class URLDBService{
 
 		try {
 
-			urls = mgr.createQuery("SELECT u FROM URL u WHERE u.get_backlinks = TRUE and u.backlinks_got = false")
+			urls = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_backlinks = TRUE and u.backlinks_got = false")
 					.getResultList();
 
 		}catch(Exception e){
@@ -835,6 +930,7 @@ public class URLDBService{
 	/*
 	 * returns all URLs that have a social_data_date less than or equal to todays date and get_social_data = true
 	 */
+	@SuppressWarnings("unchecked")
 	public List<URL> getTodaysSocialCrawlURLs() {
 
 		log.info("Entering getTodaysSocialCrawlURLs");
@@ -846,7 +942,7 @@ public class URLDBService{
 		
 
 		try {
-			result =  mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date ORDER BY u.social_data_date")
+			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date ORDER BY u.social_data_date")
 					.setParameter("date", date, TemporalType.DATE)
 					.getResultList();
 
@@ -866,6 +962,7 @@ public class URLDBService{
 
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<URL> getURLsOfClientCategory(Integer clientCategoryID, boolean targetURLsOnly){
 		
 		log.info("Entering getURLsOfClientCategory. Client Category = " + clientCategoryID);
@@ -876,11 +973,11 @@ public class URLDBService{
 
 		try { 
 			if(targetURLsOnly){
-				result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_id = :client_category_id AND u.client_target_url = true")
+				result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_id = :client_category_id AND u.client_target_url = true")
 						.setParameter("client_category_id", clientCategoryID)
 						.getResultList();
 			}else{
-				result = mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_id = :client_category_id")
+				result =(List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_id = :client_category_id")
 						.setParameter("client_category_id", clientCategoryID)
 						.getResultList();
 				
@@ -902,6 +999,7 @@ public class URLDBService{
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<URL> getClientsTargetURLs(Integer clientID,  boolean targetURLsOnly){
 		
 		log.info("Entering getClientsURLs. Client ID = " + clientID);
@@ -913,11 +1011,11 @@ public class URLDBService{
 		try {
 			
 			if(targetURLsOnly){
-			result = mgr.createQuery("SELECT u FROM URL u WHERE u.users_user_id = :users_user_id AND u.client_target_url = true")
+			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.users_user_id = :users_user_id AND u.client_target_url = true")
 					.setParameter("users_user_id", clientID)
 					.getResultList();
 			}else{
-				result = mgr.createQuery("SELECT u FROM URL u WHERE u.users_user_id = :users_user_id")
+				result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.users_user_id = :users_user_id")
 						.setParameter("users_user_id", clientID)
 						.getResultList();
 				
@@ -972,6 +1070,7 @@ public class URLDBService{
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getURLAddressesStartingWith(String query, int noOfResults) {
 		
 		//log.info("Entering getURLAddresses");
@@ -999,6 +1098,7 @@ public class URLDBService{
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<URL> getTodaysSocialCrawlURLs(int noOfResults) {
 		log.info("Entering getTodaysSocialCrawlURLs");
 		List<URL> result = null;
@@ -1009,7 +1109,7 @@ public class URLDBService{
 		
 
 		try {
-			result =  mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date ORDER BY u.social_data_date")
+			result =  (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date ORDER BY u.social_data_date")
 					.setParameter("date", date, TemporalType.DATE)
 					.setMaxResults(noOfResults)
 					.getResultList();

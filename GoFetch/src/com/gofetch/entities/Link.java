@@ -24,8 +24,20 @@ public class Link implements Serializable {
 	private Integer links_id;
 	private static final long serialVersionUID = 1L;
 
-	@NotNull private Integer target_id;
-	@NotNull private Integer source_id;
+	//NEW:
+//	@OneToOne (fetch=FetchType.LAZY)
+//	@PrimaryKeyJoinColumn(name="url_id")
+//	URL targetURL;
+//	
+//	//NEW:
+//	@OneToOne (fetch=FetchType.LAZY)
+//	@PrimaryKeyJoinColumn(name="url_id")
+//	URL sourceURL;
+	
+	 //OLD: 
+	 @NotNull private Integer target_id;
+	 //OLD: 
+	 @NotNull private Integer source_id;
 
 	@NotNull private String anchor_text;
 
@@ -186,25 +198,46 @@ public class Link implements Serializable {
 			this.anchor_text = anchor_text;
 	}
 
-
+	///////////////////
+	// OLD:
+	
 	public Integer getTarget_id() {
 		return target_id;
 	}
-
 
 	public void setTarget_id(Integer target_id) {
 		this.target_id = target_id;
 	}
 
-
 	public Integer getSource_id() {
 		return source_id;
 	}
 
-
 	public void setSource_id(Integer source_id) {
 		this.source_id = source_id;
 	}
+	////////////////////////
+	
+	///////////////////////
+	// New:
+//	public Integer getTarget_id() {
+//		return targetURL.getId();
+//	}
+//
+//	public void setTarget_id(Integer target_id) {
+//		targetURL.setId(target_id);
+//	}
+//
+//	public Integer getSource_id() {
+//		return sourceURL.getId();
+//	}
+//
+//	public void setSource_id(Integer source_id) {
+//		sourceURL.setId(source_id);
+//	}
+	
+	//
+	//////////////////////
 
 
 	public Date getDate_detected() {
