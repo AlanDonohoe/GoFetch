@@ -24,6 +24,10 @@ public class Link implements Serializable {
 	private Integer links_id;
 	private static final long serialVersionUID = 1L;
 
+	//TODO: tried changing the link class to include two urls, but with JPA issues, when trying a join, I had to revert back to making a
+	// 	series of select calls, rather than 1 join - to get the links' target and source ids -> addresses for displaying a link with addresses
+	//		rather than ids to the user...
+	
 	//NEW:
 //	@OneToOne (fetch=FetchType.LAZY)
 //	@PrimaryKeyJoinColumn(name="url_id")

@@ -54,7 +54,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/el-impl-2.2.1-b05.jar">
+	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/el-impl-2.2.1-b05.jar" sourcepath="/Users/alandonohoe/.m2/repository/org/glassfish/web/el-impl/2.2.1-b05/el-impl-2.2.1-b05-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -64,7 +64,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-impl-2.0.9.jar">
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-impl-2.0.9.jar" sourcepath="/Users/alandonohoe/.m2/repository/com/sun/faces/jsf-impl/2.0.9/jsf-impl-2.0.9-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -119,7 +119,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink 2.3.2 - Indigo">
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink 2.3.3 - Indigo">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
 			<attribute name="owner.project.facets" value="jpt.jpa"/>

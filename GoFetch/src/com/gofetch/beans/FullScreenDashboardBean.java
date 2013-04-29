@@ -11,8 +11,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeSelectEvent;
+
+import com.charts.GoogleChartsWrapper;
 import com.gofetch.models.URLNodeImpl;
 import com.gofetch.entities.Link;
+import com.gofetch.entities.LinkDBService;
+import com.gofetch.entities.MiscSocialData;
+import com.gofetch.entities.MiscSocialDataDBService;
 import com.gofetch.entities.URL;
 import com.gofetch.entities.URLAndLinkData;
 import com.gofetch.entities.URLDBService;
@@ -44,10 +49,26 @@ public class FullScreenDashboardBean implements Serializable{
 	private List <User> clientsSelectedByUser = new ArrayList<User>();
 	private List <URL> sourceURLs = new ArrayList<URL>();
 	private List <Link> links = new ArrayList<Link>();
+	private List<URLAndLinkData> urlAndLinks = new ArrayList<URLAndLinkData>();
+	private List <MiscSocialData> socialData = new ArrayList<MiscSocialData>();
 	//private List<URL> targetURLs;// = new ArrayList<URL>(); // - initialize after we make call to DB.
 	  
 	//
 	///////////////
+	
+	//////////////////
+	// Helper objects
+	
+	private GoogleChartsWrapper googleSocialChart = new GoogleChartsWrapper();
+	private GoogleChartsWrapper googleBackLinksChart = new GoogleChartsWrapper();
+	
+//	private String chartData = "[" 
+//            + "['Year', 'Facebook', 'Twitter'],"
+//            + "['2004',  1000,      400],"
+//            + "['2005',  1170,      460],"
+//            + "['2006',  660,       1120],"
+//            + "['2007',  1030,      540]"
+//           + "]";
 	
 	
 	//////////////////////////////////////////////////////////
@@ -76,42 +97,47 @@ public class FullScreenDashboardBean implements Serializable{
 	///////////////////////////////////////////////////////
 	
 	
-	/////
-	// Testing:
-	 private String testing = "[" 
-	                          + "['Year', 'Facebook', 'Twitter'],"
-	                          + "['2004',  1000,      400],"
-	                          + "['2005',  1170,      460],"
-	                          + "['2006',  660,       1120],"
-	                          + "['2007',  1030,      540]"
-	                         + "]";
+	
 			 
-	public String getTesting() {
-		return testing;
-	}
-
-	public void setTesting(String testing) {
-		this.testing = testing;
-	}
+//	public String getChartData() {
+//		return chartData;
+//		//return googleChart.getChartDataString();
+//	}
+//
+//	public void setChartData(String chartData) {
+//		this.chartData = chartData;
+//	}
 	
 	
+	/*
+	 * We want to get all backlink data for the table and chart and all historical social data for table...
+	 */
 	public void onNodeSelected(NodeSelectEvent event){
 		
 		String urlAddress = event.getTreeNode().getData().toString();
-		//String urlAddress = ""; // nodeData.??
-		List<URLAndLinkData> urlAndLinks = null;
 		
-		int i = 1;
+		Integer urlID; 
 			
 		URLDBService urlDB = new URLDBService();
+		LinkDBService linkDB = new LinkDBService();
+		MiscSocialDataDBService socialDB = new MiscSocialDataDBService();
 		
-		//urlDB.getBackLinkURLs(urlAddress); 
+		urlID= urlDB.getURLIDFromAddress(urlAddress);
 		
-		sourceURLs = urlDB.getBackLinkURLs(15051);
+		//1: get back link data:
+		//TODO: struggling to turn this into  a join...
+		sourceURLs = urlDB.getBackLinkURLs(urlID);
+		links = linkDB.getAllLinks(urlID);
 		
-		urlAndLinks = urlDB.getURLAndLinkData(15051);
+		socialData = socialDB.getAllSocialData(urlID);
 		
-		i++;
+		googleSocialChart.parseSocialData(socialData);
+		googleBackLinksChart.parseBackLinkData(urlAddress, links, sourceURLs);
+		
+		
+		
+		//urlAndLinks = urlDB.getURLAndLinkData(urlID);
+		
 
 	}
 
@@ -131,6 +157,24 @@ public class FullScreenDashboardBean implements Serializable{
 		
 		showTree = false;
 		
+	/////
+		// Testing:
+		googleSocialChart.setSocialDataString("[" 
+	            + "['Year', 'Facebook', 'Twitter'],"
+	            + "['2004',  1000,      400],"
+	            + "['2005',  1170,      460],"
+	            + "['2006',  660,       1120],"
+	            + "['2007',  1030,      540]"
+	           + "]");
+//		googleChart.setChartDataString("[" 
+//		                          + "['Year', 'Facebook', 'Twitter'],"
+//		                          + "['2004',  1000,      400],"
+//		                          + "['2005',  1170,      460],"
+//		                          + "['2006',  660,       1120],"
+//		                          + "['2007',  1030,      540]"
+//		                         + "]");
+		
+		//TODO: delete when sure...
 		URL backLinkURL = new URL();
 		
 		//Need to get this somehow...
@@ -450,6 +494,14 @@ public class FullScreenDashboardBean implements Serializable{
 
 	public void setShowTree(boolean showTree) {
 		this.showTree = showTree;
+	}
+
+	public GoogleChartsWrapper getGoogleSocialChart() {
+		return googleSocialChart;
+	}
+
+	public void setGoogleSocialChart(GoogleChartsWrapper googleChart) {
+		this.googleSocialChart = googleChart;
 	}
 	
 	

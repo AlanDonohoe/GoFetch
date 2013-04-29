@@ -78,6 +78,21 @@ public class URLDBService{
 			
 	}
 	
+	/**
+	 * 
+	 * @param urlAddress id of the target URL to get all urls and link data for 
+	 * essentially a wrapper for "getURLAndLinkData(Integer targetURLid)"
+	 *  - just gets the id of the url address.
+	 * @return
+	 */
+	public List<URLAndLinkData> getURLAndLinkData(String urlAddress){
+	
+		Integer url_id = getURLIDFromAddress(urlAddress);
+		
+		return getURLAndLinkData(url_id);
+		
+	}
+	
 
 	
 	/**
@@ -94,19 +109,18 @@ public class URLDBService{
 		
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-		//JOIN l FROM Link l WHERE l.target_id = :id
-		// SELECT u FROM URL u JOIN Link l where l.target_id = :id
-		// SELECT l.source_id FROM Link l WHERE l.target_id = :id
+		
+		//TODO:  need to replace with as JPA join eventually...
 		
 		// actual working sql:
 		// select * from links INNER JOIN url ON links.target_id = url.url_id and links.target_id = 15051; 
 		try {   
-			result= (List<URLAndLinkData>) mgr.createQuery("SELECT l FROM Link l JOIN URL u where l.source_id = :u.url_id" )
-					.setParameter("id", targetURLid)
-					.getResultList();
+//			result= (List<URLAndLinkData>) mgr.createQuery("SELECT l FROM Link l INNER JOIN l.targetURL" )
+//					.getResultList(); 
+			
 			
 		}catch(Exception e){
-			String msg = "Exception thrown. URLService: getBackLinkURLs. ";
+			String msg = "Exception thrown. URLService: getURLAndLinkData. ";
 
 			log.severe(msg + e.getMessage());
 
