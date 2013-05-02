@@ -244,7 +244,7 @@ public class QueryGoFetchBean implements Serializable{
 	public List<String> complete(String query) {
 		
 		// new code:
-		urlDB = new URLDBService();
+		//urlDB = new URLDBService();
 		
 		results = urlDB.getURLAddressesStartingWith(query, 5);
 		

@@ -1,5 +1,6 @@
 package com.gofetch.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -23,7 +24,12 @@ import com.gofetch.utils.EqualsUtil;
  */
 @Entity
 @Table(name="misc_social_data")
-public class MiscSocialData {
+public class MiscSocialData implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

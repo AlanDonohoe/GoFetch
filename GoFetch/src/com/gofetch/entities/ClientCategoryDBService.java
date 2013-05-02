@@ -22,8 +22,14 @@ public class ClientCategoryDBService {
 	log.info("Entering getClientsDefaultCategory() for client id: " + clientID);
 		
 		List <ClientCategory> clientsDefaultCategory = null;
+		
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 		
 		try {
 			
@@ -53,8 +59,13 @@ public class ClientCategoryDBService {
 		log.info("Entering getClientsCategories() for client id: " + clientID);
 		
 		List <ClientCategory> clientsCategories = null;
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 		
 		try {
 			

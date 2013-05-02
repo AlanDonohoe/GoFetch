@@ -26,8 +26,13 @@ public class SEOMozDataDBService {
 
 		log.info("Entering createSEOMozData");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		//see if SEOMoz object already exists with url_id:
 		if(null == getSEOMozDataByURLId(seoMozDataObject.getUrl_id())){
@@ -62,9 +67,13 @@ public class SEOMozDataDBService {
 
 		SEOMozData SEOMozDataObject = null;
 
-
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		SEOMozDataObject = getSEOMozDataByURLId(url_id);
 
@@ -106,8 +115,13 @@ public class SEOMozDataDBService {
 		log.info("Entering getSEOMozDataByURLId.");
 
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			result = (List<SEOMozData>) mgr.createQuery("SELECT u FROM SEOMozData u WHERE u.url_id = :url_id")

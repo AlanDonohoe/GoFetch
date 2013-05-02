@@ -31,7 +31,6 @@ import com.gofetch.entities.UserDBService;
 @ViewScoped
 public class FullScreenDashboardBean implements Serializable{
 
-
 	//////////////
 	//
 	private static final long serialVersionUID = 1L;
@@ -62,14 +61,6 @@ public class FullScreenDashboardBean implements Serializable{
 	private GoogleChartsWrapper googleSocialChart = new GoogleChartsWrapper();
 	private GoogleChartsWrapper googleBackLinksChart = new GoogleChartsWrapper();
 	
-//	private String chartData = "[" 
-//            + "['Year', 'Facebook', 'Twitter'],"
-//            + "['2004',  1000,      400],"
-//            + "['2005',  1170,      460],"
-//            + "['2006',  660,       1120],"
-//            + "['2007',  1030,      540]"
-//           + "]";
-	
 	
 	//////////////////////////////////////////////////////////
 	// Data structures for drop downs, menus, etc.
@@ -96,19 +87,6 @@ public class FullScreenDashboardBean implements Serializable{
 	// flags end
 	///////////////////////////////////////////////////////
 	
-	
-	
-			 
-//	public String getChartData() {
-//		return chartData;
-//		//return googleChart.getChartDataString();
-//	}
-//
-//	public void setChartData(String chartData) {
-//		this.chartData = chartData;
-//	}
-	
-	
 	/*
 	 * We want to get all backlink data for the table and chart and all historical social data for table...
 	 */
@@ -128,13 +106,18 @@ public class FullScreenDashboardBean implements Serializable{
 		//TODO: struggling to turn this into  a join...
 		sourceURLs = urlDB.getBackLinkURLs(urlID);
 		links = linkDB.getAllLinks(urlID);
-		
+			
 		socialData = socialDB.getAllSocialData(urlID);
 		
-		googleSocialChart.parseSocialData(socialData);
-		googleBackLinksChart.parseBackLinkData(urlAddress, links, sourceURLs);
+		googleSocialChart.setSocialDataString(googleSocialChart.parseSocialDataToString(socialData));
+
+		// testing:
+		//googleSocialChart.setSocialDataString("[['Date', 'FB (Total)', 'Twitter', 'LinkedIn', 'GooglePlus', 'PInterest', 'Stumbles', 'Delicious'], ['12-08-2012',23,23,23,23,23,23,23],['11-09-2012',45,0,0,1,0,0,123],['27-09-2012',1,0,0,1,0,0,65],['17-11-2012',2,0,0,1,0,0,34]]");
 		
+		//googleSocialChart.setSocialDataString("[['Date', 'FB (Total)', 'Twitter', 'LinkedIn', 'GooglePlus', 'PInterest', 'Stumbles', 'Delicious'], ['12-08-2012',0,0,0,1,0,0,0],['11-09-2012',1,0,0,1,0,0,5],['27-09-2012',1,0,0,1,0,0,10],['17-11-2012',2,0,0,1,0,0,20]]");
+					// 						   [['Date', 'FB (Total)', 'Twitter','LinkedIn', 'GooglePlus','PInterest','Stumbles','Delicious'],     ['12-08-2012',  0,      0,      0,      1,0,0,0],['11-09-2012',  1,      0,      0,      1,0,0,5],['27-09-2012',  1,      0,      0,      1,0,0,10],['17-11-2012',  2,      0,      0,      1,0,0,20]];
 		
+		googleBackLinksChart.setBackLinkDataString(googleBackLinksChart.parseBackLinkData(urlAddress, links, sourceURLs));		
 		
 		//urlAndLinks = urlDB.getURLAndLinkData(urlID);
 		
@@ -156,23 +139,8 @@ public class FullScreenDashboardBean implements Serializable{
 	public FullScreenDashboardBean(){
 		
 		showTree = false;
-		
-	/////
-		// Testing:
-		googleSocialChart.setSocialDataString("[" 
-	            + "['Year', 'Facebook', 'Twitter'],"
-	            + "['2004',  1000,      400],"
-	            + "['2005',  1170,      460],"
-	            + "['2006',  660,       1120],"
-	            + "['2007',  1030,      540]"
-	           + "]");
-//		googleChart.setChartDataString("[" 
-//		                          + "['Year', 'Facebook', 'Twitter'],"
-//		                          + "['2004',  1000,      400],"
-//		                          + "['2005',  1170,      460],"
-//		                          + "['2006',  660,       1120],"
-//		                          + "['2007',  1030,      540]"
-//		                         + "]");
+
+		//googleSocialChart.setSocialDataString("[[]]");
 		
 		//TODO: delete when sure...
 		URL backLinkURL = new URL();
@@ -317,36 +285,6 @@ public class FullScreenDashboardBean implements Serializable{
 		
 		
 
-
-//		DefaultTreeNode documents = new DefaultTreeNode("Documents", root); 
-//		DefaultTreeNode pictures = new DefaultTreeNode("Pictures", root); 
-//		DefaultTreeNode music = new DefaultTreeNode("Music", root);
-//		DefaultTreeNode work = new DefaultTreeNode("Work", documents); 
-//		DefaultTreeNode primefaces = new DefaultTreeNode("PrimeFaces", documents);
-//		
-//		//Documents 
-//		DefaultTreeNode expenses = new DefaultTreeNode("document", "Expenses.doc", work); 
-//		DefaultTreeNode resume = new DefaultTreeNode("document", "Resume.doc", work); 
-//		DefaultTreeNode refdoc = new DefaultTreeNode("document", "RefDoc.pages", primefaces);
-//		
-//		//Pictures 
-//		DefaultTreeNode barca = new DefaultTreeNode("picture", "barcelona.jpg", pictures); 
-//		DefaultTreeNode primelogo = new DefaultTreeNode("picture", "logo.jpg", pictures); 
-//		DefaultTreeNode optimus = new DefaultTreeNode("picture", "optimus.png", pictures);
-//		
-//		//Music 
-//		DefaultTreeNode turkish = new DefaultTreeNode("Turkish", music);
-//		DefaultTreeNode cemKaraca = new DefaultTreeNode("Cem Karaca", turkish);
-//		DefaultTreeNode erkinKoray = new DefaultTreeNode("Erkin Koray", turkish); 
-//		DefaultTreeNode mogollar = new DefaultTreeNode("Mogollar", turkish);
-//		DefaultTreeNode nemalacak = new DefaultTreeNode("mp3", "Nem Alacak Felek Benim", cemKaraca); 
-//		DefaultTreeNode resimdeki = new DefaultTreeNode("mp3", "Resimdeki Goz Yaslari", cemKaraca);
-//		DefaultTreeNode copculer = new DefaultTreeNode("mp3", "Copculer", erkinKoray); 
-//		DefaultTreeNode oylebirgecer = new DefaultTreeNode("mp3", "Oyle Bir Gecer", erkinKoray);
-//		DefaultTreeNode toprakana = new DefaultTreeNode("mp3", "Toprak Ana", mogollar); 
-//		DefaultTreeNode bisiyapmali = new DefaultTreeNode("mp3", "Bisi Yapmali", mogollar);	
-		//
-			////////
 	}
 	
 		

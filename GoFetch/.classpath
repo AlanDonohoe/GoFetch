@@ -59,7 +59,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-api-2.0.9.jar">
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-api-2.0.9.jar" sourcepath="/Users/alandonohoe/.m2/repository/com/sun/faces/jsf-api/2.0.9/jsf-api-2.0.9-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>

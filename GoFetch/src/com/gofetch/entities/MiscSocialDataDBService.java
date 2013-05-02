@@ -21,8 +21,13 @@ public class MiscSocialDataDBService {
 
 		//log.info("Entering new MiscSocialData.");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 
@@ -48,9 +53,14 @@ public class MiscSocialDataDBService {
 		//log.info("Entering getMostRecentSocialData");
 		List<MiscSocialData> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		try {
 			result = (List<MiscSocialData>) mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id ORDER BY u.date desc")
 					.setParameter("url_id", url_id)
@@ -78,8 +88,13 @@ public class MiscSocialDataDBService {
 		//log.info("Entering getSocialDataBetween");
 		List<MiscSocialData> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			
@@ -110,11 +125,15 @@ public class MiscSocialDataDBService {
 	@SuppressWarnings("unchecked")
 	public List<MiscSocialData> getAllSocialData(int url_id){
 
-		//log.info("Entering getMostRecentSocialData");
 		List<MiscSocialData> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			result = (List<MiscSocialData>) mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id ORDER BY u.date desc")
@@ -125,7 +144,6 @@ public class MiscSocialDataDBService {
 			mgr.close();
 		}
 
-		//log.info("Exiting getMostRecentSocialData");
 		return result;
 	}
 	
@@ -133,9 +151,14 @@ public class MiscSocialDataDBService {
 		
 		//log.info("Entering deleteSocialData.");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 			try{
 				
 				mgr.getTransaction().begin();

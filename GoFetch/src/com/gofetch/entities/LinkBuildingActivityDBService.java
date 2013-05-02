@@ -22,9 +22,14 @@ public List<LinkBuildingActivity> getAllLinkActivities(){
 		
 		List<LinkBuildingActivity> linkActivities = null;
 		
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
 		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+//		
 		try { 																				
 			linkActivities= (List<LinkBuildingActivity>) mgr.createQuery("SELECT u FROM LinkBuildingActivity u ORDER BY u.activity ASC").getResultList();
 		}catch(Exception e){

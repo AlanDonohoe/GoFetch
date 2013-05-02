@@ -40,9 +40,13 @@ public class URLDBService{
 		List<URL> result = null;
 		//Integer id = targetURL.getId();
 		
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {   
 			result= (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = ANY (SELECT l.source_id FROM Link l WHERE l.target_id = :id)")
@@ -107,8 +111,13 @@ public class URLDBService{
 		
 		List<URLAndLinkData> result = null;
 		
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 		
 		//TODO:  need to replace with as JPA join eventually...
 		
@@ -176,8 +185,13 @@ public class URLDBService{
 		log.info("Entering getURLAddresses");
 		List<String> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try { 
 			result= (List<String>) mgr.createQuery("SELECT u.url_address FROM URL u").getResultList();
@@ -204,8 +218,13 @@ public class URLDBService{
 		
 		boolean urlInDB = false; // flag, set to true if URL already exists in DB.
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 
@@ -253,8 +272,13 @@ public class URLDBService{
 		log.info("Entering getURL[" + id + "]");
 		URL result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			result = mgr.find(URL.class, id);
@@ -285,8 +309,13 @@ public class URLDBService{
 
 		List<URL> url = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			url = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :address")
@@ -319,8 +348,13 @@ public class URLDBService{
 		log.info("Entering getURLs");
 		List<URL> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			result= mgr.createQuery("SELECT u FROM URL u ORDER BY u.url_address").getResultList();
@@ -345,9 +379,14 @@ public class URLDBService{
 		log.info("Entering getURLs");
 		List<URL> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		try {
 			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date")
 					.setParameter("date", date, TemporalType.DATE)
@@ -398,8 +437,13 @@ public class URLDBService{
 		log.info("Entering getTargetURLsFrom");
 		List<URL> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.date = :date AND u.get_backlinks = TRUE")
@@ -451,8 +495,13 @@ public class URLDBService{
 		log.info("Entering getURLsBetween");
 		List<URL> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.date BETWEEN :startDate AND :endDate")
@@ -524,9 +573,14 @@ public class URLDBService{
 		Integer url_id;
 		List<URL> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		try {
 			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_address = :urlAddress")
 					.setParameter("urlAddress", urlAddress)
@@ -554,8 +608,13 @@ public class URLDBService{
 		String address;
 		List<URL> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = :urlID")
@@ -587,8 +646,14 @@ public class URLDBService{
 	 */
 	public void updateURLAuthorityData(String urlAddress, Integer pa, Integer da){
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		int url_id;
 
 		try {
@@ -626,8 +691,14 @@ public class URLDBService{
 	 */
 	public void updateURLData(String urlAddress, Integer pa, Integer da, String docTitle){
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		int url_id;
 
 		try {
@@ -659,8 +730,13 @@ public class URLDBService{
 		
 		log.info("Entering URLService::updateSocialFrequencyData");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 
@@ -691,8 +767,13 @@ public class URLDBService{
 
 	public void updateDomainNames(List<URL> urls){
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+//		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 
@@ -730,8 +811,14 @@ public class URLDBService{
 	 */
 	public void updateBackLinksGot(URL url, boolean backLinksGot ){
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		int url_id;
 
 		try {
@@ -769,9 +856,14 @@ public class URLDBService{
 		log.info("Entering getSociallyTrackedURLs");
 		List<URL> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		try {
 			result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = TRUE")
 					.getResultList();
@@ -799,8 +891,13 @@ public class URLDBService{
 		// List<URL> result = null; // used if we use option 1
 		List<URL> urls = new ArrayList<URL>(); //used if we use option 2.
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		//TODO: decide: 2 options: - need to check in optimization....
 
@@ -884,8 +981,13 @@ public class URLDBService{
 		log.info("Entering deleteURL. Deleting " + url_id);
 
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try{
 			mgr.getTransaction().begin();
@@ -920,9 +1022,14 @@ public class URLDBService{
 
 		List<URL> urls = null; 
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		try {
 
 			urls = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_backlinks = TRUE and u.backlinks_got = false")
@@ -951,8 +1058,13 @@ public class URLDBService{
 		List<URL> result = null;
 		Date date = DateUtil.getTodaysDate();
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 		
 
 		try {
@@ -982,9 +1094,14 @@ public class URLDBService{
 		log.info("Entering getURLsOfClientCategory. Client Category = " + clientCategoryID);
 		List<URL> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		try { 
 			if(targetURLsOnly){
 				result = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.client_category_id = :client_category_id AND u.client_target_url = true")
@@ -1019,8 +1136,13 @@ public class URLDBService{
 		log.info("Entering getClientsURLs. Client ID = " + clientID);
 		List<URL> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			
@@ -1058,8 +1180,13 @@ public class URLDBService{
 	public void updateURLClientAndCampaign(URL targetURLDB) {
 		
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 
@@ -1090,8 +1217,13 @@ public class URLDBService{
 		//log.info("Entering getURLAddresses");
 		List<String> result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try { 
 			result= (List<String>) mgr.createQuery("SELECT u.url_address FROM URL u where u.url_address LIKE :query")
@@ -1118,8 +1250,13 @@ public class URLDBService{
 		List<URL> result = null;
 		Date date = DateUtil.getTodaysDate();
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 		
 
 		try {

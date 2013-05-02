@@ -30,7 +30,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
 
 	</context-param>
-
 	<!-- Disable use of threading for single-threaded environments such as
 
 	the Google AppEngine. -->
@@ -145,5 +144,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
+	
+	<description>ServletContextListener</description>
+  <listener>
+    <listener-class>com.gofetch.entities.PersistenceAppListener</listener-class>
+  </listener>
 
 </web-app>

@@ -36,8 +36,13 @@ public class LinkDBService{
 
 		log.info("Entering new link. Source: [" + link.getSource_id() + " Target: " + link.getTarget_id() + "]");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager(); 
+		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 		
 		// check that link does not already exist in DB with this target and source ID
 		// 5-2-13: removed this check and moved it to wrapper method : createLink(Link link, boolean checkAnchorText)
@@ -70,8 +75,13 @@ public class LinkDBService{
 
 		log.info("Entering getSourceURLsIDsPointingTo [" + finalTargetURLAddress + "]");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		//Integer targetURLID = targetURL.getId();
 
@@ -107,8 +117,13 @@ public class LinkDBService{
 
 		log.info("Entering getSourceURLIDsPointingTo [" + targetURL.getUrl_address() + "]");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		Integer targetURLID = targetURL.getId();
 
@@ -147,8 +162,13 @@ public class LinkDBService{
 
 		log.info("Entering getSourceURLsIDsPointingTo [" + targetURL.getUrl_address() + "]");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		Integer targetURLID = targetURL.getId();
 
@@ -189,8 +209,13 @@ public class LinkDBService{
 
 		Integer result =0;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		List<Link> links;
 
@@ -223,8 +248,13 @@ public class LinkDBService{
 
 		Integer result =0;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		List<Link> links;
 
@@ -252,8 +282,13 @@ public class LinkDBService{
 
 		//Link link;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try{
 
@@ -285,8 +320,13 @@ public class LinkDBService{
 
 		//Link link;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try{
 
@@ -319,8 +359,13 @@ public class LinkDBService{
 
 		//Link link;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+//		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try{
 			mgr.getTransaction().begin();
@@ -349,8 +394,13 @@ public class LinkDBService{
 
 		//Link link;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 
 		try{
@@ -384,8 +434,13 @@ public class LinkDBService{
 
 		log.info("Entering getAllLinks");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		List<Link> links;
 
@@ -407,8 +462,13 @@ public class LinkDBService{
 		log.info("Entering getLink[" + id + "]");
 		Link result = null;
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			result = mgr.find(Link.class, id);
@@ -431,8 +491,13 @@ public class LinkDBService{
 
 		log.info("Entering getURLIDsPointingTo");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		List<Integer> result;
 
@@ -458,8 +523,13 @@ public class LinkDBService{
 
 		log.info("Entering getLink");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		List<Link> links = null;
 
@@ -492,9 +562,14 @@ public class LinkDBService{
 
 		log.info("Entering getLink");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
-
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
+		
 		List<Link> links = null;
 
 
@@ -526,8 +601,13 @@ public class LinkDBService{
 
 		log.info("Entering getLink");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 
 		//List<Integer> result;
 		Integer result = 0;

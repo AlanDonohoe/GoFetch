@@ -21,25 +21,53 @@
 	
 	  google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
+	  
+	  
+	  
       function drawChart() {
 		  
-		  // from server
-        var dataServer = ${fullScreenDashboardBean.googleSocialChart.socialDataString};
+		  /*
+		var socialDataServer = ${fullScreenDashboardBean.googleSocialChart.socialDataString};
 		
-		var data = google.visualization.arrayToDataTable(dataServer);
+		var socialDataClient = google.visualization.arrayToDataTable(socialDataServer);
 		
         var options = {
-          title: 'Links'
+          title: ''
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('links_chart'));
-        chart.draw(data, options);
+        var chart = new google.visualization.LineChart(document.getElementById('social_history_chart'));
+        chart.draw(socialDataClient, options);
+		 */
       }
-	 
 	
+	
+	 </script>
+     
+     <script type="text/javascript">
+	 
+	 	function updateChart(){
+			
+		var hiddenSocialData = document.getElementById('centreContentForm:hiddenSocialDataString').value;
+		
+		var socialDataAr = eval(hiddenSocialData);
+		
+		var socialDataClientUpdated = google.visualization.arrayToDataTable(socialDataAr);
+		
+        var options = {
+          title: ''
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('social_history_chart'));
+        chart.draw(socialDataClientUpdated, options);
+	
+		}
+		
 	 </script>
 	<h:head />
 	<h:body>
+    
+    
+    
 		<p:layout fullPage="true" widgetVar="layoutWdgt">
 
 			<p:layoutUnit position="north" size="100">
@@ -141,13 +169,14 @@
 
 							<p:ajax event="select"
 								listener="#{fullScreenDashboardBean.onNodeSelected}"
+                                oncomplete="updateChart()"
 								update=":centreContentForm" />
 							<p:ajax event="expand"
 								listener="#{fullScreenDashboardBean.urlTreeBean.onNodeExpand}" />
 							<p:ajax event="collapse"
 								listener="#{fullScreenDashboardBean.urlTreeBean.onNodeCollapse}" />
 							<p:treeNode type="node">
-								<h:outputText value="#{node}" />
+								<h:outputText value="#{node}" />	
 							</p:treeNode>
 							<p:treeNode type="leaf">
 								<h:outputText value="#{node}" />
@@ -164,15 +193,18 @@
 				closable="true" collapsible="true">
 
 				<h:form id="centreContentForm">
+                
+                                <h:inputText id="hiddenSocialDataString" value="#{fullScreenDashboardBean.googleSocialChart.socialDataString}" style="display:none"></h:inputText>
+                                
 					<p:panel id="links_panel" header="Links" toggleable="true"
 						toggleSpeed="500" closeSpeed="500" widgetVar="links_panel">
-						<!--
+						<!--	
         <p:ajax event="close" listener="#{panelBean.handleClose}" update="growl" />  
         <p:ajax event="toggle" listener="#{panelBean.handleToggle}" update="growl" />  
         -->
 						<div id="links_chart"></div>
 					</p:panel>
-					<p:blockUI block="links_panel" trigger=":leftContentForm:tree1"> LOADING<br />
+					<p:blockUI block="links_panel" trigger=":leftContentForm:tree1"><br />
 						<p:graphicImage value="/images/ajax-loader.gif" />
 					</p:blockUI>
 					<p:panel id="social_history_panel" header="Social Data History"

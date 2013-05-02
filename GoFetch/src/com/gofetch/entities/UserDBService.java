@@ -19,8 +19,13 @@ public class UserDBService {
 		
 		log.info("Entering UserDBService::createNewUser.  \n");
 
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();		
 		
 		try {
 
@@ -48,8 +53,13 @@ public class UserDBService {
 		
 		List<User> clients = null;
 		
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 		
 		try { 
 			clients= (List<User>) mgr.createQuery("SELECT u FROM User u WHERE u.client = true ORDER BY u.displayed_name ASC").getResultList();
@@ -77,8 +87,13 @@ public class UserDBService {
 		
 		List<User> clients = null;
 		
+		//OLD
 		emf = Persistence.createEntityManagerFactory("GoFetch");
 		EntityManager mgr = emf.createEntityManager();
+		
+		// NEW
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+//		EntityManager mgr = emf.createEntityManager();
 		
 		try { 														
 			clients= (List<User>) mgr.createQuery("SELECT u FROM User u WHERE u.client = true AND u.displayed_name = :name")
