@@ -451,6 +451,7 @@ public class LinkDBService{
 
 		} finally {
 			mgr.close();
+			//PersistenceManager.getInstance().closeEntityManagerFactory();
 		}
 
 		log.info("Exiting getAllLinks"); 

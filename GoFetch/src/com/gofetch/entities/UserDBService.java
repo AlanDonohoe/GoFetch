@@ -70,6 +70,7 @@ public class UserDBService {
 
 		} finally {
 			mgr.close();
+			//PersistenceManager.getInstance().closeEntityManagerFactory();
 		}
 		if (clients == null) {
 			log.warning("No URLs returned");

@@ -60,6 +60,7 @@ public class URLDBService{
 
 		} finally {
 			mgr.close();
+			//PersistenceManager.getInstance().closeEntityManagerFactory();
 		}
 			
 		return result; 
@@ -1165,6 +1166,7 @@ public class URLDBService{
 
 		} finally {
 			mgr.close();
+			//PersistenceManager.getInstance().closeEntityManagerFactory();
 		}
 		if (result == null) {
 			log.info("No URLs returned");
