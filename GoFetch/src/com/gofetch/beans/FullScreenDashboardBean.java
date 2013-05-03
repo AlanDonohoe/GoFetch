@@ -106,18 +106,13 @@ public class FullScreenDashboardBean implements Serializable{
 		//TODO: struggling to turn this into  a join...
 		sourceURLs = urlDB.getBackLinkURLs(urlID);
 		links = linkDB.getAllLinks(urlID);
-			
+		
 		socialData = socialDB.getAllSocialData(urlID);
 		
-		googleSocialChart.setSocialDataString(googleSocialChart.parseSocialDataToString(socialData));
-
-		// testing:
-		//googleSocialChart.setSocialDataString("[['Date', 'FB (Total)', 'Twitter', 'LinkedIn', 'GooglePlus', 'PInterest', 'Stumbles', 'Delicious'], ['12-08-2012',23,23,23,23,23,23,23],['11-09-2012',45,0,0,1,0,0,123],['27-09-2012',1,0,0,1,0,0,65],['17-11-2012',2,0,0,1,0,0,34]]");
+		googleSocialChart.parseSocialDataToString(socialData);
+		googleBackLinksChart.parseBackLinkData(urlAddress, links, sourceURLs);
 		
-		//googleSocialChart.setSocialDataString("[['Date', 'FB (Total)', 'Twitter', 'LinkedIn', 'GooglePlus', 'PInterest', 'Stumbles', 'Delicious'], ['12-08-2012',0,0,0,1,0,0,0],['11-09-2012',1,0,0,1,0,0,5],['27-09-2012',1,0,0,1,0,0,10],['17-11-2012',2,0,0,1,0,0,20]]");
-					// 						   [['Date', 'FB (Total)', 'Twitter','LinkedIn', 'GooglePlus','PInterest','Stumbles','Delicious'],     ['12-08-2012',  0,      0,      0,      1,0,0,0],['11-09-2012',  1,      0,      0,      1,0,0,5],['27-09-2012',  1,      0,      0,      1,0,0,10],['17-11-2012',  2,      0,      0,      1,0,0,20]];
 		
-		googleBackLinksChart.setBackLinkDataString(googleBackLinksChart.parseBackLinkData(urlAddress, links, sourceURLs));		
 		
 		//urlAndLinks = urlDB.getURLAndLinkData(urlID);
 		
@@ -139,8 +134,6 @@ public class FullScreenDashboardBean implements Serializable{
 	public FullScreenDashboardBean(){
 		
 		showTree = false;
-
-		//googleSocialChart.setSocialDataString("[[]]");
 		
 		//TODO: delete when sure...
 		URL backLinkURL = new URL();
