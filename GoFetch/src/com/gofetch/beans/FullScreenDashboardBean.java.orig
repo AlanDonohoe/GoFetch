@@ -12,8 +12,8 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.NodeSelectEvent;
 
+import com.charts.GoogleChartsWrapper;
 import com.gofetch.models.URLNodeImpl;
-import com.gofetch.charts.GoogleChartsWrapper;
 import com.gofetch.entities.Link;
 import com.gofetch.entities.LinkDBService;
 import com.gofetch.entities.MiscSocialData;
