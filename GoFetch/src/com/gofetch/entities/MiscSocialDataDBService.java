@@ -6,14 +6,14 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceUnit;
+//import javax.persistence.Persistence;
+//import javax.persistence.PersistenceUnit;
 import javax.persistence.TemporalType;
 
 public class MiscSocialDataDBService {
 
-	@PersistenceUnit(unitName="GoFetch")
-	EntityManagerFactory emf;
+//	@PersistenceUnit(unitName="GoFetch")
+//	EntityManagerFactory emf;
 
 	private static Logger log = Logger.getLogger(MiscSocialDataDBService.class.getName());
 
@@ -22,12 +22,12 @@ public class MiscSocialDataDBService {
 		//log.info("Entering new MiscSocialData.");
 
 		//OLD
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
+//		emf = Persistence.createEntityManagerFactory("GoFetch");
+//		EntityManager mgr = emf.createEntityManager();
 		
 		// NEW
-//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-//		EntityManager mgr = emf.createEntityManager();
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
 
 		try {
 
@@ -54,12 +54,12 @@ public class MiscSocialDataDBService {
 		List<MiscSocialData> result = null;
 
 		//OLD
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
+//		emf = Persistence.createEntityManagerFactory("GoFetch");
+//		EntityManager mgr = emf.createEntityManager();
 		
 		// NEW
-//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-//		EntityManager mgr = emf.createEntityManager();
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
 		
 		try {
 			result = (List<MiscSocialData>) mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id ORDER BY u.date desc")
@@ -89,12 +89,12 @@ public class MiscSocialDataDBService {
 		List<MiscSocialData> result = null;
 
 		//OLD
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
+//		emf = Persistence.createEntityManagerFactory("GoFetch");
+//		EntityManager mgr = emf.createEntityManager();
 		
 		// NEW
-//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-//		EntityManager mgr = emf.createEntityManager();
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			
@@ -128,12 +128,12 @@ public class MiscSocialDataDBService {
 		List<MiscSocialData> result = null;
 
 		//OLD
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
+//		emf = Persistence.createEntityManagerFactory("GoFetch");
+//		EntityManager mgr = emf.createEntityManager();
 		
 		// NEW
-//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-//		EntityManager mgr = emf.createEntityManager();
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
 
 		try {
 			result = (List<MiscSocialData>) mgr.createQuery("SELECT u FROM MiscSocialData u WHERE u.url_id = :url_id ORDER BY u.date desc")
@@ -152,12 +152,12 @@ public class MiscSocialDataDBService {
 		//log.info("Entering deleteSocialData.");
 
 		//OLD
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
+//		emf = Persistence.createEntityManagerFactory("GoFetch");
+//		EntityManager mgr = emf.createEntityManager();
 		
 		// NEW
-//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-//		EntityManager mgr = emf.createEntityManager();
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
 		
 			try{
 				

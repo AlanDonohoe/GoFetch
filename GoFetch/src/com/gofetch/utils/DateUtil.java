@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.joda.time.DateTime;
+
 public class DateUtil {
 
 	static private final long MILLIS_IN_A_DAY = 86400000; // = 1000*60*60*24; 
@@ -26,6 +28,11 @@ public class DateUtil {
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		java.util.Date utilDate = cal.getTime();
 		Date date = new Date(utilDate.getTime());
+		
+		//TODO: replace all these with joda time impl...
+		//Jodatime impl:
+		
+		DateTime dt = new DateTime();
 
 		return date;
 

@@ -1,7 +1,6 @@
 package com.gofetch.entities;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Represents a tree of urls, which is implemented using a list of URLNodes

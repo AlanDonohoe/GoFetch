@@ -5,13 +5,13 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceUnit;
+//import javax.persistence.Persistence;
+//import javax.persistence.PersistenceUnit;
 
 public class ClientCategoryDBService {
 
-	@PersistenceUnit(unitName="GoFetch")
-	EntityManagerFactory emf;
+//	@PersistenceUnit(unitName="GoFetch")
+//	EntityManagerFactory emf;
 
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
 	
@@ -24,12 +24,12 @@ public class ClientCategoryDBService {
 		List <ClientCategory> clientsDefaultCategory = null;
 		
 		//OLD
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
+//		emf = Persistence.createEntityManagerFactory("GoFetch");
+//		EntityManager mgr = emf.createEntityManager();
 		
 		// NEW
-//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-//		EntityManager mgr = emf.createEntityManager();
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
 		
 		try {
 			
@@ -60,12 +60,12 @@ public class ClientCategoryDBService {
 		
 		List <ClientCategory> clientsCategories = null;
 		//OLD
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
+//		emf = Persistence.createEntityManagerFactory("GoFetch");
+//		EntityManager mgr = emf.createEntityManager();
 		
 		// NEW
-//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-//		EntityManager mgr = emf.createEntityManager();
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
 		
 		try {
 			

@@ -5,13 +5,13 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceUnit;
+//import javax.persistence.Persistence;
+//import javax.persistence.PersistenceUnit;
 
 public class LinkBuildingActivityDBService {
  	
-	@PersistenceUnit(unitName="GoFetch")
-	EntityManagerFactory emf;
+//	@PersistenceUnit(unitName="GoFetch")
+//	EntityManagerFactory emf;
 
 	private static Logger log = Logger.getLogger(UserDBService.class.getName());
 	
@@ -22,14 +22,14 @@ public List<LinkBuildingActivity> getAllLinkActivities(){
 		
 		List<LinkBuildingActivity> linkActivities = null;
 		
-		//OLD
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
+//		//OLD
+//		emf = Persistence.createEntityManagerFactory("GoFetch");
+//		EntityManager mgr = emf.createEntityManager();
 		
 		// NEW
-//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-//		EntityManager mgr = emf.createEntityManager();
-//		
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
 		try { 																				
 			linkActivities= (List<LinkBuildingActivity>) mgr.createQuery("SELECT u FROM LinkBuildingActivity u ORDER BY u.activity ASC").getResultList();
 		}catch(Exception e){
