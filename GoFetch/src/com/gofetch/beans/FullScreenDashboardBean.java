@@ -131,7 +131,7 @@ public class FullScreenDashboardBean implements Serializable{
 		
 		socialData = socialDB.getAllSocialData(urlID);
 		
-		googleSocialChart.parseSocialData(socialData);
+		googleSocialChart.parseSocialDataToString(socialData);
 		googleBackLinksChart.parseBackLinkData(urlAddress, links, sourceURLs);
 		
 		
@@ -239,7 +239,7 @@ public class FullScreenDashboardBean implements Serializable{
 					
 					clientsSelectedByUser.add(clientsFromDB.get(a));
 					
-					// and add to the tree:
+					// and add to the tree: 
 				
 					URLNodeImpl newNode = new URLNodeImpl(clientsFromDB.get(a).getDisplayed_name(), urlTreeBean.getModel());
 					
