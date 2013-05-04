@@ -303,6 +303,12 @@ public class ProcessNewTargets extends HttpServlet {
 			url.setSeomoz_url(true); //TODO: delete this field
 			url.setBacklinks_got(false);
 			url.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_SEOMOZ); 
+			
+			if(null != currentURL.getClient_category_id())
+				url.setClient_category_id(currentURL.getClient_category_id());
+			
+			if(null != currentURL.getUsers_user_id())
+				url.setUsers_user_id(currentURL.getUsers_user_id());
 
 			//TODO: THIS IS SET TO ZERO for now - up above, as want to move this to the datatable page.
 //			url.setNo_of_layers(newNoOfLayers);
