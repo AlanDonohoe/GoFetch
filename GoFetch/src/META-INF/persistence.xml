@@ -12,7 +12,7 @@
 		<class>com.gofetch.entities.LinkBuildingActivity</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.google.appengine.api.rdbms.AppEngineDriver"/>
-			<property name="javax.persistence.jdbc.url" value="jdbc:google:rdbms://kastle2gofetch/url"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:google:rdbms://kastle2gofetch:url/url"/>
 			<property name="javax.persistence.jdbc.user" value="kastle2"/>
 			<property name="javax.persistence.jdbc.password" value="kastle2"/>
 		</properties>
