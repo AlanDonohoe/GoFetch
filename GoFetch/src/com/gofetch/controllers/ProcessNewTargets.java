@@ -416,6 +416,13 @@ public class ProcessNewTargets extends HttpServlet {
 				link.setFinal_target_url_id(currentURL.getId());
 				
 				link.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_SEOMOZ);
+				
+				//set the client this link is associated with and the campaign if any...
+				if(null!=currentURL.getUsers_user_id())
+					link.setUsers_user_id(currentURL.getUsers_user_id());
+				
+				if(null!=currentURL.getClient_category_id())
+					link.setClient_category_id(currentURL.getClient_category_id());
 
 				linksDBUnit.createLink(link, false);
 			}

@@ -109,8 +109,8 @@ public class FullScreenDashboardBean implements Serializable{
 		
 		socialData = socialDB.getAllSocialData(urlID);
 		
-		googleSocialChart.parseSocialDataToString(socialData);
-		googleBackLinksChart.parseBackLinkData(urlAddress, links, sourceURLs);
+		googleSocialChart.setSocialDataString(googleSocialChart.parseSocialDataToString(socialData));
+		googleBackLinksChart.setBackLinkDataString(googleBackLinksChart.parseBackLinkData(urlAddress, links, sourceURLs));
 		
 		
 		
