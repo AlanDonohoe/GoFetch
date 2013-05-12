@@ -1,5 +1,6 @@
 package com.gofetch.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -7,15 +8,21 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 //import javax.persistence.Persistence;
 //import javax.persistence.PersistenceUnit;
 //import javax.persistence.TemporalType;
 
-public class LinkDBService{
+public class LinkDBService implements Serializable{
 
 //	@PersistenceUnit(unitName="GoFetch")
 //	EntityManagerFactory emf;
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
 	
 	public void createLink(Link link, boolean checkAnchorText){
@@ -219,6 +226,8 @@ public class LinkDBService{
 
 		List<Link> links;
 
+		//TODO: test and replace the new way and delete the old way...
+		// Old way - 
 		try {
 			links = (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :urlID OR u.source_id = :urlID")
 					.setParameter("urlID",  urlID)
@@ -229,11 +238,47 @@ public class LinkDBService{
 		}
 
 		result = links.size();
+		
+		// new way:
+//		
+//		try {
+//			result = (Integer) mgr.createQuery("SELECT COUNT(u) FROM Link u WHERE u.target_id = :urlID")
+//			.setParameter("urlID",  urlID)
+//			.getSingleResult();
+//		} finally {
+//			mgr.close();
+//		}
 
 		log.info("Exiting noOfTimesURLIsLinkedTo(...)");
 
 		return result;
 
+	}
+	/**
+	 * returns the no of times the url is a target url in links table.
+	 * @param urlID
+	 * @return
+	 */
+	public Long noOfTimesURLIsTargetURL(Integer urlID){
+		
+		
+		Long result = null;
+		
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		try {
+			result = (Long) mgr.createQuery("SELECT COUNT(u) FROM Link u WHERE u.target_id = :urlID")
+			.setParameter("urlID",  urlID)
+			.getSingleResult();
+		}catch(Exception e){
+			String msg = "Exception thrown getting data for: " + urlID + "LinkDBService: noOfTimesURLIsTargetURL \n";
+			log.severe(msg + e.getMessage());
+		} finally {
+			mgr.close();
+		}
+		
+		return result;
 	}
 
 	/**
@@ -628,5 +673,41 @@ public class LinkDBService{
 
 		return result;
 
+	}
+
+	// see: http://en.wikibooks.org/wiki/Java_Persistence/Querying#Pagination.2C_Max.2FFirst_Results
+	// for pagination.... queries...
+	// and: https://groups.google.com/forum/?fromgroups=#!topic/google-appengine-java/VczI0tK-6-g
+	// - for ordering of setting query params...
+	// see this for getting setMaxResults - http://stackoverflow.com/questions/16484357/jpa-setmaxresults-not-working-query-returns-all-rows
+	@SuppressWarnings("unchecked")
+	public List<Link> getAllLinks(int targetURLId, int limitStart,
+			Integer limitEnd) {
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		List<Link> links;
+
+		try {
+			
+			//NEW:
+			Query query = mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :urlID ORDER BY u.links_id");
+			query.setFirstResult(limitStart);
+			query.setMaxResults(limitEnd);
+			query.setParameter("urlID",  targetURLId);
+			
+			links = (List<Link>)query.getResultList();
+			// OLD
+//			links = (List<Link>) mgr.createQuery("SELECT u FROM Link u WHERE u.target_id = :urlID")
+//					.setFirstResult(limitStart).setMaxResults(limitEnd)
+//					.setParameter("urlID",  targetURLId)
+//					.getResultList();
+
+		} finally {
+			mgr.close();
+		}
+
+
+		return links;
 	}
 }

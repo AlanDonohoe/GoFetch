@@ -1,5 +1,6 @@
 package com.gofetch.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 //import javax.persistence.Persistence;
 //import javax.persistence.PersistenceUnit;
 import javax.persistence.TemporalType;
@@ -19,11 +21,15 @@ import com.gofetch.utils.DateUtil;
  *
  */
 
-public class URLDBService{
+public class URLDBService implements Serializable{
 
 //	@PersistenceUnit(unitName="GoFetch")
 //	EntityManagerFactory emf;
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
 	
 	
@@ -1280,5 +1286,45 @@ public class URLDBService{
 		}
 		log.info("Exiting getURLs");
 		return result;
+	}
+
+	// see: http://en.wikibooks.org/wiki/Java_Persistence/Querying#Pagination.2C_Max.2FFirst_Results
+	// for limiting results... and ordering correclty...
+	@SuppressWarnings("unchecked")
+	public List<URL> getBackLinkURLs(int targetURLId, int limitStart,
+			Integer limitEnd) {
+		
+		List<URL> result = null;
+		// temp test 
+		//limitStart = 1;
+		
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		Query query = mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = ANY (SELECT l.source_id FROM Link l WHERE l.target_id = :id) ORDER BY u.url_id");
+		query.setParameter("id", targetURLId);
+		query.setFirstResult(limitStart);
+		query.setMaxResults(limitEnd);
+
+		try {   
+			//NEW:
+			result= query.getResultList();
+			
+			//OLD:
+//			result= (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = ANY (SELECT l.source_id FROM Link l WHERE l.target_id = :id)")
+//					.setFirstResult(limitStart).setMaxResults(limitEnd)
+//					.setParameter("id", targetURLId)
+//					.getResultList();
+			
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getBackLinkURLs. ";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+			
+		return result; 
 	}
 }

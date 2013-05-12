@@ -8,6 +8,7 @@ import net.minidev.json.JSONArray;
 import com.gofetch.entities.Link;
 import com.gofetch.entities.MiscSocialData;
 import com.gofetch.entities.URL;
+import com.gofetch.entities.URLAndLinkData;
 import com.jayway.jsonpath.JsonPath;
 
 public class GoogleChartsWrapper implements Serializable{
@@ -187,6 +188,12 @@ public class GoogleChartsWrapper implements Serializable{
 	
 	public String parseBackLinkData(String targetURLAddress, List<Link> links,
 			List<URL> sourceURLs) {
+
+		return "";
+		
+	}
+	
+	public String parseBackLinkData(String targetURLAddress, List<URLAndLinkData> backLinkData) {
 
 		return "";
 		

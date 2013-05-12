@@ -35,6 +35,7 @@ $(document).ready(function(){
 	$('.client_dashboard').hide();
 	$('.contacts_dashboard').hide();
 	$('.urlLinks_dashboard').hide();
+	//$('#links_panel').hide();
 	
 });
 

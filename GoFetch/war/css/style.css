@@ -229,8 +229,8 @@ header {
     height: 50px;
 	*/
 	width:100%;
-    height:100%;
-    margin:20px 0 0px 0;
+    height:40px;
+    margin:0px 0 0px 0;
 	
 }
 .lavaLampBottomStyle {
@@ -2772,11 +2772,8 @@ clear: left;
 }
 
 #companyheader{
-	height: 70px;
-	border-bottom: solid;
-	border-bottom-width: 1px;
-	border-bottom-color:#CCC;
-	display:inline-block;
+	height: auto;
+	
 	
 }
 
@@ -2841,9 +2838,10 @@ display: block;
 }
 
 #north_content_form\3Atop_toolbar{
-	/*width: 1100px !important; */
-	width:100%;
-	float: right !important;
+	/*width: 1100px !important;
+	width:100% */
+	width:auto; 
+	float: left !important;
 	display:inline-block;
 }
 
@@ -2857,6 +2855,7 @@ display: block;
 	 width:100%;
 	 height:100%;
 }
+
 
 /* 
     Document   : custom-tree.css
@@ -2882,8 +2881,12 @@ display: block;
     height: 16px;
     width: 16px;
 }
-*/
 
+
+.ui-tree {
+	width:100%;
+}
+*/
 #select_client {
 	
 	 padding:5px;
@@ -2898,4 +2901,8 @@ display: block;
 
 #top_right_container li{
 	display:inline-block;
+}
+
+#centreContentForm\3AdynaButton{
+	float:left;
 }

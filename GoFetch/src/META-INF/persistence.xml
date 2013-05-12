@@ -15,6 +15,7 @@
 			<property name="javax.persistence.jdbc.url" value="jdbc:google:rdbms://kastle2gofetch:url/url"/>
 			<property name="javax.persistence.jdbc.user" value="kastle2"/>
 			<property name="javax.persistence.jdbc.password" value="kastle2"/>
+			<property name="eclipselink.target-database" value="MySQL"/>
 		</properties>
 	</persistence-unit>
 </persistence>

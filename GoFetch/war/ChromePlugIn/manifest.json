@@ -1,7 +1,7 @@
 {
   "name": "Propellernet Power Plugin",
   "description": "Puts The Full Power of Propellernet in Your Browser",
-  "version": "1.0",
+  "version": "1.1",
   "permissions": ["contextMenus"],
   "icons": { "48": "icon48.jpg" },
   "background": {

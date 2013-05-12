@@ -1,18 +1,24 @@
 package com.gofetch.entities;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 //import javax.persistence.Persistence;
 //import javax.persistence.PersistenceUnit;
 
-public class LinkBuildingActivityDBService {
+public class LinkBuildingActivityDBService implements Serializable{
  	
 //	@PersistenceUnit(unitName="GoFetch")
 //	EntityManagerFactory emf;
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(UserDBService.class.getName());
 	
 @SuppressWarnings("unchecked")
@@ -30,7 +36,7 @@ public List<LinkBuildingActivity> getAllLinkActivities(){
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
-		try { 																				
+		try { 
 			linkActivities= (List<LinkBuildingActivity>) mgr.createQuery("SELECT u FROM LinkBuildingActivity u ORDER BY u.activity ASC").getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown. LinkBuildingActivityDBService::getAllLinkActivities";

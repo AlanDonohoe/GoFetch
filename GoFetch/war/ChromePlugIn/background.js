@@ -7,7 +7,7 @@ function genericOnClick(info, tab) {
   var target = encodeURIComponent(info.linkUrl);
   var source = encodeURIComponent(info.pageUrl);
   var anchor = encodeURIComponent(info.selectionText);
-  chrome.tabs.create({'url': 'http://localhost:8888/enterlink.jsf?target='+target+'&source='+source+'&anchor='+anchor}, function(window) {
+  chrome.tabs.create({'url': 'http://gofetchdata.appspot.com/enterlink.jsf?target='+target+'&source='+source+'&anchor='+anchor}, function(window) {
   	
   });
 }
