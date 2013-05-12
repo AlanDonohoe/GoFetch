@@ -1293,7 +1293,7 @@ public class URLDBService implements Serializable{
 	@SuppressWarnings("unchecked")
 	public List<URL> getBackLinkURLs(int targetURLId, int limitStart,
 			Integer limitEnd) {
-		
+		log.info("Entering getBackLinkURLs: Start = " + Integer.toString(limitStart) + ". End = " + Integer.toString(limitEnd));
 		List<URL> result = null;
 		// temp test 
 		//limitStart = 1;
@@ -1309,6 +1309,7 @@ public class URLDBService implements Serializable{
 		try {   
 			//NEW:
 			result= query.getResultList();
+			log.info("getBackLinkURLs: No Of Results: " + Integer.toString(result.size()));
 			
 			//OLD:
 //			result= (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = ANY (SELECT l.source_id FROM Link l WHERE l.target_id = :id)")

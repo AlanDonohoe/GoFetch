@@ -277,6 +277,8 @@ public class FullScreenDashboardBean implements Serializable {
 	 */
 	public void onNodeSelect(NodeSelectEvent event) {	
 		
+		log.info("Entering FullScreenDashboard::onNodeSelect(...)");
+		
 		Integer urlID;
 		String urlAddress;
 
@@ -286,8 +288,12 @@ public class FullScreenDashboardBean implements Serializable {
 		
 		urlAddress = event.getTreeNode().getData().toString();
 		
+		log.info("FullScreenDashboard::onNodeSelect: urlAddress = " + urlAddress);
+		
 		// Get backlink datatable data from DB.
 		urlID = urlDB.getURLIDFromAddress(urlAddress);
+		
+		log.info("FullScreenDashboard::onNodeSelect: urlID = " + Integer.toString(urlID));
 		
 		// if there's no urlID - assume we are dealing with a client parent node
 		if(0 == urlID){

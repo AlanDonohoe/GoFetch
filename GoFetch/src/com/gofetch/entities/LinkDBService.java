@@ -683,6 +683,8 @@ public class LinkDBService implements Serializable{
 	@SuppressWarnings("unchecked")
 	public List<Link> getAllLinks(int targetURLId, int limitStart,
 			Integer limitEnd) {
+		
+		log.info("Entering getAllLinks. Start = " + Integer.toString(limitStart) + ". End = " + Integer.toString(limitEnd));
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -702,6 +704,8 @@ public class LinkDBService implements Serializable{
 //					.setFirstResult(limitStart).setMaxResults(limitEnd)
 //					.setParameter("urlID",  targetURLId)
 //					.getResultList();
+			
+			log.info("getBackLinkURLs: No Of Results: " + Integer.toString(links.size()));
 
 		} finally {
 			mgr.close();
