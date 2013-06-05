@@ -34,11 +34,16 @@ public class DeleteURL extends HttpServlet{
 //		LinkDBService linksDB = new LinkDBService();
 //		MiscSocialDataDBService socialDataDB = new MiscSocialDataDBService();
 
+		///////
+		// this is the code that actually does something... thses 2 lines
 		String deleteURL = req.getParameter("url_to_delete");
 
-//		URL url =  urlsDB.getURL(deleteURL);
+
+		//Seems a bit dangerous.... comment out for now...
+		//deleteTreeWithURLAsRoot(deleteURL);
 		
-		deleteTreeWithURLAsRoot(deleteURL);
+		//
+		//////////////////
 //		
 //		//check to see if url is in DB:
 //		if(url != null){

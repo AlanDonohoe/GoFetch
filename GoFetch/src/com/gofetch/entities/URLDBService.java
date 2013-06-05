@@ -111,7 +111,6 @@ public class URLDBService implements Serializable{
 	 * @param targetURL_ID id of the target URL to get all urls and link data for 
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<URLAndLinkData> getURLAndLinkData(Integer targetURLid){
 		
 		log.info("Entering getURLAndLinkData");

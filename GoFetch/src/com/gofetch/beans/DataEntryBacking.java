@@ -39,6 +39,8 @@ public class DataEntryBacking implements Serializable {
 
 	private static Logger log = Logger.getLogger(DataEntryBacking.class
 			.getName());
+	
+	private URLDBService urlDB = null;
 
 	// bean for each tab content within this bean
 	private EnterLinkBean linkBean = new EnterLinkBean();
@@ -675,10 +677,11 @@ public class DataEntryBacking implements Serializable {
 
 		linkBean.fillClientsList();
 
-		if (urlAddressesInDB.isEmpty()) {
-			URLDBService urlDB = new URLDBService();
-			urlAddressesInDB = urlDB.getURLAddresses();
-		}
+		//15-5-13 - moved to get get adresses like - with maxresults... limit etc which is called when needed..
+//		if (urlAddressesInDB.isEmpty()) {
+//			URLDBService urlDB = new URLDBService();
+//			urlAddressesInDB = urlDB.getURLAddresses();
+//		}
 
 		// //////
 		// TODO: put all Link Activity fetching in this method.. and called above:
@@ -1100,13 +1103,19 @@ public class DataEntryBacking implements Serializable {
 		//			URLDBService urlDB = new URLDBService();
 		//			urlAddressesInDB = urlDB.getURLAddresses();
 		//		}
-
-		for (String possibleURL : urlAddressesInDB) {
-
-			if (possibleURL.startsWith(query)) {
-				resultsAutoComplete.add(possibleURL);
-			}
-		}
+		
+//		
+//
+//		for (String possibleURL : urlAddressesInDB) {
+//
+//			if (possibleURL.startsWith(query)) {
+//				resultsAutoComplete.add(possibleURL);
+//			}
+//		}
+		
+		urlDB = new URLDBService();
+		
+		resultsAutoComplete = urlDB.getURLAddressesStartingWith(query, 5);
 
 		return resultsAutoComplete;
 	}

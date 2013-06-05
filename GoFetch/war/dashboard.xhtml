@@ -2,82 +2,18 @@
     <!ENTITY nbsp "&#160;"> 
 ]>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
-<f:view contentType="text/html">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	lang="en">
+    
+    <h:head>
 
 	<link type="text/css" rel="stylesheet" href="css/style.css"></link>
-	<script
-		src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	<script type="text/javascript" src="js/dashboard.js"></script>
-	<script type="text/javascript" src="js/dashboard_charts.js"></script>
-
-	<script type="text/javascript">
-
-	// move all this somehow to dashboard_charts.js
 	
-	  google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(drawChart);
-	  
-	  
-	  
-      function drawChart() {
-		  
-		  /*
-		var socialDataServer = ${fullScreenDashboardBean.googleSocialChart.socialDataString};
-		
-		var socialDataClient = google.visualization.arrayToDataTable(socialDataServer);
-		
-        var options = {
-          title: ''
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('social_history_chart'));
-        chart.draw(socialDataClient, options);
-		 */
-      }
-	
-	
-	 </script>
-     
-     <script type="text/javascript">
-	 
-	 	function updateChart(){
-			
-		var hiddenSocialData = document.getElementById('centreContentForm:hiddenSocialDataString').value;
-		
-		var socialDataAr = eval(hiddenSocialData);
-		
-		var socialDataClientUpdated = google.visualization.arrayToDataTable(socialDataAr);
-		
-        var options = {
-          title: ''
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('social_history_chart'));
-        chart.draw(socialDataClientUpdated, options);
-	
-		}
-		
-	 </script>
-     
-    <script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38606779-2']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-	<h:head />
+	</h:head>
 	<h:body>
     
     
@@ -189,7 +125,7 @@
 							autoUpdate="true" />
 
 						<p:tree id="tree1"
-							value="#{fullScreenDashboardBean.urlTreeBean.model}" var="node"
+							value="#{fullScreenDashboardBean.urlTreeBean.root}" var="node"
 							selectionMode="checkbox"
 							selection="#{fullScreenDashboardBean.selectedNodes}"
 							rendered="#{fullScreenDashboardBean.showTree}" dyanmic="true"
@@ -213,12 +149,10 @@
 							<p:ajax event="collapse"
 								listener="#{fullScreenDashboardBean.urlTreeBean.onNodeCollapse}" />
                                 -->
-							<p:treeNode type="node">
+							<p:treeNode>
 								<h:outputText value="#{node}" />	
 							</p:treeNode>
-							<p:treeNode type="leaf">
-								<h:outputText value="#{node}" />
-							</p:treeNode>
+
 						</p:tree>
 					</div>
 					 <p:blockUI block="tree1" trigger="tree1"><br />
@@ -446,5 +380,4 @@
 
 		</p:layout>
 	</h:body>
-</f:view>
 </html>

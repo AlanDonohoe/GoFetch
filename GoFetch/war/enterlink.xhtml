@@ -411,10 +411,11 @@
 									panelStyle="width:250px"
 									style="width:92px; height:20px; padding-top:2px; overflow:hidden ">
 									<p:ajax listener="#{dataEntryBacking.linkBean.filterSelectedClientsCampaignsAndT_URLs}"
-										update="campaignSelectItems,targetURLSelectItems, :form1:j_idt7:linkspanel" />
+										update="campaignSelectItems,targetURLSelectItems, linkspanel" />
 									<f:selectItems value="#{dataEntryBacking.linkBean.clients}" />
 									<f:selectItem itemLabel="* Add New Client" itemValue="" />
 								</p:selectCheckboxMenu>
+
 
 
 
@@ -425,7 +426,7 @@
 									panelStyle="width:300px"
 									style="width:150px; height:20px; padding-top:2px; overflow:hidden">
 									<p:ajax listener="#{dataEntryBacking.linkBean.campaignSelectionChange}"
-										update="targetURLSelectItems,:form1:j_idt7:linkspanel" />
+										update="targetURLSelectItems,linkspanel" />
 									<f:selectItems value="#{dataEntryBacking.linkBean.campaigns}" />
 									<f:selectItem itemLabel="* Add New Campaign" itemValue="" />
 								</p:selectCheckboxMenu>
@@ -437,7 +438,7 @@
 									filterMatchMode="startsWith" panelStyle="width:600px"
 									style="width:300px; height:20px; padding-top:2px; overflow:hidden">
 									<p:ajax listener="#{dataEntryBacking.linkBean.updateLinksTargetURL}"
-										update=":form1:j_idt7:linkspanel" />
+										update="linkspanel" />
 									<f:selectItems value="#{dataEntryBacking.linkBean.targetURLs}" />
 									<f:selectItem itemLabel="* Add New Target URL" itemValue="" />
 								</p:selectCheckboxMenu>
@@ -488,7 +489,7 @@
 												<p:selectOneMenu value="#{link.linkActivityKey}"
 												style="width:170px" >
 												<p:ajax listener="#{dataEntryBacking.linkBean.upDateLinkBuildingActivity}" 
-												update=":form1:j_idt7:accordian_wrapper" />
+												update="@this" />
 												<f:selectItem itemLabel="Choose Link Activity..."
 													itemValue="" />
 												<f:selectItems value="#{dataEntryBacking.linkBean.linkActivity}" />
@@ -546,7 +547,7 @@
 											<h:inputText id="anchor_text" value="#{link.anchorText}" maxlength="200"
 												size="76">
 												<p:ajax listener="#{dataEntryBacking.linkBean.addNewLinkTab}"
-													update=":form1:j_idt7:accordian_wrapper" />
+													update="@this" />
 											</h:inputText>
 											<h:outputLabel value="?" id="idAnchorTextHelp" />
 											
@@ -571,7 +572,7 @@
 							<p:fileUpload
 								fileUploadListener="#{dataEntryBacking.linkBean.handleFileUpload}"
 								mode="advanced"
-								update="messages, :form1:j_idt7:accordian_wrapper"
+								update="messages, @this"
 								allowTypes="/(\.|\/)(xls|xlsx)$/" />
 							<p:growl id="messages" showDetail="true" />
 							<br />
@@ -583,7 +584,7 @@
 								style="position:relative; left:300px " value="Don't Add Links"></p:commandButton>
 </ui:remove>
 							<p:commandButton process="@this"
-								action="#{dataEntryBacking.linkBean.enterNewLinks}" update="messages, :form1:j_idt7:accordian_wrapper, dropdownheader"
+								action="#{dataEntryBacking.linkBean.enterNewLinks}" update="messages, @this, dropdownheader"
 								style="position:relative; left:600px " value="Add Links" id="enterNewLinksBtn"></p:commandButton>
 								
 								

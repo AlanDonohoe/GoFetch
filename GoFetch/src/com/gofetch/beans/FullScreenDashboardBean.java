@@ -7,10 +7,14 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
+import org.primefaces.event.NodeCollapseEvent;
+import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.LazyDataModel;
@@ -81,6 +85,7 @@ public class FullScreenDashboardBean implements Serializable {
 	private URLAndLinkData selectedURLAndLinkData;
 	
 	private TreeNode[] selectedNodes;
+	private TreeNode selectedNode;
 
 	private List<MiscSocialData> socialData = new ArrayList<MiscSocialData>();
 	// private List<URL> targetURLs;// = new ArrayList<URL>(); // - initialize
@@ -144,6 +149,9 @@ public class FullScreenDashboardBean implements Serializable {
 	// action controllers:
 
 	public void clientSelectionChange() {
+		
+
+		log.info("Entering FullScreenDashboard::clientSelectionChange()");
 
 		List<Integer> clientsIDs = new ArrayList<Integer>();
 
@@ -191,8 +199,9 @@ public class FullScreenDashboardBean implements Serializable {
 
 					// and add to the tree:
 
+					// extended version of the tree impl
 					URLNodeImpl newNode = new URLNodeImpl(clientsFromDB.get(a)
-							.getDisplayed_name(), urlTreeBean.getModel());
+							.getDisplayed_name(), urlTreeBean.getRoot());
 
 					// then need to get that client's target URLs / competitor
 					// URLs and present as children under that client:
@@ -256,6 +265,57 @@ public class FullScreenDashboardBean implements Serializable {
 
 	}
 	
+	
+	////////
+	// temp listener stuff:
+	
+	public void onNodeExpand(NodeExpandEvent event) {  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Expanded", event.getTreeNode().toString());  
+  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
+    }  
+  
+    public void onNodeCollapse(NodeCollapseEvent event) {  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Collapsed", event.getTreeNode().toString());  
+  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
+    }  
+  
+    public void onNodeSelect(NodeSelectEvent event) {  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Selected", event.getTreeNode().toString());  
+  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
+        
+        URLDBService urlDB = new URLDBService();
+        String urlAddress = event.getTreeNode().toString();
+     // Get backlink datatable data from DB.
+		Integer urlID = urlDB.getURLIDFromAddress(urlAddress);
+		
+		backLinkTableBean.addBackLinksToTable(urlID);
+        
+    }  
+  
+    public void onNodeUnselect(NodeUnselectEvent event) {  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Unselected", event.getTreeNode().toString());  
+  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
+        
+        String urlAddress;
+		Integer urlID;
+		
+		URLDBService urlDB = new URLDBService();
+		
+		urlAddress = event.getTreeNode().getData().toString();
+		urlID = urlDB.getURLIDFromAddress(urlAddress);
+		
+		backLinkTableBean.removeBackLinksFromTable(urlID);
+    }  
+	
+	
+	
+	//
+	////////////
+	
 	/*
 	 * We want to get all backlink data for the table and chart and all
 	 * historical social data for table of currently selected
@@ -275,85 +335,85 @@ public class FullScreenDashboardBean implements Serializable {
 	 *  
 	 *  2nd case: node with children nodes...
 	 */
-	public void onNodeSelect(NodeSelectEvent event) {	
-		
-		log.info("Entering FullScreenDashboard::onNodeSelect(...)");
-		
-		Integer urlID;
-		String urlAddress;
-
-		URLDBService urlDB = new URLDBService();
-		//LinkDBService linkDB = new LinkDBService();
-		MiscSocialDataDBService socialDB = new MiscSocialDataDBService();
-		
-		urlAddress = event.getTreeNode().getData().toString();
-		
-		log.info("FullScreenDashboard::onNodeSelect: urlAddress = " + urlAddress);
-		
-		// Get backlink datatable data from DB.
-		urlID = urlDB.getURLIDFromAddress(urlAddress);
-		
-		log.info("FullScreenDashboard::onNodeSelect: urlID = " + Integer.toString(urlID));
-		
-		// if there's no urlID - assume we are dealing with a client parent node
-		if(0 == urlID){
-			
-			if(event.getTreeNode().getChildCount() > 0){
-				//TODO: implement when node selected is parent node - need to get all urls associated with that parent URL's data
-				//	the method below works - but takes too long and produces timeouts..
-				//addChildrenToDataTable(event.getTreeNode(), urlDB);
-
-				
-			}else{ // just have a url with no children - but is a client node
-				//TODO: present summary of no of backlinks and cumulative social data???
-			}
-			
-		}else{ // we have a node thats an actual url - not just a client name...
-		
-			
-			// add it's data to the table and... all its children...
-			
-			backLinkTableBean.addBackLinksToTable(urlID);
-
-			//TODO: case: current node is  a target URL and has children nodes.... need to implement this in some ajax way....
-//			if(event.getTreeNode().getChildCount() > 0){
-//				addChildrenToDataTable(event.getTreeNode(), urlDB);
-//			}
-			
-		}
-		
-		
-			
-		// all this below is if we just have 1 node selected - not a parent node...
-		
-
-		// BackLink Data -  this call - below - resets all data - dont really want to call this..
-		//backLinkTableBean.updateBackLinkData(urlID);
-
-		// Google backlink chart - at the moment just time vs - no of links...
-		// shall we do a count in mysql or - get all links, order by date....???
-		// and then count total links in each month?
-		// if some flag - could change the chart to show... 1: no of links vs
-		// time, 2: DA over time, 3. some other chart...
-		
-		/////////
-		// - all this below - should be moved to other functions and called separately....
-
-		//TODO: uncomment and implement somewhere else??
-//		googleBackLinksChart.setBackLinkDataString(googleBackLinksChart
-//				.parseBackLinkData(urlAddress,
-//						backLinkTableBean.getBackLinkData()));
-
-		//TODO: move somewhere else - to speed up loading - define a function and call it via callback when the backlinks are first loaded into the table
-		// Social Data Chart
-//		socialData = socialDB.getAllSocialData(urlID);
+//	public void onNodeSelect(NodeSelectEvent event) {	
+//		
+//		log.info("Entering FullScreenDashboard::onNodeSelect(...)");
+//		
+//		Integer urlID;
+//		String urlAddress;
 //
-//		googleSocialChart.setSocialDataString(googleSocialChart
-//				.parseSocialDataToString(socialData));
-
-		//
-		//////////////////////
-	}
+//		URLDBService urlDB = new URLDBService();
+//		//LinkDBService linkDB = new LinkDBService();
+//		MiscSocialDataDBService socialDB = new MiscSocialDataDBService();
+//		
+//		urlAddress = event.getTreeNode().getData().toString();
+//		
+//		log.info("FullScreenDashboard::onNodeSelect: urlAddress = " + urlAddress);
+//		
+//		// Get backlink datatable data from DB.
+//		urlID = urlDB.getURLIDFromAddress(urlAddress);
+//		
+//		log.info("FullScreenDashboard::onNodeSelect: urlID = " + Integer.toString(urlID));
+//		
+//		// if there's no urlID - assume we are dealing with a client parent node
+//		if(0 == urlID){
+//			
+//			if(event.getTreeNode().getChildCount() > 0){
+//				//TODO: implement when node selected is parent node - need to get all urls associated with that parent URL's data
+//				//	the method below works - but takes too long and produces timeouts..
+//				//addChildrenToDataTable(event.getTreeNode(), urlDB);
+//
+//				
+//			}else{ // just have a url with no children - but is a client node
+//				//TODO: present summary of no of backlinks and cumulative social data???
+//			}
+//			
+//		}else{ // we have a node thats an actual url - not just a client name...
+//		
+//			
+//			// add it's data to the table and... all its children...
+//			
+//			backLinkTableBean.addBackLinksToTable(urlID);
+//
+//			//TODO: case: current node is  a target URL and has children nodes.... need to implement this in some ajax way....
+////			if(event.getTreeNode().getChildCount() > 0){
+////				addChildrenToDataTable(event.getTreeNode(), urlDB);
+////			}
+//			
+//		}
+//		
+//		
+//			
+//		// all this below is if we just have 1 node selected - not a parent node...
+//		
+//
+//		// BackLink Data -  this call - below - resets all data - dont really want to call this..
+//		//backLinkTableBean.updateBackLinkData(urlID);
+//
+//		// Google backlink chart - at the moment just time vs - no of links...
+//		// shall we do a count in mysql or - get all links, order by date....???
+//		// and then count total links in each month?
+//		// if some flag - could change the chart to show... 1: no of links vs
+//		// time, 2: DA over time, 3. some other chart...
+//		
+//		/////////
+//		// - all this below - should be moved to other functions and called separately....
+//
+//		//TODO: uncomment and implement somewhere else??
+////		googleBackLinksChart.setBackLinkDataString(googleBackLinksChart
+////				.parseBackLinkData(urlAddress,
+////						backLinkTableBean.getBackLinkData()));
+//
+//		//TODO: move somewhere else - to speed up loading - define a function and call it via callback when the backlinks are first loaded into the table
+//		// Social Data Chart
+////		socialData = socialDB.getAllSocialData(urlID);
+////
+////		googleSocialChart.setSocialDataString(googleSocialChart
+////				.parseSocialDataToString(socialData));
+//
+//		//
+//		//////////////////////
+//	}
 	
 	//TODO: need to make this quicker - else getting time out from GAE Server...
 	private void addChildrenToDataTable(TreeNode treeNode, URLDBService urlDB) {
@@ -376,18 +436,21 @@ public class FullScreenDashboardBean implements Serializable {
 	/* 
 	 * this needs to remove the  backlinks that point to this target URL from the datatable...	
 	 */
-	public void onNodeUnSelect(NodeUnselectEvent event){
-		
-		String urlAddress;
-		Integer urlID;
-		
-		URLDBService urlDB = new URLDBService();
-		
-		urlAddress = event.getTreeNode().getData().toString();
-		urlID = urlDB.getURLIDFromAddress(urlAddress);
-		
-		backLinkTableBean.removeBackLinksFromTable(urlID);
-	}
+//	public void onNodeUnSelect(NodeUnselectEvent event){
+//		
+//		log.info("Entering FullScreenDashboard::onNodeUnSelect(...)");
+//
+//		
+//		String urlAddress;
+//		Integer urlID;
+//		
+//		URLDBService urlDB = new URLDBService();
+//		
+//		urlAddress = event.getTreeNode().getData().toString();
+//		urlID = urlDB.getURLIDFromAddress(urlAddress);
+//		
+//		backLinkTableBean.removeBackLinksFromTable(urlID);
+//	}
 	//
 	// ///////
 
@@ -525,8 +588,18 @@ public class FullScreenDashboardBean implements Serializable {
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
 		this.selectedNodes = selectedNodes;
 	}
+
+	// for single tree node selection mode:
 	
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
+	}
 	
+
 
 	// getters & setters end....
 	// /////

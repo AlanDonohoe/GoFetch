@@ -1,0 +1,138 @@
+<!DOCTYPE html [
+    <!ENTITY nbsp "&#160;"> 
+]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<link type="text/css" rel="stylesheet" href="css/style.css">
+</link>
+<link type="text/css" rel="stylesheet" href="css/coveragebookstyles.css">
+</link>
+<script
+		src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/dashboard.js"></script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38606779-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<h:head />
+<h:body>
+<f:view contentType="text/html">
+<p:layout fullPage="true" widgetVar="layoutWdgt">
+<p:layoutUnit position="north" size="65" resizable="false">
+
+<div id="top_right_container">
+  <ul>
+    <li><strong> alan@propellernet.co.uk </strong> |</li>
+    <li><a href="#" target="_blank"> My Account </a> |</li>
+    <li><a href="/help.html" target="_blank"> Help </a></li>
+  </ul>
+</div>
+<div id="logo_container"> <a id="logo_small_left" class="ir float_left"
+								href="http://www.propellernet.co.uk/"></a> </div>
+<h:form id="north_content_form">
+  <div id="companyheader">
+    <p:toolbar id="top_toolbar">
+      <p:toolbarGroup align="left"> 
+        <!--
+								<p:commandButton widgetVar="clientsDBBtn"
+									onclick="showClientDashboard()" type="push" value="Clients" />
+                                    -->
+        <p:selectCheckboxMenu id="selectClientDropMenu"
+							styleClass="float_left"
+							value="#{fullScreenDashboardBean.selectedClients}" label="Clients"
+							filter="true" filterText="Filter" filterMatchMode="startsWith"
+							panelStyle="width:280px"
+							style="width:86px; height:25px; padding-top:6px; padding-bottom:2px overflow:hidden ">
+          <f:selectItems value="#{fullScreenDashboardBean.clientsMenu}" />
+          <f:selectItem itemLabel="* Add New Client" itemValue="" />
+        </p:selectCheckboxMenu>
+        <p:separator />
+        <p:commandButton widgetVar="contactsDBBtn"
+									onclick="showContactsDashboard()" type="push" value="Contacts" />
+        <p:separator />
+        <p:commandButton widgetVar="urlsLinksDBBtn"
+									onclick="showURLsLinksDashboard()" type="push"
+									value="URLs/Links" />
+      </p:toolbarGroup>
+      <p:toolbarGroup align="right">
+        <p:autoComplete value="#{goFetchRequestBean.url}" id="targetURL"
+									completeMethod="#{goFetchRequestBean.completeURLs}" 
+									maxResults="5" minQueryLength="7"></p:autoComplete>
+        <span id="url_add_search_btns">
+        <p:commandButton
+										widgetVar="contactsDBBtn" onclick="#" type="push"
+										value="Search" />
+        <p:commandButton widgetVar="urlsLinksDBBtn"
+										onclick="#" type="push" value="Add" />
+        </span> </p:toolbarGroup>
+    </p:toolbar>
+  </div>
+</h:form>
+</p:layoutUnit>
+<p:layoutUnit position="east" id="east_content_panel"
+				closable="false" collapsible="true" collapseSize="30" resizable="false" size="120"
+                header="ToolBox">
+  <h:form id="rightContentForm" class="client_dashboard"> </h:form>
+</p:layoutUnit>
+<p:layoutUnit position="center" id="coverbook_centre_content_panel"
+				closable="false" collapsible="false" resizable="true ">
+                
+  <div id = "shadedcolumnwrapper">
+    <div class="coveragebookcontent"> 
+      <!-- This is where all the main content for hte coverage book is:
+                use the dashboardbeans' data - which links the user selected, etc to fill in the report here...
+                 --> 
+      
+      <!--  1 title page-->
+      
+      <img src="/images/logo_large.jpg" alt="" class="small_logo"></img>
+      <img src="/images/logo_large.jpg" alt="" id = "covbooktitlelargelogo" class="large_logo"></img>
+      <!--
+      <div class="pnet_logo_small"> </div>
+      
+      <div class="pnet_logo_large"> </div>
+      -->
+    </div>
+    
+    <div class="coveragebook_pagebreak"/>
+    
+    <div class="coveragebookcontent"> page 2
+      <!-- This is where all the main content for hte coverage book is:
+                use the dashboardbeans' data - which links the user selected, etc to fill in the report here...
+                 --> 
+      
+      <!--  1 title page-->
+      
+      <div id = "pnet_logo_small" class="titlepage"> </div>
+    </div>
+    
+    <!--  2 summary page--> 
+    
+    <!--  3: 1-many: section header pages--> 
+    
+    <!--  4:  1-many: actual coverage pages-->
+    
+    <h:form id="centreContentForm" > 
+      
+      <!--
+                <p:imageCropper value="#{cropper.croppedImage}" image="../images/fullpagewebsiteimg.png" />
+                --> 
+    </h:form>
+  </div>
+</p:layoutUnit>
+</p:layout>
+</f:view>
+</h:body>
+</html>
