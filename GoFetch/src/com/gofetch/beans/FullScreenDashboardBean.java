@@ -7,12 +7,30 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.el.ExpressionFactory;
+import javax.el.MethodExpression;
+import javax.faces.application.Application;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.BehaviorEvent;
+//import javax.faces.component.behavior.AjaxBehavior;
+//import javax.faces.context.FacesContext;
+//import javax.faces.event.AbortProcessingException;
+//import javax.faces.event.AjaxBehaviorEvent;
+//import javax.faces.event.AjaxBehaviorListener;
 
+import org.primefaces.component.behavior.ajax.AjaxBehavior;
+import org.primefaces.component.behavior.ajax.AjaxBehaviorListenerImpl;
+import org.primefaces.component.tree.Tree;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.NodeCollapseEvent;
+import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.TreeNode;
 
@@ -81,6 +99,7 @@ public class FullScreenDashboardBean implements Serializable {
 	private URLAndLinkData selectedURLAndLinkData;
 	
 	private TreeNode[] selectedNodes;
+	private TreeNode selectedNode;
 
 	private List<MiscSocialData> socialData = new ArrayList<MiscSocialData>();
 	// private List<URL> targetURLs;// = new ArrayList<URL>(); // - initialize
@@ -132,7 +151,7 @@ public class FullScreenDashboardBean implements Serializable {
 	// ////
 	// client's target and associated competitors' URLs:
 
-	private URLTreeBean urlTreeBean = new URLTreeBean();
+//	private URLTreeBean urlTreeBean = new URLTreeBean();
 
 	public FullScreenDashboardBean() {
 
@@ -144,79 +163,177 @@ public class FullScreenDashboardBean implements Serializable {
 	// action controllers:
 
 	public void clientSelectionChange() {
+		
 
-		List<Integer> clientsIDs = new ArrayList<Integer>();
+		log.info("Entering FullScreenDashboard::clientSelectionChange()");
 
-		URLDBService urlDBService = new URLDBService();
-
-		List<URL> targetURLs;
-
-		// ////
-		//
-
-		// nothing is selected in the drop down menu...
-		if (selectedClients.isEmpty()) {
-
-			urlTreeBean.clearTree();
-			showTree = false;
-			return;
-		}
-
-		// run through all selected clients, getting their id's as integers
-
-		for (String clientID : selectedClients) {
-
-			clientsIDs.add(Integer.valueOf(clientID));
-
-		}
-
-		// TODO: might be a more optimised way than just clearing
-		clientsSelectedByUser.clear();
-		urlTreeBean.clearTree();
-
-		Integer clientFromDBID, clientIDFromUserSel;
-
-		// loop through the clients getting adding them to list if selected by
-		// user
-		for (int a = 0; a < clientsFromDB.size(); a++) {
-
-			for (int b = 0; b < clientsIDs.size(); b++) {
-
-				clientFromDBID = clientsFromDB.get(a).getId();
-				clientIDFromUserSel = clientsIDs.get(b);
-
-				if (clientFromDBID.equals(clientIDFromUserSel)) {
-
-					clientsSelectedByUser.add(clientsFromDB.get(a));
-
-					// and add to the tree:
-
-					URLNodeImpl newNode = new URLNodeImpl(clientsFromDB.get(a)
-							.getDisplayed_name(), urlTreeBean.getModel());
+//		List<Integer> clientsIDs = new ArrayList<Integer>();
+//
+//		URLDBService urlDBService = new URLDBService();
+//
+//		List<URL> targetURLs;
+//
+//		// ////
+//		//
+//
+//		// nothing is selected in the drop down menu...
+//		if (selectedClients.isEmpty()) {
+//
+//			if(null != urlTreeBean){
+//				urlTreeBean.clearTree();
+//				//urlTreeBean.getRoot().
+//			}
+//			
+//			showTree = false;
+//			return;
+//		}
+//
+//		// run through all selected clients, getting their id's as integers
+//
+//		for (String clientID : selectedClients) {
+//
+//			clientsIDs.add(Integer.valueOf(clientID));
+//
+//		}
+//
+//		// TODO: might be a more optimised way than just clearing
+//		clientsSelectedByUser.clear();
+//			urlTreeBean.clearTree();
+//
+//		Integer clientFromDBID, clientIDFromUserSel;
+//
+//		// loop through the clients getting adding them to list if selected by
+//		// user
+//		for (int a = 0; a < clientsFromDB.size(); a++) {
+//
+//			for (int b = 0; b < clientsIDs.size(); b++) {
+//
+//				clientFromDBID = clientsFromDB.get(a).getId();
+//				clientIDFromUserSel = clientsIDs.get(b);
+//
+//				if (clientFromDBID.equals(clientIDFromUserSel)) {
+//
+//					clientsSelectedByUser.add(clientsFromDB.get(a));
+//
+//					// and add to the tree:
+//
+//					// Move this to URLTreeBean constructor
+//					// NEW:
+//					//urlTreeBean = new URLTreeBean(clientsSelectedByUser);
+//					urlTreeBean.clearTreeAndAddNewNodes(clientsSelectedByUser);
+					
+					// OLD
+					// extended version of the tree impl
+//					URLNodeImpl newNode = new URLNodeImpl(clientsFromDB.get(a)
+//							.getDisplayed_name(), urlTreeBean.getRoot());
+					
+					//default:
+//					DefaultTreeNode newNode = new DefaultTreeNode(clientsFromDB.get(a)
+//							.getDisplayed_name(), urlTreeBean.getRoot());
+					
+					/////////////////
+					// add ajax programmitcally too:
+					// but really - do we want to add the ajax to teh TREE after the nodes are added..??
+					
+					// access tree from its id:
+					
+					/*
+					 * ((DataTable)(FacesContext.getCurrentInstance().getViewRoot().findComponent(
+"centerTabIds:dataId:tableViewFormId:tableViewId"))).setFirst(0);
+					 */
+					
+//					<p:ajax event="expand" update=":leftContentForm:growl1" listener="#{fullScreenDashboardBean.onNodeExpand}" />
+//			        <p:ajax event="collapse" update=":leftContentForm:growl1" listener="#{fullScreenDashboardBean.onNodeCollapse}" />
+//			        <p:ajax event="select" update=":leftContentForm:growl1" listener="#{fullScreenDashboardBean.onNodeSelect}" />
+//			        <p:ajax event="unselect" update=":leftContentForm:growl1" listener="#{fullScreenDashboardBean.onNodeUnselect}" />
+					
+//					FacesContext fc = FacesContext.getCurrentInstance();
+//					Application application = fc.getApplication();
+//					ExpressionFactory ef = fc.getApplication().getExpressionFactory();
+//					
+//					// v hacky - what if the front end ids change..???	
+//					Tree tree = (Tree) fc.getViewRoot().findComponent("leftContentForm:tree1");
+					
+					/////
+					// 1. select event class:
+					
+//					Class[] classArray = new Class[1];
+//					classArray[0] =  BehaviorEvent.class;
+					//classArray[1] = NodeExpandEvent.class;
+					
+//					MethodExpression meSelect = ef.createMethodExpression( fc.getELContext(), "#{fullScreenDashboardBean.onNodeSelect}", null,  new Class[]{NodeSelectEvent.class});
+//					// or: MethodExpressionActionListener actionListener = new MethodExpressionActionListener(meSelect);
+//					AjaxBehavior pajaxSelect = new AjaxBehavior();
+//					pajaxSelect.setListener( meSelect );
+//					pajaxSelect.setProcess("@this");
+//					pajaxSelect.setUpdate( "@form" );
+//					//newNode.addClientBehavior( "select", pajaxSelect );
+//					//its the tree we want to give ajax to: - not the nodes..
+//					tree.addClientBehavior( "select", pajaxSelect );
+					//
+					////////////
+					
+					////////
+					// 2 expand event class:
+					//classArray[1] = NodeExpandEvent.class;
+					
+//					MethodExpression meExpand = ef.createMethodExpression( fc.getELContext(), "#{fullScreenDashboardBean.onNodeExpand}", null,  new Class[]{NodeExpandEvent.class});
+//					
+//					AjaxBehavior pajaxExpand = new AjaxBehavior();
+//					pajaxExpand.setListener( meExpand );
+//					pajaxExpand.setProcess("@this");
+//					pajaxExpand.setUpdate( "@form" );
+//					//its the tree we want to give ajax to:
+//					//newNode.addClientBehavior( "expand", pajaxExpand );
+//					tree.addClientBehavior( "expand", pajaxExpand );
+					
+					
+					
+					//
+					///////////
+					
 
 					// then need to get that client's target URLs / competitor
 					// URLs and present as children under that client:
-					targetURLs = urlDBService.getClientsTargetURLs(
-							clientsFromDB.get(a).getId(), true);
-
-					for (int c = 0; c < targetURLs.size(); c++) {
-
-						new URLNodeImpl(targetURLs.get(c).getUrl_address(),
-								newNode);
-
-					}
-				}
-			}
-
-		}
+					// New:
+					
+					//OLD:
+//					targetURLs = urlDBService.getClientsTargetURLs(
+//							clientsFromDB.get(a).getId(), true);
+//
+//					for (int c = 0; c < targetURLs.size(); c++) {
+//						
+//						// extended version of the tree impl
+//						new URLNodeImpl(targetURLs.get(c).getUrl_address(),
+//								newNode);
+						
+						//trying to add ajax.... - but move this to p:tree, NOT p:node...
+//						newChild.addClientBehavior( "select", pajaxSelect );
+//						newChild.addClientBehavior( "expand", pajaxExpand );
+//						//default:
+//						new DefaultTreeNode(targetURLs.get(c).getUrl_address(),
+//								newNode);
+//
+//					}
+//				}
+//			}
+//
+//		}
 
 		showTree = true;
+		
+		// new version: just update the viewscoped bean, in the left content form, this will then access this
+		//	bean's selectedClients array and create new tree accordingly...
+		RequestContext context = RequestContext.getCurrentInstance();  
+		context.update("leftContentForm");
 
 		// testing email here...
 		// EmailWrapper.SendEmail("Alan@propellernet.co.uk", "Alan Donohoe",
 		// "robot@gofetchdata.appspotmail.com", "GoFetch Robot",
 		// "If you get this message, then our robot in the cloud has learned how to email.",
 		// "Hello From The GoFetch Robot");
+		
+		
 	}
 
 	public void switchToClientsDashboard() {
@@ -233,7 +350,6 @@ public class FullScreenDashboardBean implements Serializable {
 
 	}
 	
-
 	@PostConstruct
 	public void init() {
 
@@ -256,6 +372,62 @@ public class FullScreenDashboardBean implements Serializable {
 
 	}
 	
+	
+	////////
+	// temp listener stuff:
+	
+	public void onNodeExpand(NodeExpandEvent event) {  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Expanded", event.getTreeNode().toString());  
+  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
+    }  
+  
+    public void onNodeCollapse(NodeCollapseEvent event) {  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Collapsed", event.getTreeNode().toString());  
+  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
+    }  
+  
+    public void onNodeSelect(NodeSelectEvent event) {  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Selected", event.getTreeNode().toString());  
+  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
+        
+//        String selectedNodeData = urlTreeBean.getSelectedNode().getData().toString();
+//        
+//        FacesMessage message2 = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: selectedNodeData = ", selectedNodeData);  
+//        FacesContext.getCurrentInstance().addMessage(null, message2);  
+        
+        URLDBService urlDB = new URLDBService();
+        String urlAddress = event.getTreeNode().toString();
+     // Get backlink datatable data from DB.
+		Integer urlID = urlDB.getURLIDFromAddress(urlAddress);
+		
+		backLinkTableBean.addBackLinksToTable(urlID);
+        
+    }  
+  
+    public void onNodeUnselect(NodeUnselectEvent event) {  
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Unselected", event.getTreeNode().toString());  
+  
+        FacesContext.getCurrentInstance().addMessage(null, message);  
+        
+        String urlAddress;
+		Integer urlID;
+		
+		URLDBService urlDB = new URLDBService();
+		
+		urlAddress = event.getTreeNode().getData().toString();
+		urlID = urlDB.getURLIDFromAddress(urlAddress);
+		
+		backLinkTableBean.removeBackLinksFromTable(urlID);
+    }  
+	
+	
+	
+	//
+	////////////
+	
 	/*
 	 * We want to get all backlink data for the table and chart and all
 	 * historical social data for table of currently selected
@@ -275,85 +447,85 @@ public class FullScreenDashboardBean implements Serializable {
 	 *  
 	 *  2nd case: node with children nodes...
 	 */
-	public void onNodeSelect(NodeSelectEvent event) {	
-		
-		log.info("Entering FullScreenDashboard::onNodeSelect(...)");
-		
-		Integer urlID;
-		String urlAddress;
-
-		URLDBService urlDB = new URLDBService();
-		//LinkDBService linkDB = new LinkDBService();
-		MiscSocialDataDBService socialDB = new MiscSocialDataDBService();
-		
-		urlAddress = event.getTreeNode().getData().toString();
-		
-		log.info("FullScreenDashboard::onNodeSelect: urlAddress = " + urlAddress);
-		
-		// Get backlink datatable data from DB.
-		urlID = urlDB.getURLIDFromAddress(urlAddress);
-		
-		log.info("FullScreenDashboard::onNodeSelect: urlID = " + Integer.toString(urlID));
-		
-		// if there's no urlID - assume we are dealing with a client parent node
-		if(0 == urlID){
-			
-			if(event.getTreeNode().getChildCount() > 0){
-				//TODO: implement when node selected is parent node - need to get all urls associated with that parent URL's data
-				//	the method below works - but takes too long and produces timeouts..
-				//addChildrenToDataTable(event.getTreeNode(), urlDB);
-
-				
-			}else{ // just have a url with no children - but is a client node
-				//TODO: present summary of no of backlinks and cumulative social data???
-			}
-			
-		}else{ // we have a node thats an actual url - not just a client name...
-		
-			
-			// add it's data to the table and... all its children...
-			
-			backLinkTableBean.addBackLinksToTable(urlID);
-
-			//TODO: case: current node is  a target URL and has children nodes.... need to implement this in some ajax way....
-//			if(event.getTreeNode().getChildCount() > 0){
-//				addChildrenToDataTable(event.getTreeNode(), urlDB);
-//			}
-			
-		}
-		
-		
-			
-		// all this below is if we just have 1 node selected - not a parent node...
-		
-
-		// BackLink Data -  this call - below - resets all data - dont really want to call this..
-		//backLinkTableBean.updateBackLinkData(urlID);
-
-		// Google backlink chart - at the moment just time vs - no of links...
-		// shall we do a count in mysql or - get all links, order by date....???
-		// and then count total links in each month?
-		// if some flag - could change the chart to show... 1: no of links vs
-		// time, 2: DA over time, 3. some other chart...
-		
-		/////////
-		// - all this below - should be moved to other functions and called separately....
-
-		//TODO: uncomment and implement somewhere else??
-//		googleBackLinksChart.setBackLinkDataString(googleBackLinksChart
-//				.parseBackLinkData(urlAddress,
-//						backLinkTableBean.getBackLinkData()));
-
-		//TODO: move somewhere else - to speed up loading - define a function and call it via callback when the backlinks are first loaded into the table
-		// Social Data Chart
-//		socialData = socialDB.getAllSocialData(urlID);
+//	public void onNodeSelect(NodeSelectEvent event) {	
+//		
+//		log.info("Entering FullScreenDashboard::onNodeSelect(...)");
+//		
+//		Integer urlID;
+//		String urlAddress;
 //
-//		googleSocialChart.setSocialDataString(googleSocialChart
-//				.parseSocialDataToString(socialData));
-
-		//
-		//////////////////////
-	}
+//		URLDBService urlDB = new URLDBService();
+//		//LinkDBService linkDB = new LinkDBService();
+//		MiscSocialDataDBService socialDB = new MiscSocialDataDBService();
+//		
+//		urlAddress = event.getTreeNode().getData().toString();
+//		
+//		log.info("FullScreenDashboard::onNodeSelect: urlAddress = " + urlAddress);
+//		
+//		// Get backlink datatable data from DB.
+//		urlID = urlDB.getURLIDFromAddress(urlAddress);
+//		
+//		log.info("FullScreenDashboard::onNodeSelect: urlID = " + Integer.toString(urlID));
+//		
+//		// if there's no urlID - assume we are dealing with a client parent node
+//		if(0 == urlID){
+//			
+//			if(event.getTreeNode().getChildCount() > 0){
+//				//TODO: implement when node selected is parent node - need to get all urls associated with that parent URL's data
+//				//	the method below works - but takes too long and produces timeouts..
+//				//addChildrenToDataTable(event.getTreeNode(), urlDB);
+//
+//				
+//			}else{ // just have a url with no children - but is a client node
+//				//TODO: present summary of no of backlinks and cumulative social data???
+//			}
+//			
+//		}else{ // we have a node thats an actual url - not just a client name...
+//		
+//			
+//			// add it's data to the table and... all its children...
+//			
+//			backLinkTableBean.addBackLinksToTable(urlID);
+//
+//			//TODO: case: current node is  a target URL and has children nodes.... need to implement this in some ajax way....
+////			if(event.getTreeNode().getChildCount() > 0){
+////				addChildrenToDataTable(event.getTreeNode(), urlDB);
+////			}
+//			
+//		}
+//		
+//		
+//			
+//		// all this below is if we just have 1 node selected - not a parent node...
+//		
+//
+//		// BackLink Data -  this call - below - resets all data - dont really want to call this..
+//		//backLinkTableBean.updateBackLinkData(urlID);
+//
+//		// Google backlink chart - at the moment just time vs - no of links...
+//		// shall we do a count in mysql or - get all links, order by date....???
+//		// and then count total links in each month?
+//		// if some flag - could change the chart to show... 1: no of links vs
+//		// time, 2: DA over time, 3. some other chart...
+//		
+//		/////////
+//		// - all this below - should be moved to other functions and called separately....
+//
+//		//TODO: uncomment and implement somewhere else??
+////		googleBackLinksChart.setBackLinkDataString(googleBackLinksChart
+////				.parseBackLinkData(urlAddress,
+////						backLinkTableBean.getBackLinkData()));
+//
+//		//TODO: move somewhere else - to speed up loading - define a function and call it via callback when the backlinks are first loaded into the table
+//		// Social Data Chart
+////		socialData = socialDB.getAllSocialData(urlID);
+////
+////		googleSocialChart.setSocialDataString(googleSocialChart
+////				.parseSocialDataToString(socialData));
+//
+//		//
+//		//////////////////////
+//	}
 	
 	//TODO: need to make this quicker - else getting time out from GAE Server...
 	private void addChildrenToDataTable(TreeNode treeNode, URLDBService urlDB) {
@@ -376,18 +548,21 @@ public class FullScreenDashboardBean implements Serializable {
 	/* 
 	 * this needs to remove the  backlinks that point to this target URL from the datatable...	
 	 */
-	public void onNodeUnSelect(NodeUnselectEvent event){
-		
-		String urlAddress;
-		Integer urlID;
-		
-		URLDBService urlDB = new URLDBService();
-		
-		urlAddress = event.getTreeNode().getData().toString();
-		urlID = urlDB.getURLIDFromAddress(urlAddress);
-		
-		backLinkTableBean.removeBackLinksFromTable(urlID);
-	}
+//	public void onNodeUnSelect(NodeUnselectEvent event){
+//		
+//		log.info("Entering FullScreenDashboard::onNodeUnSelect(...)");
+//
+//		
+//		String urlAddress;
+//		Integer urlID;
+//		
+//		URLDBService urlDB = new URLDBService();
+//		
+//		urlAddress = event.getTreeNode().getData().toString();
+//		urlID = urlDB.getURLIDFromAddress(urlAddress);
+//		
+//		backLinkTableBean.removeBackLinksFromTable(urlID);
+//	}
 	//
 	// ///////
 
@@ -473,9 +648,6 @@ public class FullScreenDashboardBean implements Serializable {
 
 	}
 
-	public URLTreeBean geturlTreeBean() {
-		return urlTreeBean;
-	}
 
 	public boolean isShowTree() {
 		return showTree;
@@ -525,8 +697,35 @@ public class FullScreenDashboardBean implements Serializable {
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
 		this.selectedNodes = selectedNodes;
 	}
+
+	// for single tree node selection mode:
 	
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
+	}
+
+	public List<User> getClientsSelectedByUser() {
+		return clientsSelectedByUser;
+	}
+
+	public void setClientsSelectedByUser(List<User> clientsSelectedByUser) {
+		this.clientsSelectedByUser = clientsSelectedByUser;
+	}
+
+//	public URLTreeBean getUrlTreeBean() {
+//		return urlTreeBean;
+//	}
+//
+//	public void setUrlTreeBean(URLTreeBean urlTreeBean) {
+//		this.urlTreeBean = urlTreeBean;
+//	}
+//	
 	
+
 
 	// getters & setters end....
 	// /////

@@ -67,6 +67,8 @@ public class URL implements Serializable {
 	// category, to have many url's assigned to it...
 
 	private boolean client_target_url;
+	
+	private Integer get_image;
 
 	// private Integer client_category;
 
@@ -257,6 +259,14 @@ public class URL implements Serializable {
 
 	public void setClient_category_id(Integer client_category_id) {
 		this.client_category_id = client_category_id;
+	}
+
+	public Integer getGet_image() {
+		return get_image;
+	}
+
+	public void setGet_image(Integer get_image) {
+		this.get_image = get_image;
 	}
 
 	@Override

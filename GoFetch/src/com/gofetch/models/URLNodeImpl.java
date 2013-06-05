@@ -45,14 +45,14 @@ public class URLNodeImpl extends DefaultTreeNode {
 	     * @return {@link com.bluelotussoftware.example.jsf.TreeNodeType#getType()}
 	     * based on whether this node has child objects.
 	     */
-	    @Override
-	    public String getType() {
-	        if (isLeaf()) {
-	            return TreeNodeType.LEAF.getType();
-	        } else {
-	            return TreeNodeType.NODE.getType();
-	        }
-	    }
+//	    @Override
+//	    public String getType() {
+//	        if (isLeaf()) {
+//	            return TreeNodeType.LEAF.getType();
+//	        } else {
+//	            return TreeNodeType.NODE.getType();
+//	        }
+//	    }
 	    
 //	    
 //	    public void setChildren(List<TreeNode> children){

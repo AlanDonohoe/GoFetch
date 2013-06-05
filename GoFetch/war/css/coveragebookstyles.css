@@ -1,0 +1,155 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.pnet_logo_small{
+	background-image:url(../images/logo_large.jpg);
+	width:100px;
+    height:100px;
+    margin:0px 0px 0px 0px;
+	background-repeat:no-repeat;
+}
+
+.pnet_logo_large{
+	background:url(../images/logo_large.jpg);
+	width:200px;
+    height:200px;
+    margin:0px 0px 0px 0px;
+	background-repeat:no-repeat;
+}
+
+#shadedcolumnwrapper{
+
+	background-color:#CCC;
+	/*height:100%; */
+	height: 820px;
+	width:100%;
+	z-index:-10;
+	
+	padding-top:30px;
+	/*
+	padding-bottom:30px;
+	*/
+	
+}
+
+#coverbook_centre_content_panel{
+	/*
+	background-color:#CCC;
+	height:100%;
+	width:100%;
+	
+	background: none repeat scroll 0 0 #E5E5E5;
+	*/
+	
+}
+
+.coveragebook_pagebreak{
+	
+	background-color:#CCC;
+	height:20px;
+	width:100%;
+}
+
+.coveragebookcontent{
+	/*
+	background-color:#FFF;
+	border:20px red;
+	*/
+	
+	background: none repeat scroll 0 0 #FFFFFF;
+	width: 650px;
+	    display: block;
+    margin-left: auto;
+    margin-right: auto; 
+	vertical-align: middle;
+	/*height:90%;  */
+	height: 800px;
+	top: 10px;
+    bottom: 10px;
+	padding-top:10px;
+}
+
+.coveragebookcontent .small_logo{
+	width:113px;
+    height:36px;
+	padding-left:10px;
+	display:block;
+}
+
+.coveragebookcontent .large_logo{
+	width:256px;
+    height:83px;
+	display:block;
+	padding-top:40px;
+	
+}
+
+.coveragebookcontent .client_logo{
+	width:233px;
+    height:89px;
+	padding-left:10px;
+	display:block;
+	float: right;
+	clear:both;
+}
+
+#covbooktitlelargelogo{
+	display:block;
+}
+
+.clientname{
+	 font-size:36px;
+	 font-weight:700;
+	 font-stretch:semi-expanded;
+	 padding-top:20px;
+	 display:block;
+	 float:left;
+	 font-family: 'Merriweather Sans', sans-serif;
+	 color:#000;
+}
+
+.innercontent{
+	padding-left:40px;
+	padding-right:40px;
+	
+}
+
+.large-title-text{
+	clear:both;
+	float:left;
+	padding-top:30px;
+	padding-bottom:40px;
+	font-size:36px;	
+	
+}
+
+#titlesheet-dates{
+	clear:both;
+	float:left;
+}
+
+.bold{
+	font-weight:700;
+	 font-family: 'Merriweather Sans', sans-serif;
+	 color:#000;
+}
+
+.clear-left{
+	clear:both;
+	float:left;
+}
+
+#pnet-team-text{
+	padding-top:60px;
+}
+
+#pnet-url{
+	padding-top:100px;
+	font-weight:400;
+	font-size:24px;
+	font-family: 'Merriweather Sans', sans-serif;
+}
+
+.image_cropper_wrapper{
+	width:50px;
+}

@@ -28,23 +28,24 @@ public class PersistenceAppListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
-		// this is called on start up - should we initialise entity manager here - the once only....???
+		// this is called on start up - should we initialise entity manager here
+		// - the once only....???
 		// is actually 4 x....:
-		
-		/*1.
-		 * INFO: Successfully processed /Users/alandonohoe/Documents/EclipseWorkspace/GoFetch/GoFetch/war/WEB-INF/backends.xml
-May 3, 2013 9:24:15 AM com.google.apphosting.utils.jetty.JettyLogger info
-INFO: jetty-6.1.x
+
+		/*
+		 * 1. INFO: Successfully processed
+		 * /Users/alandonohoe/Documents/EclipseWorkspace
+		 * /GoFetch/GoFetch/war/WEB-INF/backends.xml May 3, 2013 9:24:15 AM
+		 * com.google.apphosting.utils.jetty.JettyLogger info INFO: jetty-6.1.x
 		 */
-		
-		/*2
-		 * INFO: Successfully processed /Users/alandonohoe/Documents/EclipseWorkspace/GoFetch/GoFetch/war/WEB-INF/backends.xml
-		May 3, 2013 9:22:48 AM com.google.apphosting.utils.jetty.JettyLogger info
-		INFO: jetty-6.1.x
-		---> here.....
+
+		/*
+		 * 2 INFO: Successfully processed
+		 * /Users/alandonohoe/Documents/EclipseWorkspace
+		 * /GoFetch/GoFetch/war/WEB-INF/backends.xml May 3, 2013 9:22:48 AM
+		 * com.google.apphosting.utils.jetty.JettyLogger info INFO: jetty-6.1.x
+		 * ---> here.....
 		 */
-		int i;
-		i = 0;
-		
+
 	}
-	}
+}

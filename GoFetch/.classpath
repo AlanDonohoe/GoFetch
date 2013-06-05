@@ -59,22 +59,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-api-2.0.9.jar" sourcepath="/Users/alandonohoe/.m2/repository/com/sun/faces/jsf-api/2.0.9/jsf-api-2.0.9-sources.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-impl-2.0.9.jar" sourcepath="/Users/alandonohoe/.m2/repository/com/sun/faces/jsf-impl/2.0.9/jsf-impl-2.0.9-sources.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-fileupload-1.2.2.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/javax.faces-2.1.10.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -110,13 +95,15 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/joda-time-2.2.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/primefaces-3.5.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink 2.4.1 - Juno">
+	<classpathentry kind="lib" path="war/WEB-INF/lib/eclipselink.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSF 2.0 (Mojarra 2.0.3-FCS)">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
-			<attribute name="owner.project.facets" value="jpt.jpa"/>
+			<attribute name="owner.project.facets" value="jst.jsf"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/eclipselink.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-api.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-impl.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/primefaces-3.5.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
