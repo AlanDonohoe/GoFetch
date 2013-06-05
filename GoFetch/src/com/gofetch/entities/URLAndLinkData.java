@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Represents the join of a call to the links table and url table,
  * for representing backlink URLs with associated link data: eg: anchor text, date, etc
  */
-public class URLAndLinkData implements Serializable {
+public class URLAndLinkData implements Serializable{
 
 	/**
 	 * 
@@ -86,7 +86,5 @@ public class URLAndLinkData implements Serializable {
 	public void setTargetURLId(Integer targetURLId) {
 		this.targetURLId = targetURLId;
 	}
-	
-	
 
 }

@@ -189,10 +189,6 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 		return allLinksDAPA;
 	}
 
-	public List<URLPlusDataPoints> getUniqueDomains(String urlTarget) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/**
 	 * retrieves Domain and Page authority for "url" - returns a URLPlusDataPoints object with DA and PA, domain name and doc title.
@@ -290,5 +286,25 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 
 	}
 
+	@Override
+	public List<URLPlusDataPoints> getLinkFromUniqueDomains(String urlTarget)
+			throws Exception {
+		
+		/*
+		 * 	scope = LinksConstants.LINKS_SCOPE_PAGE_TO_PAGE;
+		filters = LinksConstants.LINKS_FILTER_FOLLOW + LinksConstants.LINKS_FILTER_301 + LinksConstants.LINKS_FILTER_EXTERNAL; 
+		sort = LinksConstants.LINKS_SORT_PAGE_AUTHORITY; //The Sources with the highest Page Authority are returned first.
+		sourceCols = URLMetricsConstants.URLMETRICS_COL_URL;
+		targetCols = URLMetricsConstants.URLMETRICS_COL_URL;
+		linkCols   = LinksConstants.LINKS_COL_URL;
+		offSet = 0;
+		 */
+		//simply change teh scope arg and call getLinks....
+		scope = LinksConstants.LINKS_SCOPE_DOMAIN_TO_PAGE;
+		sort = LinksConstants.LINKS_SORT_DOMAIN_AUTHORITY;
+		
+		return getLinks(urlTarget); 
+
+	}
 
 }

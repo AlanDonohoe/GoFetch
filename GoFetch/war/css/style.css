@@ -2906,3 +2906,18 @@ display: block;
 #centreContentForm\3AdynaButton{
 	float:left;
 }
+
+.line-separator{
+
+height:1px;
+
+background:#000;
+
+border-bottom:1px solid #313030;
+width:80%;
+
+}
+
+.padtop{
+	padding-top:80px;
+}

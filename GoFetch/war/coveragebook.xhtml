@@ -10,6 +10,8 @@
 </link>
 <link type="text/css" rel="stylesheet" href="css/coveragebookstyles.css">
 </link>
+<link href='http://fonts.googleapis.com/css?family=Merriweather+Sans:400,700' rel='stylesheet' type='text/css'>
+</link>
 <script
 		src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="js/dashboard.js"></script>
@@ -84,52 +86,87 @@
 <p:layoutUnit position="east" id="east_content_panel"
 				closable="false" collapsible="true" collapseSize="30" resizable="false" size="120"
                 header="ToolBox">
-  <h:form id="rightContentForm" class="client_dashboard"> </h:form>
+  <h:form id="rightContentForm" class="client_dashboard"> 
+                 <p:commandButton value="Crop"  
+                action="#{imageCropperBean.crop}"  
+                update=":centreContentForm:localCroppedImage"/> </h:form>
 </p:layoutUnit>
+<!--
+<p:layoutUnit widgetvar="west_content_widget" id="west_content_panel"
+				position="west" size="300" resizable="true" closable="false"
+				collapsible="true" collapseSize="30" styleClass="" header="Image Cropper">
+                <h:form id="west_form">
+                <p:imageCropper value="#{cropper.croppedImage}" image="../images/fullpagewebsiteimg.png" styleClass="imgCropper"/>
+               <p:commandButton value="Crop"  
+                action="#{imageCropperBean.crop}"  
+                update="localCroppedImage"/>  
+                </h:form>
+                </p:layoutUnit>
+                -->
 <p:layoutUnit position="center" id="coverbook_centre_content_panel"
 				closable="false" collapsible="false" resizable="true ">
-                
   <div id = "shadedcolumnwrapper">
     <div class="coveragebookcontent"> 
       <!-- This is where all the main content for hte coverage book is:
                 use the dashboardbeans' data - which links the user selected, etc to fill in the report here...
                  --> 
       
-      <!--  1 title page-->
+      <!--  1 title page--> 
       
       <img src="/images/logo_large.jpg" alt="" class="small_logo"></img>
-      <img src="/images/logo_large.jpg" alt="" id = "covbooktitlelargelogo" class="large_logo"></img>
-      <!--
-      <div class="pnet_logo_small"> </div>
-      
-      <div class="pnet_logo_large"> </div>
-      -->
+      <div class="innercontent"> <img src="/images/logo_large.jpg" alt="" id = "covbooktitlelargelogo" class="large_logo"></img>
+        <div class ="padtop"></div>
+        <div class="line-separator "></div>
+        <p class="clientname"> #{fullScreenDashboardBean.clientsSelectedByUser[0].displayed_name} </p>
+        <p class="large-title-text"> Authority Building Report </p>
+        <p id="titlesheet-dates"> #{fullScreenDashboardBean.backLinkTableBean.earliestLinkDate}
+          -
+          #{fullScreenDashboardBean.backLinkTableBean.latestLinkDate} </p>
+        <p class="bold clear-left" id="pnet-team-text"> Propellernet Team </p>
+        <p class="clear-left"> 
+        Account Director<br/>
+          Cultivate Consultant </p>
+          
+         
+           <img src="/images/marksspencer_logo.jpg" alt="" class="client_logo"></img>
+           
+            <p class="clear-left" id="pnet-url">
+          www.propellernet.co.uk
+           </p>
+      </div>
     </div>
-    
+    </div>
     <div class="coveragebook_pagebreak"/>
-    
-    <div class="coveragebookcontent"> page 2
+    <div id = "shadedcolumnwrapper">
+    <div class="coveragebookcontent"> 
       <!-- This is where all the main content for hte coverage book is:
                 use the dashboardbeans' data - which links the user selected, etc to fill in the report here...
                  --> 
+      <!-- 1.to work with a dynamic no of url and links data array -  use an accordian here with ui-accordion-header style="visibility:hidden"  - to hide the accordian header
       
-      <!--  1 title page-->
+      2. cropping image - for the moment - need to have cropper image in left hand panel - then have cropped image streched /  shrunk to correct width and height as per page size of doc...
+      
+      can use java api /  GAE image api for cropping /  streching image.. to correct width????-->           
       
       <div id = "pnet_logo_small" class="titlepage"> </div>
-    </div>
-    
-    <!--  2 summary page--> 
-    
-    <!--  3: 1-many: section header pages--> 
-    
-    <!--  4:  1-many: actual coverage pages-->
-    
-    <h:form id="centreContentForm" > 
       
-      <!--
-                <p:imageCropper value="#{cropper.croppedImage}" image="../images/fullpagewebsiteimg.png" />
-                --> 
-    </h:form>
+      <!--  2 summary page--> 
+      
+      <!--  3: 1-many: section header pages--> 
+      
+      <!--  4:  1-many: actual coverage pages-->
+      
+      <h:form id="centreContentForm" > 
+        
+        
+        <div class="image_cropper_wrapper">
+                 <p:graphicImage id="localCroppedImage"   
+                    value="barca/#{imageCropperBean.newImageName}.jpg" />  
+                      <p:imageCropper value="#{cropper.croppedImage}" image="../images/fullpagewebsiteimg.png" style="width:50px"/>
+ 		</div>
+                
+      </h:form>
+    </div>
   </div>
 </p:layoutUnit>
 </p:layout>

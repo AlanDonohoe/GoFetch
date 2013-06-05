@@ -95,7 +95,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/joda-time-2.2.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/primefaces-3.5.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/eclipselink.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSF 2.0 (Mojarra 2.0.3-FCS)">
 		<attributes>
@@ -105,5 +104,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-api.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-impl.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/primefaces-3.5.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

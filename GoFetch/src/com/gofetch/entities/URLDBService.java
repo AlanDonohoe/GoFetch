@@ -13,6 +13,7 @@ import javax.persistence.Query;
 //import javax.persistence.PersistenceUnit;
 import javax.persistence.TemporalType;
 
+import com.gofetch.images.ImageConstants;
 import com.gofetch.utils.DateUtil;
 
 /**
@@ -54,6 +55,7 @@ public class URLDBService implements Serializable{
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
+		//SQL: this works: select * from url u where u.url_id IN (select l.source_id from links l where l.target_id = id);
 		try {   
 			result= (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = ANY (SELECT l.source_id FROM Link l WHERE l.target_id = :id)")
 					.setParameter("id", targetURLid)
@@ -1326,5 +1328,70 @@ public class URLDBService implements Serializable{
 		}
 			
 		return result; 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<URL> getURLsWithImage() {
+		log.info("Entering getURLsWithImage");
+		List<URL> result = null;
+		
+		// NEW
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+
+		try {
+			result =  (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_image > 0")
+					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getURLsWithImage";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			log.info("No URLs with images returned");
+		}
+		log.info("Exiting getURLsWithImage");
+		return result;
+	}
+	
+	public void updateURLImageGot(Integer url_id, Integer getImageType){
+		
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		try {
+
+			mgr.getTransaction().begin();
+
+			URL url = mgr.find(URL.class, url_id);
+			url.setGet_image(getImageType);
+
+			mgr.merge(url);
+			mgr.getTransaction().commit();
+
+		}catch(Exception e){
+			String msg = "Exception thrown: URLService: getImageType";
+			log.severe(msg + e.getMessage());
+
+		}  finally {
+			mgr.close();
+		}
+
+
+	}
+
+	public void getPremierLeagueURLs() {
+		// TODO  add field to DB to highlight these urls???
+		// as these urls will be different to others currently in there.... - just looking for 1 link per unique domain...
+		
+		// for now - to test return those urls that have get_backinkink set to true...
+		
+		
+		
 	}
 }

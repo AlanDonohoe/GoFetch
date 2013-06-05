@@ -1,6 +1,5 @@
-<!DOCTYPE html [
-    <!ENTITY nbsp "&#160;"> 
-]>
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" [<!ENTITY nbsp "&#160;">]>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -14,15 +13,13 @@
 	<script type="text/javascript" src="js/dashboard.js"></script>
 	
 	</h:head>
-	<h:body>
-    
-    
-    
-		<p:layout fullPage="true" widgetVar="layoutWdgt">
-
-			<p:layoutUnit position="north" size="65" resizable="false">
-
-				<div id="top_right_container">
+<h:body>
+  <p:layout fullPage="true" widgetVar="layoutWdgt">
+  
+    <p:layoutUnit position="north" size="65" resizable="false">
+   
+      
+      <div id="top_right_container">
 					<ul>
 						<li><strong> alan@propellernet.co.uk </strong> |</li>
 						<li><a href="#" target="_blank"> My Account </a> |</li>
@@ -32,7 +29,7 @@
 
 				<div id="logo_container">
 							<a id="logo_small_left" class="ir float_left"
-								href="http://www.propellernet.co.uk/"></a>
+								href="http://gofetchdata.appspot.com/"></a>
 						</div>
                         
 				<h:form id="north_content_form">
@@ -85,88 +82,47 @@
 						</p:toolbar>
 					</div>
 
-<!--
-					<div id="select_client" class="client_dashboard">
-			
-						<h:outputLabel class="float_left client_wrapper_text">Select a </h:outputLabel>
 
-						<p:selectCheckboxMenu id="selectClientDropMenu"
-							styleClass="float_left"
-							value="#{fullScreenDashboardBean.selectedClients}" label="Client"
-							filter="true" filterText="Filter" filterMatchMode="startsWith"
-							panelStyle="width:280px"
-							style="width:73px; height:25px; padding-top:2px; padding-bottom:2px overflow:hidden ">
-							<p:ajax
-								listener="#{fullScreenDashboardBean.clientSelectionChange}"
-								update=":leftContentForm" />
-							<f:selectItems value="#{fullScreenDashboardBean.clientsMenu}" />
-							<f:selectItem itemLabel="* Add New Client" itemValue="" />
-						</p:selectCheckboxMenu>
-
-						<h:outputLabel class="float_left client_wrapper_text"> to get started. </h:outputLabel>
-                        
-					</div>
-                    -->
 				</h:form>
-			</p:layoutUnit>
-
-
-			<!-- Left hand panel content -->
+                
+                
+    </p:layoutUnit>
+    
+    <!-- Left hand panel content -->
 
 			<p:layoutUnit widgetvar="west_content_widget" id="west_content_panel"
 				position="west" size="300" resizable="true" closable="false"
 				collapsible="true" collapseSize="30" styleClass="client_dashboard, urlLinks_dashboard" header="Target URLs">
 
 				<h:form id="leftContentForm">
-
-					<div id="url_tree" class="client_dashboard, urlLinks_dashboard">
-
-						<p:growl id="growl1" showSummary="true" showDetail="true"
+                <div id="url_tree" class="client_dashboard, urlLinks_dashboard">
+                <p:growl id="growl1" showSummary="true" showDetail="true"
 							autoUpdate="true" />
-
-						<p:tree id="tree1"
-							value="#{fullScreenDashboardBean.urlTreeBean.root}" var="node"
-							selectionMode="checkbox"
-							selection="#{fullScreenDashboardBean.selectedNodes}"
-							rendered="#{fullScreenDashboardBean.showTree}" dyanmic="true"
+       <p:tree id="tree1"
+							value="#{urlTreeBean.root}" var="node"
+							selectionMode="single"
+							selection="#{fullScreenDashboardBean.urlTreeBean.selectedNode}"
+							rendered="true" dyanmic="true" cache="false"  
                             style="width:100%">
+        <p:ajax event="expand" update=":leftContentForm:growl1" listener="#{fullScreenDashboardBean.urlTreeBean.onNodeExpand}" />
+        <p:ajax event="collapse" update=":leftContentForm:growl1" listener="#{fullScreenDashboardBean.urlTreeBean.onNodeCollapse}" />
+        <p:ajax event="select" update=":leftContentForm:growl1" listener="#{fullScreenDashboardBean.urlTreeBean.onNodeSelect}" />
+        <p:ajax event="unselect" update=":leftContentForm:growl1" listener="#{fullScreenDashboardBean.urlTreeBean.onNodeUnselect}" />
+        <p:treeNode>
+          <h:outputText value="#{node}" />
+        </p:treeNode>
+      </p:tree>
 
+				
 
-
-						<!-- fullScreenDashboardBean.urlTreeBean.onNodeSelect - also has the tree event handlers
-                        but kept it at fullScreenDashboardBean level so that we can deal with backlinks aswell as social data -->
-                        
-							<p:ajax event="select"
-								listener="#{fullScreenDashboardBean.onNodeSelect}"
-								update=":centreContentForm" />
-                            <p:ajax event="unselect"
-                            	listener="#{fullScreenDashboardBean.onNodeUnSelect}"
-								update=":centreContentForm" />
-                            	
-                                <!--
-							<p:ajax event="expand"
-								listener="#{fullScreenDashboardBean.urlTreeBean.onNodeExpand}" />
-							<p:ajax event="collapse"
-								listener="#{fullScreenDashboardBean.urlTreeBean.onNodeCollapse}" />
-                                -->
-							<p:treeNode>
-								<h:outputText value="#{node}" />	
-							</p:treeNode>
-
-						</p:tree>
-					</div>
-					 <p:blockUI block="tree1" trigger="tree1"><br />
-						<p:graphicImage value="/images/ajax-loader.gif" />
-					</p:blockUI>
-
-
+</div>
 				</h:form>
 			</p:layoutUnit>
 
 			<p:layoutUnit position="center" id="centre_content_panel"
 				closable="false" collapsible="false" resizable="true">
 
-				<h:form id="centreContentForm" class="client_dashboard">
+<h:form id="centreContentForm" class="client_dashboard">
                 
                                 <h:inputText id="hiddenSocialDataString" value="#{fullScreenDashboardBean.googleSocialChart.socialDataString}" style="display:none"></h:inputText>
                                 
@@ -182,7 +138,7 @@
         	<p:menuitem value="Set New Alert" url="#" /> 
         </p:submenu> 
          <p:submenu label="Reports" icon="ui-icon-clipboard"> 
-            <p:menuitem value="Coverage Book" url="#" />   
+            <p:menuitem value="Coverage Book" url="/coveragebook.jsf" />   
           </p:submenu>   
     </p:menubar>
                                 
@@ -376,6 +332,7 @@
 
 
 				</h:form>
+				
 			</p:layoutUnit>
 
 		</p:layout>

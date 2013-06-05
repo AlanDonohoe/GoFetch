@@ -19,4 +19,7 @@ public interface SEOMoz {
 	// fills the list parameter with page & domain authority and document title - for each url.
 	public List<URLPlusDataPoints> getAuthorityData(List<URLPlusDataPoints> urls);
 	
+	// returns list of one link from each unique domain pointing to the target
+	public List<URLPlusDataPoints> getLinkFromUniqueDomains(String urlTarget) throws Exception;
+	
 }

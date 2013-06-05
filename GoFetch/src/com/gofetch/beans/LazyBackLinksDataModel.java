@@ -28,7 +28,7 @@ import com.gofetch.entities.URLDBService;
 @SuppressWarnings("serial")
 public class LazyBackLinksDataModel extends LazyDataModel<URLAndLinkData>
 		implements SelectableDataModel<URLAndLinkData> {
-
+	
 	/**
 	 * 
 	 */

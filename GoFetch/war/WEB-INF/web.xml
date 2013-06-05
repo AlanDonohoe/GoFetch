@@ -65,7 +65,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
 
-	<!-- ***** Specify session timeout of thirty (30) minutes. ***** -->
+	<!-- ***** Specify session timeout of (default = thirty (30)) ***** -->
 	<session-config>
 
 		<session-timeout>30</session-timeout>
@@ -96,12 +96,28 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/urlssocialdatacrawl</url-pattern>
 	</servlet-mapping>
 	<servlet>
+	<servlet-name>PremierLeagueCrawl</servlet-name>
+		<servlet-class>com.gofetch.controllers.PremierLeagueCrawl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PremierLeagueCrawl</servlet-name>
+		<url-pattern>/premierleaguecrawl</url-pattern>
+	</servlet-mapping> 
+	<servlet>
 		<servlet-name>DeleteURL</servlet-name>
 		<servlet-class>com.gofetch.controllers.DeleteURL</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>DeleteURL</servlet-name>
 		<url-pattern>/delete_url</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ImageCrawl</servlet-name>
+		<servlet-class>com.gofetch.controllers.ImageCrawl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ImageCrawl</servlet-name>
+		<url-pattern>/imagecrawl</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>TestServlet</servlet-name>
