@@ -14,18 +14,15 @@ public class ChartBean implements Serializable{
 	private String beanData;
 	
 	public ChartBean(){
-		//beanData = "Hello hello";
 	}
 
 	public String getBeanData() {
-		return "Hello!!!!";
+		return beanData;
 	}
 
 	public void setBeanData(String beanData) {
-		this.beanData = "Hello....";
+		this.beanData = beanData;
 	}
-	
-	
 	
 //	private CartesianChartModel categoryModel;  
 //	  

@@ -111,6 +111,34 @@ public class TextUtil {
 		
 		return url;
 	}
+	
+	/**
+	 * 
+	 * @param url - URL address to parse
+	 * @return - tidy version of the passed URL
+	 * 
+	 * removes http://www, https://www, and all trailing args after the first ?
+	 * ex. passed: http://www.marksandspencer.com/Maternity-Bras-Guide-Lingerie-Underwear-Womens/b/908657031?ie=UTF8&ie=UTF8?ie=UTF8&pf_rd_r=1R8EMRGQ20MJB1FAM6ZT&pf_rd_m=A2BO0OYVBKIQJM&pf_rd_t=101&pf_rd_i=1323471031&pf_rd_p=475115433&pf_rd_s=left-nav-2
+	 * returned: www.marksandspencer.com/Maternity-Bras-Guide-Lingerie-Underwear-Womens/b/908657031
+	 */
+	public static String tidyURLAddress(String url){
+		
+		String parsedAddress;
+		Integer secondDot, firstQuestionMark;
+		
+		// remove http:
+		parsedAddress = url.substring(7);
+		secondDot = parsedAddress.indexOf('.', 8);// find the dot after the first dot of http://www.
+		firstQuestionMark = parsedAddress.indexOf('?', secondDot++);
+		
+		if(firstQuestionMark < 0) // if there's no trailing arguments...
+			return parsedAddress; // just return
+		
+		parsedAddress = parsedAddress.substring(0, firstQuestionMark--);
+		
+		return parsedAddress;
+		
+	}
 
 
 }

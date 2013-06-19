@@ -12,6 +12,7 @@ import javax.el.MethodExpression;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -59,6 +60,16 @@ public class FullScreenDashboardBean implements Serializable {
 			.getName());
 	//
 	// /////////////
+	
+	private URLDBService urlDBService = new URLDBService();
+	
+	//////
+	// refs to other beans.. could have them as nested members??
+	
+    @ManagedProperty("#{clientTargetURLsBean}")
+	private ClientTargetURLsBean clientTargetURLsBean;
+	//
+	////////
 
 	// /////////////
 	// Entities:
@@ -68,6 +79,8 @@ public class FullScreenDashboardBean implements Serializable {
 												// want to break this
 												// functionality out...
 	private List<User> clientsSelectedByUser = new ArrayList<User>();
+	
+	private List<Integer> selectedTargetURLIds = new ArrayList<Integer>();
 	//private List<URL> sourceURLs = new ArrayList<URL>();
 	//private List<Link> links = new ArrayList<Link>();
 
@@ -114,6 +127,7 @@ public class FullScreenDashboardBean implements Serializable {
 	private GoogleChartsWrapper googleSocialChart = new GoogleChartsWrapper();
 	private GoogleChartsWrapper googleBackLinksChart = new GoogleChartsWrapper();
 	private BackLinkTableBean backLinkTableBean = new BackLinkTableBean();
+	//private ClientTargetURLsBean clientTargetURLsBean = new ClientTargetURLsBean();
 
 	// ////////////////////////////////////////////////////////
 	// Data structures for drop downs, menus, etc.
@@ -166,6 +180,108 @@ public class FullScreenDashboardBean implements Serializable {
 		
 
 		log.info("Entering FullScreenDashboard::clientSelectionChange()");
+		
+		List<Integer> clientsIDs = new ArrayList<Integer>();
+		
+		for (String clientID : selectedClients) {
+
+			clientsIDs.add(Integer.valueOf(clientID));
+
+		}
+		
+		List<URL> targetURLs = null;
+
+		// TODO: might be a more optimised way than just clearing
+		clientsSelectedByUser.clear();
+			//urlTreeBean.clearTree();
+
+		Integer clientFromDBID, clientIDFromUserSel;
+
+		// loop through the clients getting adding them to list if selected by
+		// user
+		for (int a = 0; a < clientsFromDB.size(); a++) {
+
+			for (int b = 0; b < clientsIDs.size(); b++) {
+
+				clientFromDBID = clientsFromDB.get(a).getId();
+				clientIDFromUserSel = clientsIDs.get(b);
+
+				if (clientFromDBID.equals(clientIDFromUserSel)) {
+
+					clientsSelectedByUser.add(clientsFromDB.get(a));
+		
+
+					// then need to get that client's target URLs / competitor
+
+//					targetURLs = urlDBService.getClientsTargetURLs(
+//							clientsSelectedByUser.get(0).getId(), true);
+
+				}
+			}
+
+		}
+//		if(null != targetURLs){
+			//Integer targetURLId = targetURLs.get(0).getId();
+			
+			/*TODO:  NEw - 11-6-13:
+			 * user selects client(s) from drop down menu...
+			 * now have selected client id's in: 
+			 * clientsSelectedByUser
+			 * 
+			 * check if users in clientsSelectedByUser are also in the clientTargetURLsBean.getClientAndTUrlList
+			 * 
+			 * but for now - just add the newly selected user..
+			*/
+		
+		//Create list to hold all selected clients and associated T URls:
+		List<ClientAndTUrls> clientAndURLsList = new ArrayList<ClientAndTUrls>();
+		
+			for(User selectedClient: clientsSelectedByUser){
+				
+				//create single new  ClientandURLs object and :
+				ClientAndTUrls clientAndURLs = new ClientAndTUrls();
+				
+				// 1. set user to the client selected;
+				clientAndURLs.setUser(selectedClient);
+				
+				// 2. get URLs: later move this to dynamically call it when user opens client tab..
+				targetURLs = urlDBService.getClientsTargetURLs(selectedClient.getId(), true);
+				
+				//3. add these, as unselected Target urls to the client_url object
+				
+				// need to create new URLAndBoolSelection object for each- can not cast... inefficient... replace..
+				
+				for(URL url: targetURLs){
+					URLAndBoolSelection urlAndBoolSel = new URLAndBoolSelection();
+					urlAndBoolSel.setUrl(url);
+					clientAndURLs.getUrls().add(urlAndBoolSel);
+				}
+				
+				// now add this to the list of all clients selected:
+				//TODO; need to add / remove any clients here...
+				
+				clientAndURLsList.add(clientAndURLs);
+				
+			}
+			
+			// then add: to the bean in the accordion:
+			clientTargetURLsBean.setClientAndTUrlList(clientAndURLsList);
+			
+			//clientTargetURLsBean.getClientAndTUrlList()clientFromDBID..
+			//( (LazyClientTURLsDataModel)clientTargetURLsBean.getDataModel()).setTargetURLId(targetURLId); 
+			//((LazyBackLinksDataModel)clientTargetURLsBean.getDataModel()).setTargetURLId(targetURLId);
+			//((LazyBackLinksDataModel)backLinkTableBean.getDataModel()).setTargetURLId(targetURLId);
+//		}
+		
+		
+//		((LazyClientTURLsDataModel) dataModel).setTargetURLId(targetURLId);
+		//clientTargetURLsBean
+//		((LazyBackLinksDataModel) dataModel).setTargetURLId(targetURLId);
+//		clientTargetURLsBean.setTargetURLAddress("");
+		//((LazyBackLinksDataModel)clientTargetURLsBean.getDataModel()).setTargetURLId(targetURLId);
+		
+		//////
+		// OLD
 
 //		List<Integer> clientsIDs = new ArrayList<Integer>();
 //
@@ -319,13 +435,14 @@ public class FullScreenDashboardBean implements Serializable {
 //			}
 //
 //		}
+		
 
 		showTree = true;
 		
 		// new version: just update the viewscoped bean, in the left content form, this will then access this
 		//	bean's selectedClients array and create new tree accordingly...
-		RequestContext context = RequestContext.getCurrentInstance();  
-		context.update("leftContentForm");
+//		RequestContext context = RequestContext.getCurrentInstance();  
+//		context.update("leftContentForm");
 
 		// testing email here...
 		// EmailWrapper.SendEmail("Alan@propellernet.co.uk", "Alan Donohoe",
@@ -387,6 +504,38 @@ public class FullScreenDashboardBean implements Serializable {
   
         FacesContext.getCurrentInstance().addMessage(null, message);  
     }  
+    
+    public void onNodeSelect(javax.faces.event.AjaxBehaviorEvent event){
+    	
+    	// clear data model... may be way to cache this...
+    	//backLinkTableBean.setDataModel(null);
+    	
+    	// go through all selected users....
+    	for(ClientAndTUrls clientsAndURLs: clientTargetURLsBean.getClientAndTUrlList()){
+    		
+    		// got through all the selected users' selected T URLs
+    		for(URLAndBoolSelection urlAndSelection: clientsAndURLs.getUrls()){
+    			
+    			//backLinkTableBean.getDataModel()
+    			
+    			if(urlAndSelection.isSelected()){
+    				
+    				// add to list if not already added:
+    				if(!selectedTargetURLIds.contains(urlAndSelection.getUrl().getId()))
+    					selectedTargetURLIds.add(urlAndSelection.getUrl().getId());
+    				
+    			}
+    			else{ // user has unselected this T URL - must be a more efficient way of doing this...
+    				if(selectedTargetURLIds.contains(urlAndSelection.getUrl().getId()))
+    					selectedTargetURLIds.remove(urlAndSelection.getUrl().getId());
+    			}
+    		}
+    		
+    	}
+    	
+    	// update the data model with the ID of the target URL...
+		backLinkTableBean.addBackLinksToTable(selectedTargetURLIds);
+    }
   
     public void onNodeSelect(NodeSelectEvent event) {  
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Selected", event.getTreeNode().toString());  
@@ -714,6 +863,14 @@ public class FullScreenDashboardBean implements Serializable {
 
 	public void setClientsSelectedByUser(List<User> clientsSelectedByUser) {
 		this.clientsSelectedByUser = clientsSelectedByUser;
+	}
+
+	public ClientTargetURLsBean getClientTargetURLsBean() {
+		return clientTargetURLsBean;
+	}
+
+	public void setClientTargetURLsBean(ClientTargetURLsBean clientTargetURLsBean) {
+		this.clientTargetURLsBean = clientTargetURLsBean;
 	}
 
 //	public URLTreeBean getUrlTreeBean() {

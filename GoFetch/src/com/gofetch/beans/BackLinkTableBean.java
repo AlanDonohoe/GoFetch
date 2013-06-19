@@ -23,6 +23,11 @@ import com.gofetch.entities.URL;
 import com.gofetch.entities.URLAndLinkData;
 import com.gofetch.entities.URLDBService;
 
+/**
+ * Manages the data for the datatable holding backlinks 
+ * @author alandonohoe
+ *
+ */
 @ManagedBean
 @SessionScoped
 public class BackLinkTableBean implements Serializable {
@@ -38,10 +43,6 @@ public class BackLinkTableBean implements Serializable {
 
 	private URLAndLinkData selectedBackLink;
 
-	// private List<URLAndLinkData> selectedURLAndLinkData = new
-	// ArrayList<URLAndLinkData>();
-	// private Integer urlId; // the id of the target url selected by the user.
-
 	private URLAndLinkData[] selectedURLAndLinkDataArray;
 
 	private String earliestLinkDate;
@@ -52,37 +53,18 @@ public class BackLinkTableBean implements Serializable {
 		dataModel = new LazyBackLinksDataModel();
 		
 		//TODO: temp hack until we get the tree -> datatable working...
-		
 		earliestLinkDate = "February 2013";
 		latestLinkDate = "April 2013";
 		
 
 	}
 
-	// now in the data model - will only access DB via that - set datamodel
-	// target url id, delete when tested...
-	// public void updateBackLinkData(Integer targetURLId) {
-	//
-	// //backLinkData = getBackLinkDataFromDB(targetURLId);
-	// //dataModel = new LazyBackLinksDataModel(backLinkData);
-	//
-	// }
-
 	public void addBackLinksToTable(Integer targetURLId) {
 
 		log.info("Entering BacklinkTableBean::addBackLinksToTable(...) targetURLId = "
 				+ Integer.toString(targetURLId));
 
-		// backLinkData.clear();
-		// move to default constrcutor
-		// if(null == dataModel)
-		// dataModel = new LazyBackLinksDataModel();
-
-		// old:
-		// backLinkData = getBackLinkDataFromDB(targetURLId);
-		// ((LazyBackLinksDataModel)dataModel).addBackLinksToData(backLinkData);
-
-		// new - now when load gets called - we just make lazy load calls to DB
+		// when load gets called - we just make lazy load calls to DB
 		// there... based on page size, etc...
 		((LazyBackLinksDataModel) dataModel).setTargetURLId(targetURLId);
 	}
@@ -103,73 +85,9 @@ public class BackLinkTableBean implements Serializable {
 		this.dataModel = dataModel;
 	}
 
-	// public Integer getUrlId() {
-	// return urlId;
-	// }
-	//
-	// public void setUrlId(Integer urlId) {
-	// this.urlId = urlId;
-	// }
-
-	// move this to the datamodel....???
-	// public List<URLAndLinkData> getBackLinkDataFromDB(Integer targetURLId) {
-	//
-	// sourceURLs = urlDB.getBackLinkURLs(targetURLId);
-	// links = linkDB.getAllLinks(targetURLId);
-	//
-	// for (int i = 0; i < sourceURLs.size(); i++) {
-	//
-	// URLAndLinkData urlAndLink = new URLAndLinkData();
-	//
-	// urlAndLink.setUrl(sourceURLs.get(i));
-	// urlAndLink.setLink(links.get(i));
-	//
-	// urlAndLink.setTargetURLId(targetURLId);
-	//
-	// backLinkData.add(urlAndLink);
-	//
-	// }
-	//
-	// return backLinkData;
-	//
-	// }
-
-	// public List<URLAndLinkData> getBackLinkData() {
-	// return backLinkData;
-	// }
-	//
-	// public void setBackLinkData(List<URLAndLinkData> backLinkData) {
-	// this.backLinkData = backLinkData;
-	// }
-
 	public void onRowSelect(SelectEvent event) {
 		selectedBackLink = (URLAndLinkData) event.getObject();
 	}
-
-	// public List<URLAndLinkData> getSelectedURLAndLinkData() {
-	// return selectedURLAndLinkData;
-	// }
-	//
-	// public void setSelectedURLAndLinkData(
-	// List<URLAndLinkData> selectedURLAndLinkData) {
-	// this.selectedURLAndLinkData = selectedURLAndLinkData;
-	// }
-
-	// public List<URL> getSourceURLs() {
-	// return sourceURLs;
-	// }
-	//
-	// public void setSourceURLs(List<URL> sourceURLs) {
-	// this.sourceURLs = sourceURLs;
-	// }
-	//
-	// public List<Link> getLinks() {
-	// return links;
-	// }
-	//
-	// public void setLinks(List<Link> links) {
-	// this.links = links;
-	// }
 
 	public URLAndLinkData[] getSelectedURLAndLinkDataArray() {
 		return selectedURLAndLinkDataArray;
@@ -188,15 +106,15 @@ public class BackLinkTableBean implements Serializable {
 
 	public void checkBoxSelected(SelectEvent se) {
 
-		int i = 0;
-		i++;
+//		int i = 0;
+//		i++;
 
 	}
 
 	public void checkBoxUnselected(UnselectEvent se) {
 
-		int i = 0;
-		i++;
+//		int i = 0;
+//		i++;
 
 	}
 	
@@ -254,6 +172,12 @@ public class BackLinkTableBean implements Serializable {
 	public static void setLog(Logger log) {
 		BackLinkTableBean.log = log;
 	}
-	
+
+
+	public void addBackLinksToTable(List<Integer> selectedTargetURLIds) {
+		
+		((LazyBackLinksDataModel) dataModel).setTargetURLIds(selectedTargetURLIds);
+		
+	}
 	
 }

@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import com.gofetch.entities.ClientCategory;
+
 //import javax.persistence.Persistence;
 //import javax.persistence.PersistenceUnit;
 

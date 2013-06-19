@@ -1296,8 +1296,6 @@ public class URLDBService implements Serializable{
 			Integer limitEnd) {
 		log.info("Entering getBackLinkURLs: Start = " + Integer.toString(limitStart) + ". End = " + Integer.toString(limitEnd));
 		List<URL> result = null;
-		// temp test 
-		//limitStart = 1;
 		
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
@@ -1329,6 +1327,44 @@ public class URLDBService implements Serializable{
 			
 		return result; 
 	}
+	
+	/**
+	 * 
+	 * @param links list of links that we want the urls
+	 * @return - list of urls that are the source urls in the list of links passed
+	 */
+	@SuppressWarnings("unchecked")
+	public List<URL> getBackLinkURLs(List<Integer> sourceIDs) {
+		
+		log.info("Entering getBackLinkURLs - list of links version");
+		List<URL> result = null;
+		
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		Query query = mgr.createQuery("SELECT u FROM URL u WHERE u.url_id IN :sourceIDs ORDER BY u.url_id")
+										.setParameter("sourceIDs", sourceIDs);
+		
+		try{
+			
+			result= query.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getBackLinkURLs (Link List version) ";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		
+		
+		
+		return result;
+		
+	}
+		
+	
 	
 	@SuppressWarnings("unchecked")
 	public List<URL> getURLsWithImage() {
@@ -1394,4 +1430,32 @@ public class URLDBService implements Serializable{
 		
 		
 	}
+	
+	public Integer noOfClientURLs(Integer clientID){
+		
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		Integer result = null;
+		
+		try {
+
+			result =  (Integer) mgr.createQuery("SELECT COUNT(u) FROM URL u WHERE u.users_user_id = :clientID")
+			.setParameter("clientID",  clientID)
+			.getSingleResult();
+
+
+
+		}catch(Exception e){
+			String msg = "Exception thrown: URLService: noOfClientURLs";
+			log.severe(msg + e.getMessage());
+
+		}  finally {
+			mgr.close();
+		}
+		
+		return result;
+		
+	}
+
 }

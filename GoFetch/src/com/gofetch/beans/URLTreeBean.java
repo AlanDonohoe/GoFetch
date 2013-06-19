@@ -32,7 +32,7 @@ import com.gofetch.models.URLNodeImpl;
 //import com.gofetch.models.URLNodeImpl;
 
 @ManagedBean(name = "urlTreeBean")
-@ViewScoped
+@SessionScoped
 public class URLTreeBean implements Serializable {
 
 	/**
@@ -137,9 +137,13 @@ public class URLTreeBean implements Serializable {
 
 		if (!fullScreenDashboardBean.getClientsSelectedByUser().isEmpty()) {
 
-			targetURLs = urlDBService.getClientsTargetURLs(
-					fullScreenDashboardBean.getClientsSelectedByUser().get(0)
-							.getId(), true);
+			// 	ORig
+//			targetURLs = urlDBService.getClientsTargetURLs(
+//					fullScreenDashboardBean.getClientsSelectedByUser().get(0)
+//							.getId(), true);
+			
+			// test:
+			targetURLs = urlDBService.getClientsTargetURLs(1, true);
 
 			for (int c = 0; c < targetURLs.size(); c++) {
 

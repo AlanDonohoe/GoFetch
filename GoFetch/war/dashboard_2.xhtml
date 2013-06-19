@@ -6,140 +6,248 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	lang="en">
-    
-    <h:head>
-
-	<link type="text/css" rel="stylesheet" href="css/style.css"></link>
-    <!--
-     <script type="text/javascript" src="js/dashboard.js"></script> 
-     
-     <script src='js/jquery-1.8.0.min.js' type="text/javascript"></script>
-     -->
-    
-    <title>Dashboard v1.3 </title>
-	
-	</h:head>
-<h:body>
-  <p:layout fullPage="true" widgetVar="layoutWdgt">
+<h:head>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  </link>
   
-    <p:layoutUnit position="north" size="65" resizable="false">
-   
-      
-      <div id="top_right_container">
-					<ul>
-						<li><strong> alan@propellernet.co.uk </strong> |</li>
-						<li><a href="#" target="_blank"> My Account </a> |</li>
-						<li><a href="/help.html" target="_blank"> Help </a></li>
-					</ul>
-				</div>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript" src="js/dashboard.js"></script>
+	<script type="text/javascript" src="js/dashboard_charts.js"></script>
+    
+    <script type="text/javascript">
 
-				<div id="logo_container">
-							<a id="logo_small_left" class="ir float_left"
-								href="http://gofetchdata.appspot.com/"></a>
-						</div>
-                        
-				<h:form id="north_content_form">
+	// move all this somehow to dashboard_charts.js
 
-					<div id="companyheader">
-						
+	  google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
 
-						<p:toolbar id="top_toolbar">
 
-							<p:toolbarGroup align="left">
-                            <!--
+
+      function drawChart() {
+
+		  /*
+		var socialDataServer = ${fullScreenDashboardBean.googleSocialChart.socialDataString};
+		
+		var socialDataClient = google.visualization.arrayToDataTable(socialDataServer);
+		
+        var options = {
+          title: ''
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('social_history_chart'));
+        chart.draw(socialDataClient, options);
+		 */
+      }
+
+
+	 </script>
+     
+     <script type="text/javascript">
+
+	 	function updateChart(){
+
+		var hiddenSocialData = document.getElementById('centreContentForm:hiddenSocialDataString').value;
+
+		var socialDataAr = eval(hiddenSocialData);
+
+		var socialDataClientUpdated = google.visualization.arrayToDataTable(socialDataAr);
+
+        var options = {
+          title: ''
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('social_history_chart'));
+        chart.draw(socialDataClientUpdated, options);
+
+		}
+
+	 </script>
+     
+      <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38606779-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  
+  <title>Dashboard v1.3</title>
+</h:head>
+<h:body>
+<p:layout fullPage="true" widgetVar="layoutWdgt">
+<p:layoutUnit position="north" size="65" resizable="false">
+
+<div id="top_right_container">
+  <ul>
+    <li><strong> alan@propellernet.co.uk </strong> |</li>
+    <li><a href="#" target="_blank"> My Account </a> |</li>
+    <li><a href="/help.html" target="_blank"> Help </a></li>
+  </ul>
+</div>
+<div id="logo_container"> <a id="logo_small_left" class="ir float_left"
+								href="http://gofetchdata.appspot.com/"></a> </div>
+<h:form id="north_content_form">
+  <div id="companyheader">
+    <p:toolbar id="top_toolbar">
+      <p:toolbarGroup align="left"> 
+        <!--
 								<p:commandButton widgetVar="clientsDBBtn"
 									onclick="showClientDashboard()" type="push" value="Clients" />
                                     -->
-                                    <p:selectCheckboxMenu id="selectClientDropMenu"
+        <p:selectCheckboxMenu id="selectClientDropMenu"
 							styleClass="float_left"
 							value="#{fullScreenDashboardBean.selectedClients}" label="Clients"
 							filter="true" filterText="Filter" filterMatchMode="startsWith"
 							panelStyle="width:280px"
 							style="width:86px; height:25px; padding-top:6px; padding-bottom:2px overflow:hidden ">
-							<p:ajax
+          <p:ajax
 								listener="#{fullScreenDashboardBean.clientSelectionChange}"
-								update=":leftContentForm" 
-                                process="@form"/>
-							<f:selectItems value="#{fullScreenDashboardBean.clientsMenu}" />
-							<f:selectItem itemLabel="* Add New Client" itemValue="" />
-						</p:selectCheckboxMenu>
-								<p:separator />
-								<p:commandButton widgetVar="contactsDBBtn"
+								update=":leftContentForm" />
+          <f:selectItems value="#{fullScreenDashboardBean.clientsMenu}" />
+          <f:selectItem itemLabel="* Add New Client" itemValue="" />
+        </p:selectCheckboxMenu>
+        <p:separator />
+        <p:commandButton widgetVar="contactsDBBtn"
 									onclick="showContactsDashboard()" type="push" value="Contacts" />
-								<p:separator />
-								<p:commandButton widgetVar="urlsLinksDBBtn"
+        <p:separator />
+        <p:commandButton widgetVar="urlsLinksDBBtn"
 									onclick="showURLsLinksDashboard()" type="push"
 									value="URLs/Links" />
-
-
-							</p:toolbarGroup>
-							<p:toolbarGroup align="right">
-
-								<p:autoComplete value="#{goFetchRequestBean.url}" id="targetURL"
+      </p:toolbarGroup>
+      <p:toolbarGroup align="right">
+        <p:autoComplete value="#{goFetchRequestBean.url}" id="targetURL"
 									completeMethod="#{goFetchRequestBean.completeURLs}" 
 									maxResults="5" minQueryLength="7"></p:autoComplete>
-
-								<span id="url_add_search_btns"> <p:commandButton
+        <span id="url_add_search_btns">
+        <p:commandButton
 										widgetVar="contactsDBBtn" onclick="#" type="push"
-										value="Search" /> <p:commandButton widgetVar="urlsLinksDBBtn"
+										value="Search" />
+        <p:commandButton widgetVar="urlsLinksDBBtn"
 										onclick="#" type="push" value="Add" />
-								</span>
-							</p:toolbarGroup>
-						
-						</p:toolbar>
-					</div>
+        </span> </p:toolbarGroup>
+    </p:toolbar>
+  </div>
+</h:form>
+</p:layoutUnit>
 
+<!-- Left hand panel content -->
 
-				</h:form>
-                
-                
-    </p:layoutUnit>
-    
-    <!-- Left hand panel content -->
-
-			<p:layoutUnit widgetvar="west_content_widget" id="west_content_panel"
+<p:layoutUnit widgetvar="west_content_widget" id="west_content_panel"
 				position="west" size="300" resizable="true" closable="false"
 				collapsible="true" collapseSize="30" styleClass="client_dashboard, urlLinks_dashboard" header="Target URLs">
-
-				<h:form id="leftContentForm">
-                
-                <div id="url_tree" class="client_dashboard, urlLinks_dashboard">
-          
-                            
-                            
-                             <p:growl id="growl1" showSummary="true" showDetail="true"
-							autoUpdate="true" />
-      <p:tree id="tree1"
-							value="#{urlTreeBean.root}" var="node"
-							selectionMode="single"
-							selection="#{urlTreeBean.selectedNode}"
-							rendered="true" dyanmic="true" cache="false"  
-                            style="width:100%">
-                            <p:ajax event="select" update=":leftContentForm:growl1" listener="#{urlTreeBean.onNodeSelect}" />
+  <h:form id="leftContentForm">
+    <div id="clients_t_urls" class="client_dashboard, urlLinks_dashboard"> 
       
-        <p:treeNode>
-          <h:outputText value="#{node}" />
-        </p:treeNode>
+      <p:tabView id="clientsAndURLsTab" var="selectedClients" value="#{clientTargetURLsBean.clientAndTUrlList}"
+				 orientation="left" style="font-size:10px; border:none;">
+        <p:tab id="clientTab" title="#{selectedClients.user.displayed_name}">
+          <p:dataList value="#{selectedClients.urls}" var="turl" itemType="none">
+         
+          <h:selectBooleanCheckbox value="#{turl.selected}" >
+            <f:ajax event="click" listener="#{fullScreenDashboardBean.onNodeSelect}" render=":centreContentForm"	execute="@this" />
+          </h:selectBooleanCheckbox>
+          <h:outputText value="#{turl.url.url_address}" styleClass="target_url_li"/>
         
-        <p:ajax event="expand" update=":leftContentForm:growl1" listener="#{urlTreeBean.onNodeExpand}" />
-        <p:ajax event="collapse" update=":leftContentForm:growl1" listener="#{urlTreeBean.onNodeCollapse}" />
-        <p:ajax event="unselect" update=":leftContentForm:growl1" listener="#{urlTreeBean.onNodeUnselect}" />
-     
- 		  
-      </p:tree>
-				
-
-				</div>
-				</h:form>
-			</p:layoutUnit>
-            
-            
-    <p:layoutUnit position="center" id="centre_content_panel"
-				closable="false" collapsible="false" resizable="true">
-    <h:form id="centreContentForm" class="client_dashboard">
+        </p:dataList>  
+          
+        </p:tab>
+      </p:tabView>
       
-    </h:form>
-    </p:layoutUnit>
-  </p:layout>
+   
+    </div>
+  </h:form>
+</p:layoutUnit>
+<p:layoutUnit position="center" id="centre_content_panel"
+				closable="false" collapsible="false" resizable="true">
+  <h:form id="centreContentForm" class="client_dashboard">
+    <h:inputText id="hiddenSocialDataString" value="#{fullScreenDashboardBean.googleSocialChart.socialDataString}" style="display:none"></h:inputText>
+    <p:menubar autoDisplay="false">
+      <p:submenu label="Data" icon="ui-icon-document">
+        <p:submenu label="Download Data" icon="ui-icon-contact">
+          <p:menuitem value=".csv" url="#" />
+          <p:menuitem value=".xls" url="#" />
+        </p:submenu>
+      </p:submenu>
+      <p:submenu label="Alerts" icon="ui-icon-alert">
+        <p:menuitem value="Your Alerts" url="#" />
+        <p:menuitem value="Set New Alert" url="#" />
+      </p:submenu>
+      <p:submenu label="Reports" icon="ui-icon-clipboard">
+        <p:menuitem value="Coverage Book" url="/coveragebook.jsf" />
+      </p:submenu>
+    </p:menubar>
+    <p:panel id="links_panel" header="Links" toggleable="true"
+						toggleSpeed="500" closeSpeed="500" widgetVar="links_panel"> 
+      
+      <p:dataTable var="urlAndLink" value="#{fullScreenDashboardBean.backLinkTableBean.dataModel}" paginator="true" rows="10"  
+                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"  
+                 rowsPerPageTemplate="5,10,25,50" 
+                 selection="#{fullScreenDashboardBean.backLinkTableBean.selectedURLAndLinkDataArray}" 
+                 rowSelectListener="#{fullScreenDashboardBean.backLinkTableBean.checkBoxSelected}" 
+                 rowUnselectListener="#{fullScreenDashboardBean.backLinkTableBean.checkBoxUnselected}"
+                 id="URLAndLinkDataTable" lazy="true">
+        <p:column selectionMode="multiple" style="width:2%"/>
+        <p:ajax event="rowSelect" listener="#{fullScreenDashboardBean.backLinkTableBean.onRowSelect}" update=":centreContentForm" />
+        <p:column headerText="Address" sortBy="#{urlAndLink.tidyURLAddress}" 
+        filterBy="#{urlAndLink.tidyURLAddress}" style="width:25%">
+          <h:outputText value="#{urlAndLink.tidyURLAddress}" />
+        </p:column>
+        <p:column headerText="Date" sortBy="#{urlAndLink.tidyDate}" 
+        filterBy="#{urlAndLink.url.date}" style="width:10%">
+          <h:outputText value="#{urlAndLink.tidyDate}" />
+        </p:column>
+        <p:column headerText="Anchor Text" sortBy="#{urlAndLink.link.anchor_text}" 
+        filterBy="#{urlAndLink.link.anchor_text}" style="width:15%" >
+          <h:outputText value="#{urlAndLink.link.anchor_text}" />
+        </p:column>
+        <p:column headerText="DA" sortBy="#{urlAndLink.url.domain_authority}" style="width:5%" >
+          <h:outputText value="#{urlAndLink.url.domain_authority}" />
+        </p:column>
+        <p:column headerText="PA" sortBy="#{urlAndLink.url.page_authority}" style="width:5%" >
+          <h:outputText value="#{urlAndLink.url.page_authority}" />
+        </p:column>
+        <p:column headerText="Target URL" sortBy="#{urlAndLink.tidyTargetURLAddress}" style="width:5%" >
+          <h:outputText value="#{urlAndLink.tidyTargetURLAddress}" />
+        </p:column>
+        <p:column headerText="Link Activity" sortBy="#{urlAndLink.linkBuildingActivity}" style="width:5%" >
+          <h:outputText value="#{urlAndLink.linkBuildingActivity}" />
+        </p:column>
+        <p:column headerText="Get Social Data" style="width:25%">
+          <p:selectBooleanCheckbox value="#{urlAndLink.url.get_social_data}"/>
+        </p:column>
+        <p:column headerText="Get BackLinks" style="width:5%">
+          <p:selectBooleanCheckbox value="#{urlAndLink.url.get_backlinks}"/>
+        </p:column>
+      </p:dataTable>
+      <p:blockUI block="URLAndLinkDataTable" trigger="URLAndLinkDataTable"><br />
+        <p:graphicImage value="/images/ajax-loader.gif" />
+      </p:blockUI>
+      
+      
+      <div id="links_chart"></div>
+    </p:panel>
+    <!--
+					<p:blockUI block="links_panel" trigger=":leftContentForm:clients_t_urls"><br />
+						<p:graphicImage value="/images/ajax-loader.gif" />
+					</p:blockUI>
+                    -->
+    <p:panel id="social_history_panel" header="Social Data History"
+						toggleable="true" toggleSpeed="500" closeSpeed="500"
+						widgetVar="social_history_panel">
+      <div id="social_history_chart"></div>
+    </p:panel>
+    <p:panel id="datatable_panel" toggleable="true" toggleSpeed="500"
+						closeSpeed="500" widgetVar="datatable_panel"> 
+      
+    </p:panel>
+  </h:form>
+</p:layoutUnit>
+</p:layout>
 </h:body>
 </html>

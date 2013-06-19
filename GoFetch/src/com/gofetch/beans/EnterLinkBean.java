@@ -52,12 +52,6 @@ public class EnterLinkBean implements Serializable {
 
 	private boolean uploadingExcelLinks;
 
-	//private List<String> errorReport = new ArrayList<String>();
-	//private List<String> successReport = new ArrayList<String>();
-
-	//
-	// //////
-
 	// /////////
 	// used in drop down box selections
 	private List<String> selectedClients;
@@ -143,18 +137,12 @@ public class EnterLinkBean implements Serializable {
 		// 1. progress bar.....
 		// http://www.primefaces.org/showcase/ui/progressBar.jsf
 		
-	
-		
-
-
-		//int iSize = links.size();		
 		boolean success = true; // at the moment, when we hit a problem - cancel the whole process then. though report to user that x no of links have been proccessed and what they need to do to fix this one to continue...
 		boolean multipleLinks;
 		Integer usersIDFromDB;
 		Integer noOfCurrentLink= 0;
 		Integer noOfLinks = links.size();
 		Integer noOfLinksToCheck;
-		//Integer noOfLinksProcessed;
 		String sourceURLAddress = "";
 		String targetURLAddress = "";
 		boolean failure = false;
@@ -268,21 +256,9 @@ public class EnterLinkBean implements Serializable {
 						FacesContext.getCurrentInstance().addMessage(null, msg);
 						return null; 
 					}
-					
-					
-					
 				}
-
 			}
 		}
-		
-		
-		
-		//
-		////////////////
-		
-
-
 
 		//////////////////
 		if(uploadingExcelLinks)
@@ -1288,8 +1264,5 @@ public class EnterLinkBean implements Serializable {
 	public void setActiveTabIndex(Integer activeTabIndex) {
 		this.activeTabIndex = activeTabIndex;
 	}
-
-
-
 
 }

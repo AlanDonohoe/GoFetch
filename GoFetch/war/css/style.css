@@ -66,8 +66,7 @@ input:invalid, textarea:invalid { border-radius: 1px;  -moz-box-shadow: 0px 0px 
 .no-boxshadow input:invalid, 
 .no-boxshadow textarea:invalid { background-color: #f0dddd; }
 
-::-moz-selection{ background: #FFD204; color:#fff; text-shadow: none; }
-::selection { background:#FFD204; color:#fff; text-shadow: none; } 
+
 a:link { -webkit-tap-highlight-color: #000; color: #000;  } /* was: #FFD204;*/
 
 button {  width: auto; overflow: visible; }
@@ -2920,4 +2919,92 @@ width:80%;
 
 .padtop{
 	padding-top:80px;
+}
+
+
+.ui-accordion-header{
+	
+}
+
+/* Target URLs List*/
+
+ 
+#leftContentForm\3AclientsAndURLsTab\3A0\3AclientTab h2 {
+  font: 400 40px/1.5 Helvetica, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+ 
+#clients_target_urls_ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ 
+.target_url_li {
+  font: 8px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom:5px;
+}
+ 
+.target_url_li:last-child {
+  border: none;
+}
+ 
+.target_url_li {
+  text-decoration: none;
+  color: #000;
+  display: inline-block;
+  word-wrap:break-word;
+ 
+  -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -o-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
+  transition: font-size 0.3s ease, background-color 0.3s ease;
+}
+ 
+.target_url_li :hover {
+  font-size: 12px;
+}
+
+.target_url_li_box{
+	display:inline;
+}
+
+#centre_content_panel{
+	font-size:12px;
+}
+
+#west_content_panel{
+	background-color:#CCC;
+}
+
+#west_content_panel .ui-layout-unit-content{
+	background-color:#CCC;
+}
+
+#leftContentForm .ui-widget-content{
+	border:none;
+}
+
+#leftContentForm .ui-tabs-left > .ui-tabs-nav{
+	height:100%;
+	background-color:#CCC;
+}
+
+#leftContentForm #clients_t_urls{
+	
+	background-color:#CCC;
+}
+
+#leftContentForm .ui-chkbox{
+	width: 10px;
+	height: 10px;
+}
+
+
+#leftContentForm .ui-chkbox chkbox-box{
+	width: 8px;
+	height: 8px;
 }

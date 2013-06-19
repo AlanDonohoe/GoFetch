@@ -61,28 +61,6 @@ public class EnterURLBean implements Serializable {
 
 		int noOfURLs = urls.length;
 
-		//TODO: replace this loop with a query that just returns all url's addresses in DB
-
-		//		//if(null == urlAddressesInDB){
-		//		// old code:
-		//			urlsinDB = urlDB.getURLs();
-		//
-		//			for (URL url : urlsinDB) {
-		//				urlAddressesInDB.add(url.getUrl_address());
-		//			}
-		//		//}
-
-		// new code:
-		//		urlAddressesInDB = urlDB.getURLAddresses();
-		////////////
-
-		///////////////
-		// replaced here:
-		//TODO: not working... JQPL - dont know if you can select a single field....
-		//urlAddressesInDB = urlDB.getURLAddresses();
-		//
-		// ////// getURLAddresses
-
 		// //////////
 		// check all entries length and "http://" prefix
 		for (int i = 0; i < noOfURLs; i++) {
@@ -128,10 +106,6 @@ public class EnterURLBean implements Serializable {
 			String urlAddress = urlList.get(x);
 			urlAddress = TextUtil.replaceHttpsWithHttp(urlAddress);	
 
-			// add trailing slash to all urls so they can be checked against normalised urls in DB
-			// old code:
-			//if ((urlAddressesInDB.contains(urlList.get(x)))||(urlAddressesInDB.contains(TextUtil.addSlashToEndOfString(urlList.get(x))))) { // check that url not already in DB....
-			//new code:
 			if ((urlDB.urlInDB(urlAddress))||(urlDB.urlInDB(TextUtil.addSlashToEndOfString(urlAddress)))) { // check that url not already in DB....
 
 				tempString = urlAddress

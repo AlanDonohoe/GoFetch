@@ -63,8 +63,6 @@ public class DataEntryBacking implements Serializable {
 
 	}
 
-	//private Integer activeTabIndex;
-
 	// used in autocomplete
 	private List<String> urlAddressesInDB = new ArrayList<String>();
 	private List<URL> urlsinDB = null;
@@ -76,16 +74,6 @@ public class DataEntryBacking implements Serializable {
 
 	private boolean uploadingExcelLinks;
 	private Integer user_id;
-
-
-
-	/////////////////////
-	//TODO: delete after testing.
-	//private String targetURL;
-	//private String campaign;
-	//private List<String> errorReport = new ArrayList<String>();
-	//private List<String> successReport = new ArrayList<String>();
-	//////////////////////
 	
 	public NewClientBean getNewClientBean() {
 		return newClientBean;
@@ -155,13 +143,7 @@ public class DataEntryBacking implements Serializable {
 
 		selectedClientsKey = "";
 		selectedCampaignKey = "";
-
-		//activeTabIndex = 0;
-
-
 	}
-
-	
 
 	public List<String> getSelectedTargetURLs() {
 		return selectedTargetURLs;
@@ -244,13 +226,6 @@ public class DataEntryBacking implements Serializable {
 		this.selectedClientsKey = selectedClientsKey;
 	}
 
-
-
-	// - end of SelectCheckboxMenu
-	// //////////
-
-
-
 	public String getSelectedCampaignKey() {
 		return selectedCampaignKey;
 	}
@@ -267,8 +242,6 @@ public class DataEntryBacking implements Serializable {
 	public void setUser_id(Integer user_id) {
 		this.user_id = user_id;
 	}
-
-
 
 	public List<ManualLink> getLinks() {
 		return links;
@@ -293,10 +266,6 @@ public class DataEntryBacking implements Serializable {
 	public void setUrlsinDB(List<URL> urlsinDB) {
 		this.urlsinDB = urlsinDB;
 	}
-
-
-
-
 
 	public List<String> getResultsAutoComplete() {
 		return resultsAutoComplete;
@@ -329,12 +298,11 @@ public class DataEntryBacking implements Serializable {
 		// 1. progress bar.....
 		// http://www.primefaces.org/showcase/ui/progressBar.jsf
 
-		//int iSize = links.size();		
-		boolean success = true; // at the moment, when we hit a problem - cancel the whole process then. though report to user that x no of links have been proccessed and what they need to do to fix this one to continue...
+		//boolean success = true; // at the moment, when we hit a problem - cancel the whole process then. though report to user that x no of links have been proccessed and what they need to do to fix this one to continue...
+		//Integer noOfLinksProcessed;		
 		boolean multipleLinks;
 		Integer usersIDFromDB;
 		Integer noOfCurrentLink= 0;
-		//Integer noOfLinksProcessed;
 
 		String successReport = "";
 		String errorReport = "";
@@ -372,23 +340,12 @@ public class DataEntryBacking implements Serializable {
 				String targetURLAddress = currentLink.getTargetUrl();
 				String sourceURLAddress = currentLink.getSourceUrl();
 				URL targetURLDB, sourceURLDB;
-				//Integer usersIDFromDB;
-				//success = true;
+
 
 				//TODO: check this default... assuming all urls entered as part of links ought to be monitored for social data...
 				currentLink.setSocialData(true);
 
-				// moved this outside loop - test and then delete...
-				//				if(uploadingExcelLinks) //TODO: move this to outside the loop - only need to get client once
-				//					usersIDFromDB = getUsersIDFromDB(currentLink.getClient());
-				//				else
-				//					usersIDFromDB = user_id;
-
-				//TODO: move this to outside the loop - only need to check it once....
-				// *2: check user is in the Db as a client...
-				//if(usersIDFromDB > 0){
-
-				// *3: get target url from url table:
+				// *2: get target url from url table:
 				targetURLDB = urlDBService.getURL(targetURLAddress);
 
 				// if the Target URL already exists in DB but does not have client or campaign associated with it, then update with current entered user data
@@ -440,9 +397,6 @@ public class DataEntryBacking implements Serializable {
 					}
 				}
 
-
-
-
 				successReport += "Target: " + targetURLAddress;
 				successReport += "Source:" + sourceURLAddress;
 
@@ -453,8 +407,6 @@ public class DataEntryBacking implements Serializable {
 				//if doesnt exist in url table - create url
 
 				if(null == sourceURLDB){
-
-					//successReport += "New Source URL: " + sourceURLAddress;
 
 					try{
 						//TODO: need to check with a lot of the assumptions made when creating this URL - no backlinks no social monitoring.. etc... 
@@ -538,8 +490,6 @@ public class DataEntryBacking implements Serializable {
 		link.setData_entered_by(dataEnteredBy);
 		link.setDate_detected(date);
 		
-		//6 - 2- 13: legacy code - replace with subsequent line
-		//link.setFinal_target_url(targetURLAddress);
 		link.setFinal_target_url_id(targetID);
 		
 		link.setSource_id(sourceID);
@@ -1082,36 +1032,6 @@ public class DataEntryBacking implements Serializable {
 	//	backlink urls....
 
 	public List<String> complete(String query) {
-
-		// TODO: replace this with one call - get URLaddresses and use a native
-		// query in the URLDB's JPQL....
-		// OLD CODE:
-		//	if (urlAddressesInDB.isEmpty()) {
-		//		URLDBService urlDB = new URLDBService();
-		//		urlsinDB = urlDB.getURLs();
-		//
-		//		for (URL url : urlsinDB) {
-		//			urlAddressesInDB.add(url.getUrl_address());
-		//		}
-		//
-		//	}
-
-		//NEW CODE:
-		//TODO: move this to a one off call..???? - yes - moved to postconstruct
-		//	and remember to index the addresses in the DB AND only get target URLs
-		//		if (urlAddressesInDB.isEmpty()) {
-		//			URLDBService urlDB = new URLDBService();
-		//			urlAddressesInDB = urlDB.getURLAddresses();
-		//		}
-		
-//		
-//
-//		for (String possibleURL : urlAddressesInDB) {
-//
-//			if (possibleURL.startsWith(query)) {
-//				resultsAutoComplete.add(possibleURL);
-//			}
-//		}
 		
 		urlDB = new URLDBService();
 		
