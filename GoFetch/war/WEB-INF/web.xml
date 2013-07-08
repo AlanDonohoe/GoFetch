@@ -62,7 +62,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<!-- Map these files with JSF -->
 	<servlet-mapping>
-
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>/faces/*</url-pattern>
 		<url-pattern>*.jsf</url-pattern>
@@ -75,6 +74,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<session-timeout>30</session-timeout>
 
 	</session-config>
+	<servlet>
+		<servlet-name>GetSocialData</servlet-name>
+		<servlet-class>com.gofetch.controllers.GetSocialData</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetSocialData</servlet-name>
+		<url-pattern>/getsocialdata</url-pattern>
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>GoFetch</servlet-name>
 		<servlet-class>com.gofetch.controllers.GoFetchServlet</servlet-class>

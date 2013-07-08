@@ -232,10 +232,13 @@ public class GetSocialDataHelper {
 
 			// for each backlink, get social data and then add as a new node pointing to this as the parent...
 			for(URL backLink : backLinks){
+				
+				//edge case where target URL has a link to itself - this would result in a never-ending loop - so skip getting backlinks for this case
+				if(backLink.getId() != node.getUrlPlusSocialData().getUrl().getId()){
 
 				try{
 
-					URLPlusSocialData urlPlusSocialData = new URLPlusSocialData();
+					URLPlusSocialData urlPlusSocialData = new URLPlusSocialData();	
 					URLNode childNode;
 
 					//get social data:							//  socialDataDB.getAllSocialData(backLink.getId());
@@ -262,6 +265,7 @@ public class GetSocialDataHelper {
 
 					log.warning(msg + e.getMessage());
 				}
+			}
 			}
 		}
 	}

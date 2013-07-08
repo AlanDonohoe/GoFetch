@@ -17,6 +17,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.BehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 //import javax.faces.component.behavior.AjaxBehavior;
 //import javax.faces.context.FacesContext;
 //import javax.faces.event.AbortProcessingException;
@@ -31,6 +32,7 @@ import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.TreeNode;
@@ -156,9 +158,26 @@ public class FullScreenDashboardBean implements Serializable {
 	private boolean showTree; // may need to keep this one - as not too sure how
 								// to deal with empty tree- it shows up
 								// as an ugly bar on screen
+	
+	/////////////////////////
+	//TODO: delete when done....
+	private boolean testBoolean;// temp - just for testing ajax issue... 
+	
+	public boolean isTestBoolean() {
+		return testBoolean;
+	}
+
+	public void setTestBoolean(boolean testBoolean) {
+		this.testBoolean = testBoolean;
+	}
+	
+
+	//
+	//////////////////////
 
 	// flags end
 	// /////////////////////////////////////////////////////
+
 
 	private Integer urlEntry;
 
@@ -505,10 +524,64 @@ public class FullScreenDashboardBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);  
     }  
     
+    public void testAjaxSelectBtn(){
+    	
+    	log.info("Entering FullScreenDashboard::testAjaxSelectBtn()");
+
+    	 FacesContext context = FacesContext.getCurrentInstance();  
+         
+         context.addMessage(null, new FacesMessage("Successful", "testAjaxSelectBtn FIRED"));  
+    	
+    	updateTURLs();
+    }
+    
+    public void onTabChange(TabChangeEvent tabChangeEvent){
+    	log.info("Entering FullScreenDashboard::onTabChange()");
+    	
+    }
+    
+
+    
     public void onNodeSelect(javax.faces.event.AjaxBehaviorEvent event){
+    	
+    	log.info("Entering FullScreenDashboard::onNodeSelect()");
     	
     	// clear data model... may be way to cache this...
     	//backLinkTableBean.setDataModel(null);
+    	
+    	updateTURLs();
+    	
+    	// go through all selected users....
+//    	for(ClientAndTUrls clientsAndURLs: clientTargetURLsBean.getClientAndTUrlList()){
+//    		
+//    		// got through all the selected users' selected T URLs
+//    		for(URLAndBoolSelection urlAndSelection: clientsAndURLs.getUrls()){
+//    			
+//    			//backLinkTableBean.getDataModel()
+//    			
+//    			if(urlAndSelection.isSelected()){
+//    				
+//    				// add to list if not already added:
+//    				if(!selectedTargetURLIds.contains(urlAndSelection.getUrl().getId()))
+//    					selectedTargetURLIds.add(urlAndSelection.getUrl().getId());
+//    				
+//    			}
+//    			else{ // user has unselected this T URL - must be a more efficient way of doing this...
+//    				if(selectedTargetURLIds.contains(urlAndSelection.getUrl().getId()))
+//    					selectedTargetURLIds.remove(urlAndSelection.getUrl().getId());
+//    			}
+//    		}
+//    		
+//    	}
+//    	
+//    	// update the data model with the ID of the target URL...
+//		backLinkTableBean.addBackLinksToTable(selectedTargetURLIds);
+		
+		log.info("selectedTargetURLIds = " + selectedTargetURLIds.toString());
+		
+    }
+    
+    private void updateTURLs(){
     	
     	// go through all selected users....
     	for(ClientAndTUrls clientsAndURLs: clientTargetURLsBean.getClientAndTUrlList()){
@@ -535,31 +608,34 @@ public class FullScreenDashboardBean implements Serializable {
     	
     	// update the data model with the ID of the target URL...
 		backLinkTableBean.addBackLinksToTable(selectedTargetURLIds);
+    	
     }
   
-    public void onNodeSelect(NodeSelectEvent event) {  
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Selected", event.getTreeNode().toString());  
-  
-        FacesContext.getCurrentInstance().addMessage(null, message);  
-        
-//        String selectedNodeData = urlTreeBean.getSelectedNode().getData().toString();
+//    public void onNodeSelect(NodeSelectEvent event) {  
+//        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Selected", event.getTreeNode().toString());  
+//  
+//        FacesContext.getCurrentInstance().addMessage(null, message);  
 //        
-//        FacesMessage message2 = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: selectedNodeData = ", selectedNodeData);  
-//        FacesContext.getCurrentInstance().addMessage(null, message2);  
-        
-        URLDBService urlDB = new URLDBService();
-        String urlAddress = event.getTreeNode().toString();
-     // Get backlink datatable data from DB.
-		Integer urlID = urlDB.getURLIDFromAddress(urlAddress);
-		
-		backLinkTableBean.addBackLinksToTable(urlID);
-        
-    }  
+////        String selectedNodeData = urlTreeBean.getSelectedNode().getData().toString();
+////        
+////        FacesMessage message2 = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: selectedNodeData = ", selectedNodeData);  
+////        FacesContext.getCurrentInstance().addMessage(null, message2);  
+//        
+//        URLDBService urlDB = new URLDBService();
+//        String urlAddress = event.getTreeNode().toString();
+//     // Get backlink datatable data from DB.
+//		Integer urlID = urlDB.getURLIDFromAddress(urlAddress);
+//		
+//		backLinkTableBean.addBackLinksToTable(urlID);
+//        
+//    }  
   
     public void onNodeUnselect(NodeUnselectEvent event) {  
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Unselected", event.getTreeNode().toString());  
+        //FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "FULLSCREENDASHBOARD:: Unselected", event.getTreeNode().toString());  
   
-        FacesContext.getCurrentInstance().addMessage(null, message);  
+       // FacesContext.getCurrentInstance().addMessage(null, message);  
+    	
+    	log.info("Entering FullScreenDashboard::onNodeUnselect()");
         
         String urlAddress;
 		Integer urlID;
@@ -676,23 +752,23 @@ public class FullScreenDashboardBean implements Serializable {
 //		//////////////////////
 //	}
 	
-	//TODO: need to make this quicker - else getting time out from GAE Server...
-	private void addChildrenToDataTable(TreeNode treeNode, URLDBService urlDB) {
-		
-		String urlAddress;
-		Integer urlID;
-		
-		List<TreeNode> children = treeNode.getChildren();
-		
-		for(int i =0; i < children.size(); i++ ){
-			
-			urlAddress = children.get(i).getData().toString();
-			urlID = urlDB.getURLIDFromAddress(urlAddress);
-			
-			backLinkTableBean.addBackLinksToTable(urlID); 
-		}
-		
-	}
+	//TODO: delete after testing....
+//	private void addChildrenToDataTable(TreeNode treeNode, URLDBService urlDB) {
+//		
+//		String urlAddress;
+//		Integer urlID;
+//		
+//		List<TreeNode> children = treeNode.getChildren();
+//		
+//		for(int i =0; i < children.size(); i++ ){
+//			
+//			urlAddress = children.get(i).getData().toString();
+//			urlID = urlDB.getURLIDFromAddress(urlAddress);
+//			
+//			backLinkTableBean.addBackLinksToTable(urlID); 
+//		}
+//		
+//	}
 
 	/* 
 	 * this needs to remove the  backlinks that point to this target URL from the datatable...	
@@ -873,14 +949,7 @@ public class FullScreenDashboardBean implements Serializable {
 		this.clientTargetURLsBean = clientTargetURLsBean;
 	}
 
-//	public URLTreeBean getUrlTreeBean() {
-//		return urlTreeBean;
-//	}
-//
-//	public void setUrlTreeBean(URLTreeBean urlTreeBean) {
-//		this.urlTreeBean = urlTreeBean;
-//	}
-//	
+
 	
 
 

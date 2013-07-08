@@ -150,6 +150,40 @@
     <div id="clients_t_urls" class="client_dashboard, urlLinks_dashboard"> 
     
   -->
+  
+  <!-- strip back to basics -->
+  <p:growl id="growl" showDetail="true" sticky="true" /> 
+  
+
+  
+   
+  <p:tabView id="clientsAndURLsTab" var="selectedClients" value="#{clientTargetURLsBean.clientAndTUrlList}"
+                 orientation="left" style="font-size:10px; border:none;">
+        <p:tab id="clientTab" title="#{selectedClients.user.displayed_name}">
+        <p:column>
+         <p:selectBooleanCheckbox value="#{fullScreenDashboardBean.testBoolean}" >
+            <p:ajax process="@this" event="change" update=":centreContentForm :leftContentForm:growl" listener="#{fullScreenDashboardBean.testAjaxSelectBtn}" />
+  </p:selectBooleanCheckbox>
+  	</p:column>
+
+         <p:dataList value="#{selectedClients.urls}" var="turl" itemType="none">
+          <p:column>
+
+          <p:selectBooleanCheckbox value="#{turl.selected}" id="selBolChkBox">
+            <p:ajax update=":centreContentForm" listener="#{fullScreenDashboardBean.testAjaxSelectBtn}" />
+          </p:selectBooleanCheckbox>
+          
+           
+
+          <h:outputText value="#{turl.url.url_address}" styleClass="target_url_li"/>
+        </p:column>
+         </p:dataList> 
+
+         </p:tab>
+        </p:tabView>
+        
+  <!--
+  
       
       <p:tabView id="clientsAndURLsTab" var="selectedClients" value="#{clientTargetURLsBean.clientAndTUrlList}"
 				 orientation="left" style="font-size:10px; border:none;" dynamic="true" cache="false">
@@ -169,7 +203,7 @@
         
                 </p:tab>
         </p:tabView>
-        
+        -->
         
         <!-- Datalist not working on server - ajax listener not being called... 
           <p:dataList value="#{selectedClients.urls}" var="turl" itemType="none">

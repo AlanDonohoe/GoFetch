@@ -58,16 +58,17 @@ public class BackLinkTableBean implements Serializable {
 		
 
 	}
-
-	public void addBackLinksToTable(Integer targetURLId) {
-
-		log.info("Entering BacklinkTableBean::addBackLinksToTable(...) targetURLId = "
-				+ Integer.toString(targetURLId));
-
-		// when load gets called - we just make lazy load calls to DB
-		// there... based on page size, etc...
-		((LazyBackLinksDataModel) dataModel).setTargetURLId(targetURLId);
-	}
+	
+//TODO: delete after testing - replaced this with method that accepts multiple TURLs
+//	public void addBackLinksToTable(Integer targetURLId) {
+//
+//		log.info("Entering BacklinkTableBean::addBackLinksToTable(...) targetURLId = "
+//				+ Integer.toString(targetURLId));
+//
+//		// when load gets called - we just make lazy load calls to DB
+//		// there... based on page size, etc...
+//		((LazyBackLinksDataModel) dataModel).setTargetURLId(targetURLId);
+//	}
 
 	public URLAndLinkData getSelectedBackLink() {
 		return selectedBackLink;
@@ -175,6 +176,8 @@ public class BackLinkTableBean implements Serializable {
 
 
 	public void addBackLinksToTable(List<Integer> selectedTargetURLIds) {
+		
+		log.info("BacklinkTabelBean::addBackLinksToTable(). Size: " + selectedTargetURLIds.size());
 		
 		((LazyBackLinksDataModel) dataModel).setTargetURLIds(selectedTargetURLIds);
 		

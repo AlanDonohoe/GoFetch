@@ -293,7 +293,7 @@ public class ProcessNewTargets extends HttpServlet {
 			URL url = new URL();
 			url.setUrl_address(urlPlusHttp);
 			url.setDate(todaysDate);
-			url.setGet_social_data(currentURL.isGet_social_data());
+			url.setGet_social_data(false);
 			url.setGet_backlinks(false);
 			
 			url.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);

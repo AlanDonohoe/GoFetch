@@ -116,7 +116,7 @@ public class LazyBackLinksDataModel extends LazyDataModel<URLAndLinkData>
 	public List<URLAndLinkData> load(int first, int pageSize, String sortField,
 			SortOrder sortOrder, Map<String, String> filters) {
 		
-		log.info("Entering LazyBackLinksDataModel::load(...). URL_id = " + Integer.toString(this.targetURLId));
+		log.info("Entering LazyBackLinksDataModel::load(...). No Of Target URLs = " + Integer.toString(this.targetURLIds.size()));
 		
 		Integer dataSize;
 		Long rowCountLong =(long) 0;
@@ -142,7 +142,7 @@ public class LazyBackLinksDataModel extends LazyDataModel<URLAndLinkData>
 		
 		dataSize = rowCountSum != null ? rowCountSum.intValue() : null;
 		
-		//log.info("No of backlinks / rows in total table: " + Integer.toString(dataSize));	
+		log.info("No of backlinks / rows in total table: " + Integer.toString(dataSize));	
 		
 		// set the no of times this url is a target as the no of rows in table...
 		this.setRowCount(dataSize);
@@ -150,7 +150,7 @@ public class LazyBackLinksDataModel extends LazyDataModel<URLAndLinkData>
 		/////////
 		// Pagination:
 		
-		if(dataSize > pageSize){
+ 		if(dataSize > pageSize){
 			
 			//data.subList(first, first + pageSize);  
 			
@@ -159,10 +159,10 @@ public class LazyBackLinksDataModel extends LazyDataModel<URLAndLinkData>
 			//	and user clicks to move from first to second page.... need to display: 
 			//	backlinks 4 - 14 of the 2nd target url's backlinks....
 			
-			for(Integer urlID: targetURLIds){
-				
-				
-			}
+//			for(Integer urlID: targetURLIds){
+//				
+//				
+//			}
 			
 			
 			
@@ -174,8 +174,10 @@ public class LazyBackLinksDataModel extends LazyDataModel<URLAndLinkData>
 		// no pagination, filtering or sorting - just return all data....
 		for(Integer urlID: targetURLIds){
 			
+			
 			List<URLAndLinkData> urlAndLinks = getBackLinkDataFromDB(urlID, first, pageSize);
 			datasource.addAll(urlAndLinks);
+			log.info("No of backlinks for this T URL with id: " + Integer.toString(urlID) + ". Backlinks: " + Integer.toString(urlAndLinks.size()));	
 			
 		}
 		

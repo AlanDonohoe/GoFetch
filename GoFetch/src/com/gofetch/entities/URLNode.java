@@ -10,6 +10,8 @@ public class URLNode {
 	private URLPlusSocialData urlPlusSocialData;
 	private URLNode parent;
 	private List<URLNode> children;
+	
+	public URLNode(){}
 
 	//TODO: test this.. 
 	//	what about when the urlAddress is a child of a child... ??

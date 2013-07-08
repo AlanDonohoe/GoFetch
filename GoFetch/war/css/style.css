@@ -122,7 +122,7 @@ a[href="/"]
 /* Structure */
 
 body {
-    background: #E5E5E5;
+    background: #FFF;
     color: #3B3436;
     text-align: center;
     line-height: 1.2em;
@@ -212,12 +212,13 @@ header {
     display: inline;
 }
 
-#logo_container{
+.logo_container{
 	float:left;
 	display: inline-block;
 	position:relative;
-	    width:128px;
+	width:128px;
     height: 50px;
+	padding:15px,15px;
 }
 
 #logo_small_left{
@@ -228,7 +229,7 @@ header {
     height: 50px;
 	*/
 	width:100%;
-    height:40px;
+    height:45px;
     margin:0px 0 0px 0;
 	
 }
@@ -2785,6 +2786,10 @@ clear: left;
 	float: left;
 }
 
+
+.float_right{
+	float:right;
+}
 .client_wrapper_text{
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-size:16px;
@@ -2989,8 +2994,10 @@ width:80%;
 }
 
 #leftContentForm .ui-tabs-left > .ui-tabs-nav{
-	height:100%;
-	background-color:#CCC;
+	height:800px;
+	overflow:hidden;
+	/*background-color:#CCC; */
+	background-image:url("../images/greyBkgrndTexture.jpg");
 }
 
 #leftContentForm #clients_t_urls{
@@ -3007,4 +3014,177 @@ width:80%;
 #leftContentForm .ui-chkbox chkbox-box{
 	width: 8px;
 	height: 8px;
+}
+
+
+.top_banner{
+	background-color:rgb(255, 210, 4);
+	width:100%;
+	height: 45px;
+	margin-top:20px;
+	position: fixed;
+	z-index:100;
+}
+
+.selectClientDropMenu .ui-state-default{
+	border:none;
+	
+}
+
+.selectClientDropMenu .ui-selectcheckboxmenu{
+	background-color:rgb(255, 210, 4);;
+	width:200px;
+}
+
+.selectClientDropMenu{
+
+width:86px; 
+height:25px; 
+padding-top:6px; 
+padding-bottom:2px; 
+overflow:hidden; 
+background-color:rgb(255, 210, 4);
+margin:3px;
+ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ background: rgb(255, 210, 4); 
+}
+
+.selectClientDropMenu .ui-selectcheckboxmenu-panel{
+	background-color:rgb(255, 210, 4);
+}
+
+.selectClientDropMenu .ui-selectcheckboxmenu-trigger{
+	background-color:rgb(255, 210, 4);
+}
+
+
+.selectClientDropMenu .ui-state-hover{
+	box-shadow:rgb(255, 210, 4);
+	-webkit-box-shadow:rgb(255, 210, 4);
+	background:rgb(255, 210, 4);
+	
+	
+}
+
+.selectClientDropMenu .ui-corner-all{
+	border-radius:rgb(255, 210, 4);
+	-webkit-border-radius:rgb(255, 210, 4);
+}
+
+
+.contactsDBBtn{
+	
+
+padding-bottom:3px; 
+overflow:hidden; 
+background-color:rgb(255, 210, 4);
+margin:3px;
+ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ background: rgb(255, 210, 4); 
+}
+
+.urlsLinksDBBtn{
+	 
+padding-bottom:3px; 
+overflow:hidden; 
+background-color:rgb(255, 210, 4);
+margin:3px;
+ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ background: rgb(255, 210, 4); 
+}
+
+.top_strip{
+	
+	height:20px;
+	width:100%;
+	background-image:url("../images/tile-diag-light-yellow.png");
+	position: fixed;
+	z-index:100;
+}
+
+.horizontal_centre{
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.url_add_search_btns{
+	display:inline !important;
+	margin-right: 0px !important;
+	margin-left: 7px !important;
+}
+
+.searchURLBtn{
+	padding-bottom:3px; 
+overflow:hidden; 
+background-color:rgb(255, 210, 4);
+margin:3px;
+ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ background: rgb(255, 210, 4); 
+}
+
+.addURLBtn{
+	padding-bottom:3px; 
+overflow:hidden; 
+background-color:rgb(255, 210, 4);
+margin:3px;
+ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ background: rgb(255, 210, 4); 
+}
+
+.urlSearchTextBox .ui-autocomplete-input{
+	size:135px;
+	
+}
+
+.main_content{
+	height:100px;
+	
+}
+
+.left_content{
+	float:left;
+	background-color:#FFF;
+	height:3000px;
+	display:block;
+	margin-top:65px;
+	width:300px;
+}
+
+
+.header{
+	
+}
+
+.ui-panel .ui-panel-titlebar{
+	background-image:none;
+	background-color:rgb(255, 210, 4); 
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ background: rgb(255, 210, 4); 	
+}
+
+#leftContentForm\3AclientsAndURLsTab{
+	
+	background-image:url("../images/greyBkgrndTexture.jpg");
+}
+
+#leftContentForm\3Aj_idt22_content{
+	background-image:url("../images/greyBkgrndTexture.jpg");
+}
+
+.ui-tabs-nav{
+	background-image:url("../images/greyBkgrndTexture.jpg");
+	background-color:none;
+}
+
+.ui-tabs{
+	padding:0px;	
+}
+
+.selectedClientsDiv{
+	background-image:url("../images/greyBkgrndTexture.jpg");
+}
+
+.selectedTUrlsDiv{
+	background-image:none;
+	background-color:#FFF;
 }
