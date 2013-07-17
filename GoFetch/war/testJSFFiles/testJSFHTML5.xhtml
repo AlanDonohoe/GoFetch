@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>HTML5 and JSF Test</title>
+</h:head>
+<h:body>
+	<f:view contentType="text/html">
+		<h:form>
+			<h:inputText></h:inputText>
+			<br></br>
+			<h:outputText value="#{testBean.data}" />
+			<h:commandButton action="#{testBean.homepage}"></h:commandButton>
+		</h:form>
+	</f:view>
+</h:body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms no-csstransforms3d csstransitions fontface video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"
+	lang="en">
+<h:head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<style type="text/css"></style>
+
+</h:head>
+
+<h:body class="home">
+
+        <p:selectCheckboxMenu value="#{formBean.selectedMovies}"
+                              label="Languages" filter="true" filterText="Filter languages">
+            <f:selectItems value="#{formBean.movies}"/>
+        </p:selectCheckboxMenu>
+</h:body>
+</html>

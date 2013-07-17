@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<backends>
+	<backend name="backgroundprocess">
+		<class>B4</class>
+		<instances>1</instances>
+		<options>
+			<dynamic>true</dynamic>
+			<public>true</public>
+		</options>
+	</backend>
+	<backend name="api">
+		<class>B1</class>
+		<instances>1</instances>
+		<options>
+			<dynamic>true</dynamic>
+			<public>true</public>
+		</options>
+	</backend>
+</backends> 
