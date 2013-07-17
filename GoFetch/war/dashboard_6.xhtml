@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" [<!ENTITY nbsp "&#160;">]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	lang="en">
+<h:head>
+  <link type="text/css" rel="stylesheet" href="css/style.css"/>
+  <script type="text/javascript" src="./js/toggle.js"></script>
+  <title>Dashboard v1.6</title>
+</h:head>
+<h:body>
+
+<h:form id="leftContentForm"> 
+
+ <p:dataList value="#{fullScreenDashboardBean.testList}"
+                   var ="ints"  id="intList"  paginator="false" type="none">
+                    
+                    
+    <p:column>
+      <p:commandButton  value="a" actionListener="#{fullScreenDashboardBean.updateTURLs}"/>
+      <p:commandButton  value="b" action="#{fullScreenDashboardBean.testButtonAction}"/>
+      <p:commandButton  value="c" actionListener="#{fullScreenDashboardBean.testButtonActionListener}"/>
+    </p:column>
+    
+    <p:dataList value="#{fullScreenDashboardBean.innerTestList}"
+                   var ="innerInts"  id="innetIntList"  paginator="false" type="none">
+                   	<p:commandButton  value="1" actionListener="#{fullScreenDashboardBean.updateInnerTURLs}"/>
+      				<p:commandButton  value="2" action="#{fullScreenDashboardBean.testInnerButtonAction}"/>
+      				<p:commandButton  value="3" actionListener="#{fullScreenDashboardBean.testInnerButtonActionListener}"/>
+                   
+                   </p:dataList>
+    			
+  </p:dataList>
+  
+</h:form>
+
+</h:body>
+</html>

@@ -1,14 +1,11 @@
 package com.gofetch.beans;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-//import org.mortbay.log.Log;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SelectableDataModel;
 import org.primefaces.model.SortOrder;
@@ -25,7 +22,7 @@ import com.gofetch.entities.URLDBService;
  */
 @SuppressWarnings("serial")
 public class LazyBackLinksDataModel extends LazyDataModel<URLAndLinkData>
-		implements SelectableDataModel<URLAndLinkData> {
+		implements SelectableDataModel<URLAndLinkData>{
 	
 	/**
 	 * 

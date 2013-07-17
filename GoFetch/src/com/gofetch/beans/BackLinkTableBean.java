@@ -2,26 +2,18 @@ package com.gofetch.beans;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
 
-import com.gofetch.entities.Link;
-import com.gofetch.entities.LinkDBService;
-import com.gofetch.entities.URL;
 import com.gofetch.entities.URLAndLinkData;
-import com.gofetch.entities.URLDBService;
 
 /**
  * Manages the data for the datatable holding backlinks 

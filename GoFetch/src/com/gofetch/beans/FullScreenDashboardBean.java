@@ -7,40 +7,24 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.el.ExpressionFactory;
-import javax.el.MethodExpression;
-import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.BehaviorEvent;
-import javax.faces.event.ValueChangeEvent;
-//import javax.faces.component.behavior.AjaxBehavior;
-//import javax.faces.context.FacesContext;
-//import javax.faces.event.AbortProcessingException;
-//import javax.faces.event.AjaxBehaviorEvent;
-//import javax.faces.event.AjaxBehaviorListener;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 
-import org.primefaces.component.behavior.ajax.AjaxBehavior;
-import org.primefaces.component.behavior.ajax.AjaxBehaviorListenerImpl;
-import org.primefaces.component.tree.Tree;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.TreeNode;
 
-import com.gofetch.models.URLNodeImpl;
 import com.gofetch.charts.GoogleChartsWrapper;
 import com.gofetch.entities.MiscSocialData;
-import com.gofetch.entities.MiscSocialDataDBService;
 import com.gofetch.entities.URL;
 import com.gofetch.entities.URLAndLinkData;
 import com.gofetch.entities.URLDBService;
@@ -75,6 +59,49 @@ public class FullScreenDashboardBean implements Serializable {
 
 	// /////////////
 	// Entities:
+    
+    //////
+    // Just for testing - delete when done...
+    
+    private List<Integer> testList = new ArrayList<Integer>();
+    
+    private List<Integer> innerTestList = new ArrayList<Integer>();
+    
+	public List<Integer> getTestList() {
+		
+		
+		
+		return testList;
+	}
+
+	public void setTestList(List<Integer> testList) {
+		
+		
+		this.testList = testList;
+	}
+	
+
+
+	public List<Integer> getInnerTestList() {
+		
+
+		
+		return innerTestList;
+	}
+
+	public void setInnerTestList(List<Integer> innerTestList) {
+		this.innerTestList = innerTestList;
+	}
+
+    
+    
+    //
+    /////////
+
+
+
+
+
 
 	private List<User> clientsFromDB = null; // new ArrayList<User>(); // pulls
 												// all clients from the DB. may
@@ -189,8 +216,90 @@ public class FullScreenDashboardBean implements Serializable {
 	public FullScreenDashboardBean() {
 
 		showTree = false;
+		
+		//////
+		// testing:
+		
+		for (int i = 0; i < 5; i++){
+			
+			testList.add(i);
+		}
+
+		for(int a = 0; a < 5; a++){
+			innerTestList.add(a);
+			
+		}
+	
+		
+		//
+		/////////
 
 	}
+	
+	//////
+	//TODO: DELETE!
+	
+//	private void addMandSToClientList(){
+//		
+//		List<URL> targetURLs = null;
+//
+//	
+//	Integer clientFromDBID, clientIDFromUserSel;
+//
+//	// loop through the clients getting adding them to list if selected by
+//	// user
+//	for (int a = 0; a < clientsFromDB.size(); a++) {
+//
+//		for (int b = 0; b < clientsIDs.size(); b++) {
+//
+//			clientFromDBID = clientsFromDB.get(a).getId();
+//			clientIDFromUserSel = clientsIDs.get(b);
+//
+//			if (clientFromDBID.equals(clientIDFromUserSel)) {
+//
+//				clientsSelectedByUser.add(clientsFromDB.get(a));
+//
+//
+//			}
+//		}
+//
+//	}
+//
+//	
+//	//Create list to hold all selected clients and associated T URls:
+//	List<ClientAndTUrls> clientAndURLsList = new ArrayList<ClientAndTUrls>();
+//	
+//		for(User selectedClient: clientsSelectedByUser){
+//			
+//			//create single new  ClientandURLs object and :
+//			ClientAndTUrls clientAndURLs = new ClientAndTUrls();
+//			
+//			// 1. set user to the client selected;
+//			clientAndURLs.setUser(selectedClient);
+//			
+//			// 2. get URLs: later move this to dynamically call it when user opens client tab..
+//			targetURLs = urlDBService.getClientsTargetURLs(selectedClient.getId(), true);
+//			
+//			//3. add these, as unselected Target urls to the client_url object
+//			
+//			// need to create new URLAndBoolSelection object for each- can not cast... inefficient... replace..
+//			
+//			for(URL url: targetURLs){
+//				URLAndBoolSelection urlAndBoolSel = new URLAndBoolSelection();
+//				urlAndBoolSel.setUrl(url);
+//				clientAndURLs.getUrls().add(urlAndBoolSel);
+//			}
+//			
+//			clientAndURLsList.add(clientAndURLs);
+//			
+//		}
+//		
+//		// then add: to the bean in the accordion:
+//		clientTargetURLsBean.setClientAndTUrlList(clientAndURLsList);
+//	}
+	
+	//
+	///////////
 
 	// //////
 	// action controllers:
@@ -527,12 +636,12 @@ public class FullScreenDashboardBean implements Serializable {
     public void testAjaxSelectBtn(){
     	
     	log.info("Entering FullScreenDashboard::testAjaxSelectBtn()");
-
-    	 FacesContext context = FacesContext.getCurrentInstance();  
-         
-         context.addMessage(null, new FacesMessage("Successful", "testAjaxSelectBtn FIRED"));  
-    	
-    	updateTURLs();
+//
+//    	 FacesContext context = FacesContext.getCurrentInstance();  
+//         
+//         context.addMessage(null, new FacesMessage("Successful", "testAjaxSelectBtn FIRED"));  
+//    	
+//    	updateTURLs();
     }
     
     public void onTabChange(TabChangeEvent tabChangeEvent){
@@ -549,7 +658,7 @@ public class FullScreenDashboardBean implements Serializable {
     	// clear data model... may be way to cache this...
     	//backLinkTableBean.setDataModel(null);
     	
-    	updateTURLs();
+    	//updateTURLs();
     	
     	// go through all selected users....
 //    	for(ClientAndTUrls clientsAndURLs: clientTargetURLsBean.getClientAndTUrlList()){
@@ -581,7 +690,46 @@ public class FullScreenDashboardBean implements Serializable {
 		
     }
     
-    private void updateTURLs(){
+    //////
+    // Testing:
+    public String testButtonAction() {
+    	log.info("testButtonAction invoked");
+        return "";
+    }
+    public void testButtonActionListener(){
+    	log.info("testButtonActionListener() invoked");
+    }
+
+    public void testButtonActionListener(AjaxBehaviorEvent event) throws AbortProcessingException{
+    	log.info("testButtonActionListener(AjaxBehaviorEvent event) invoked");
+    }
+    
+    public void updateTURLs(){
+    	log.info("- - - - - -- -  -- - Entering updateTURLs()");
+    }
+    
+    public String testInnerButtonAction() {
+    	log.info("testInnerButtonAction invoked");
+        return "";
+    }
+    public void testInnerButtonActionListener(){
+    	log.info("testInnerButtonActionListener() invoked");
+    }
+
+    public void testInnerButtonActionListener(AjaxBehaviorEvent event) throws AbortProcessingException{
+    	log.info("testInnerButtonActionListener(AjaxBehaviorEvent event) invoked");
+    }
+    
+    public void updateInnerTURLs(){
+    	log.info("- - - - - -- -  -- - Entering updateInnerTURLs()");
+    }
+    //
+    /////////
+    // but only event param signature - when working with... <f:ajax ..../>
+   // public void processAjaxBehavior(javax.faces.event.AjaxBehaviorEvent event)
+    public void updateTURLs(AjaxBehaviorEvent event) throws AbortProcessingException{
+    	
+    	log.info("- - - - - -- -  -- - Entering updateTURLs(AjaxBehaviorEvent event)");
     	
     	// go through all selected users....
     	for(ClientAndTUrls clientsAndURLs: clientTargetURLsBean.getClientAndTUrlList()){
@@ -603,7 +751,6 @@ public class FullScreenDashboardBean implements Serializable {
     					selectedTargetURLIds.remove(urlAndSelection.getUrl().getId());
     			}
     		}
-    		
     	}
     	
     	// update the data model with the ID of the target URL...

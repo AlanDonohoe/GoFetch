@@ -8,6 +8,7 @@
 <h:head>
   <link type="text/css" rel="stylesheet" href="css/style.css"></link>
    <script type="text/javascript" src="./js/toggle.js"></script>
+  
   <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -22,11 +23,13 @@
 
 </script>
 
+
   <title>Dashboard v1.4</title>
 </h:head>
 <h:body>
-<div class="header">
 <div class="page_container">
+<div class="header">
+
 
 <div class="top_strip"> 
 
@@ -81,125 +84,247 @@ border-width:2px; border-color:rgb(235, 190, 0);">
 	</h:form>
   </div>
   
-</div>
+
 </div>
 
 <div class="left_content">
-<h:form id="leftContentForm">
-  
+  <h:form id="leftContentForm">
+   
 
+               
+      <p:panel id="hpnl" styleClass="leftHandPanel" header="" toggleable="true" toggleOrientation="horizontal" > 
 
-<p:panel  styleClass="leftHandPanel" header="" toggleable="true" toggleOrientation="horizontal"> 
- 
+               
+
  <!-- jquery UI code: 
  see: http://stackoverflow.com/questions/10105426/how-to-create-tabs-jquery-or-jsf
  -->
 <!-- jsf Attempt 1 ui repeat
 with JQuery
 see: http://kahimyang.info/kauswagan/howto_blogs/1403-implementing_a_collapsible_ui_repeat_rows_in_jsf
--->
-<ui:repeat value="#{collapsible.rows}"
-                   var ="rows">
-            <h:panelGrid>
+
+this works - but issue with ajax - 
+        
+        <ui:repeat value="#{clientTargetURLsBean.clientAndTUrlList}"
+                   var ="selectedClients" >
+                  
+                   <h:panelGrid styleClass="clientAndTUrlsGrid">
+                   
                 <h:panelGroup>
-                    <h:outputLink value="javascript:void(0)"
-                                  onclick="vistoggle('#icon#{rows.id}',
-                                          '#body#{rows.id}')" >
- 
-                        <h:outputText value="#{rows.title}" />
-                    </h:outputLink>
- 
-                    <span style="display: inline-block;margin-right:2px;">
-                        <span id="icon#{rows.id}" class="ui-icon ui-icon-plus"
+                <span style="display: inline-block;margin-right:2px;">
+                    
+                        <span id="icon#{selectedClients.id}" class="ui-icon ui-icon-plus"
                               style="float:left">
+                              
                         </span>
+                        
                     </span> 
-                </h:panelGroup>
+                    <h:outputLink value="javascript:void(0)"
+                                  onclick="vistoggle('#icon#{selectedClients.id}',
+                                          '#body#{selectedClients.id}')" >
  
-                <div style="display:none;" id="body#{rows.id}">
-                    #{rows.body}
-                </div>
-            </h:panelGrid>
-        </ui:repeat>
-        
-        <ui:repeat var="selectedClients" value="#{clientTargetURLsBean.clientAndTUrlList}">
-	<div class="selectedClientsDiv">
-    
-    <h:outputText value="#{selectedClients.user.displayed_name}" styleClass="target_url_li"/>
-    
-    <ui:repeat value="#{selectedClients.urls}" var="turl">
-    	<div class="selectedTUrlsDiv">
-        <h:selectBooleanCheckbox value="#{turl.selected}" id="selBolChkBox">
-        </h:selectBooleanCheckbox>
-        
-        <h:outputText value="#{turl.url.url_address}" styleClass="target_url_li"/>
-        
-        </div>
-    </ui:repeat>
-    </div>
-
-</ui:repeat>
-<!--
-
-<ui:repeat var="selectedClients" value="#{clientTargetURLsBean.clientAndTUrlList}">
-	<div class="selectedClientsDiv">
-    
-    <h:outputText value="#{selectedClients.user.displayed_name}" styleClass="target_url_li"/>
-    
-    <ui:repeat value="#{selectedClients.urls}" var="turl">
-    	<div class="selectedTUrlsDiv">
-        <h:selectBooleanCheckbox value="#{turl.selected}" id="selBolChkBox">
-        </h:selectBooleanCheckbox>
-        
-        <h:outputText value="#{turl.url.url_address}" styleClass="target_url_li"/>
-        
-        </div>
-    </ui:repeat>
-    </div>
-
-</ui:repeat>
-
--->
-
-
-
-<!-- jsf Attempt 2 datatable-->
-
-<!-- This does not work on server there is no ajax functionality when user selects a tab or checks T URL checkbox...
-	 - replace with jquery UI code... above
- <p:accordionPanel id="clientsAndURLsTab" var="selectedClients" value="#{clientTargetURLsBean.clientAndTUrlList}"
-				 orientation="left" style="font-size:10px; border:none;"  dynamic="false">
-                 <p:ajax event="tabChange" listener="#{fullScreenDashboardBean.onTabChange}"/>
-        <p:tab id="clientTab" title="#{selectedClients.user.displayed_name}">
-        
-         <p:dataList value="#{selectedClients.urls}" var="turl" itemType="none">
-          <p:column>
+                        <h:outputText value="#{selectedClients.user.displayed_name}" />
+            
+                    </h:outputLink>
+                    
+ 
+                    
+                </h:panelGroup>
+ 				<h:panelGroup>
+                <div style="display:none;" id="body#{selectedClients.id}">
+                    
+                     <ui:repeat value="#{selectedClients.urls}" var="turl">
+    				<div class="selectedTUrlsDiv">
+        		<h:selectBooleanCheckbox value="#{turl.selected}" styleClass="target_url_checkbox">
+                	<f:ajax event="click" render=":centreContentForm" listener="#{fullScreenDashboardBean.testButtonActionListener}" />
          
-          <p:selectBooleanCheckbox value="#{turl.selected}" id="selBolChkBox">
-            <p:ajax update=":centreContentForm" listener="#{fullScreenDashboardBean.testAjaxSelectBtn}" />
-          </p:selectBooleanCheckbox>
-          
-          <h:outputText value="#{turl.url.url_address}" styleClass="target_url_li"/>
-        </p:column>
-        </p:dataList>  
-             
-        </p:tab>
-        </p:accordionPanel>
+                           <p:ajax
+								listener="#{fullScreenDashboardBean.testAjaxSelectBtn}"
+								update=":centreContentForm" />  
+                                
+                     
+        		</h:selectBooleanCheckbox> 
         
+        		<h:outputText value="#{turl.url.url_address}" styleClass="target_url_li" />
+        
+        </div>
+    </ui:repeat>
+                </div>
+                </h:panelGroup>
+            </h:panelGrid>
+                   
+        </ui:repeat>
         -->
-  </p:panel>
+        
+        <!-- attempt 2: pf:datalist -->
+        
+        <p:dataList value="#{clientTargetURLsBean.clientAndTUrlList}"
+                   var ="selectedClients"  id="selectedClientList"  paginator="false" type="none">  
+         <p:column>          
+  	 <p:commandButton process="@this" id="btn3" value="+" actionListener="#{fullScreenDashboardBean.updateTURLs}" update=":centreContentForm"/>
+         </p:column> 
+
+              <h:panelGrid styleClass="clientAndTUrlsGrid">
+                   
+                <h:panelGroup>
+                <span style="display: inline-block;margin-right:2px;">
+                    
+                        <span id="icon#{selectedClients.id}" class="ui-icon ui-icon-plus"
+                              style="float:left">
+                              
+                        </span>
+                        
+                    </span> 
+                    <h:outputLink value="javascript:void(0)"
+                                  onclick="vistoggle('#icon#{selectedClients.id}',
+                                          '#body#{selectedClients.id}')" >
+ 
+                        <h:outputText value="#{selectedClients.user.displayed_name}" />
+            
+                    </h:outputLink>
+                    
+ 
+                    
+                </h:panelGroup>
+ 				<h:panelGroup>
+                <div style="display:none;" id="body#{selectedClients.id}">
+                    
+                     <p:dataList value="#{selectedClients.urls}" var="turl" id="turls" type="none" styleClass="selectedTUrlsList">
+                     
+    				<div class="selectedTUrlsDiv">
+                    <p:column>
+                  
+        		<p:selectBooleanCheckbox value="#{turl.selected}" id="selBolChkBox" styleClass="target_url_checkbox" >
+         
+                           <p:ajax
+								listener="#{fullScreenDashboardBean.updateTURLs}"
+								update=":centreContentForm" />  
+                     
+        		</p:selectBooleanCheckbox> 
+
+               
+               
+                
+        		</p:column>
+        		<h:outputText value="#{turl.url.url_address}" styleClass="target_url_li" />
+        
+        </div>
+        
+    </p:dataList>
+                </div>
+                </h:panelGroup>
+            </h:panelGrid>
+            
+    </p:dataList> 
     
-  </h:form>
+    
+    
+        
+        <!-- attempt 2 end:-->
+        
+        
+  </p:panel>
+    </h:form>
 
 </div>
- 
+
+<!-- 
+ <p:panel id="cpnl" styleClass="centrePanel" header="" toggleable="true" toggleOrientation="horizontal" > 
+ -->
  <div class="main_content">
- <h:form id="centreContentForm">
- </h:form>
+<h:form id="centreContentForm" >
+    <h:inputText id="hiddenSocialDataString" value="#{fullScreenDashboardBean.googleSocialChart.socialDataString}" style="display:none"></h:inputText>
+    
+    <p:menubar styleClass="dataMenuBar">
+      <p:submenu label="Data" icon="ui-icon-document">
+        <p:submenu label="Download Data" icon="ui-icon-contact">
+          <p:menuitem value=".csv" url="#" />
+          <p:menuitem value=".xls" url="#" />
+        </p:submenu>
+      </p:submenu>
+      <p:submenu label="Alerts" icon="ui-icon-alert">
+        <p:menuitem value="Your Alerts" url="#" />
+        <p:menuitem value="Set New Alert" url="#" />
+      </p:submenu>
+      <p:submenu label="Reports" icon="ui-icon-clipboard">
+        <p:menuitem value="Coverage Book" url="/coveragebook.jsf" />
+      </p:submenu>
+    </p:menubar>
+   
+    <p:panel id="links_panel" header="Links" toggleable="true"
+						toggleSpeed="500" closeSpeed="500" widgetVar="links_panel"> 
+      
+      <p:dataTable var="urlAndLink" value="#{fullScreenDashboardBean.backLinkTableBean.dataModel}" paginator="true" rows="10"  
+                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"  
+                 rowsPerPageTemplate="5,10,25,50" 
+                 selection="#{fullScreenDashboardBean.backLinkTableBean.selectedURLAndLinkDataArray}" 
+                 rowSelectListener="#{fullScreenDashboardBean.backLinkTableBean.checkBoxSelected}" 
+                 rowUnselectListener="#{fullScreenDashboardBean.backLinkTableBean.checkBoxUnselected}"
+                 id="URLAndLinkDataTable" lazy="true">
+        <p:column selectionMode="multiple" style="width:2%"/>
+        <p:ajax event="rowSelect" listener="#{fullScreenDashboardBean.backLinkTableBean.onRowSelect}" update=":centreContentForm" />
+        <p:column headerText="Address" sortBy="#{urlAndLink.tidyURLAddress}" 
+        filterBy="#{urlAndLink.tidyURLAddress}" style="width:25%">
+          <h:outputText value="#{urlAndLink.tidyURLAddress}" />
+        </p:column>sq
+        <p:column headerText="Date" sortBy="#{urlAndLink.tidyDate}" 
+        filterBy="#{urlAndLink.url.date}" style="width:10%">
+          <h:outputText value="#{urlAndLink.tidyDate}" />
+        </p:column>
+        <p:column headerText="Anchor Text" sortBy="#{urlAndLink.link.anchor_text}" 
+        filterBy="#{urlAndLink.link.anchor_text}" style="width:15%" >
+          <h:outputText value="#{urlAndLink.link.anchor_text}" />
+        </p:column>
+        <p:column headerText="DA" sortBy="#{urlAndLink.url.domain_authority}" style="width:5%" >
+          <h:outputText value="#{urlAndLink.url.domain_authority}" />
+        </p:column>
+        <p:column headerText="PA" sortBy="#{urlAndLink.url.page_authority}" style="width:5%" >
+          <h:outputText value="#{urlAndLink.url.page_authority}" />
+        </p:column>
+        <p:column headerText="Target URL" sortBy="#{urlAndLink.tidyTargetURLAddress}" style="width:5%" >
+          <h:outputText value="#{urlAndLink.tidyTargetURLAddress}" />
+        </p:column>
+        <p:column headerText="Link Activity" sortBy="#{urlAndLink.linkBuildingActivity}" style="width:5%" >
+          <h:outputText value="#{urlAndLink.linkBuildingActivity}" />
+        </p:column>
+        <p:column headerText="Get Social Data" style="width:25%">
+          <p:selectBooleanCheckbox value="#{urlAndLink.url.get_social_data}"/>
+        </p:column>
+        <p:column headerText="Get BackLinks" style="width:5%">
+          <p:selectBooleanCheckbox value="#{urlAndLink.url.get_backlinks}"/>
+        </p:column>
+      </p:dataTable>
+      <p:blockUI block="URLAndLinkDataTable" trigger="URLAndLinkDataTable"><br />
+        <p:graphicImage value="/images/ajax-loader.gif" />
+      </p:blockUI>
+      
+      
+      <div id="links_chart"></div>
+    </p:panel>
+
+    <!--
+					<p:blockUI block="links_panel" trigger=":leftContentForm:clients_t_urls"><br />
+						<p:graphicImage value="/images/ajax-loader.gif" />
+					</p:blockUI>
+                    -->
+                    
+                    <!-- 
+    <p:panel id="social_history_panel" header="Social Data History"
+						toggleable="true" toggleSpeed="500" closeSpeed="500"
+						widgetVar="social_history_panel">
+      <div id="social_history_chart"></div>
+    </p:panel>
+    <p:panel id="datatable_panel" toggleable="true" toggleSpeed="500"
+						closeSpeed="500" widgetVar="datatable_panel"> 
+      
+    </p:panel>
+    -->
+  </h:form>
    
  </div>
+ <!--
+ </p:panel>
+ -->
+ </div>
 </h:body>
-<script type="text/javascript">
-var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
-</script>
 </html>
