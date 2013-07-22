@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 //import com.gofetch.entities.URLDBService;
+import com.gofetch.json.JsonWrapper;
 import com.gofetch.utils.TextUtil;
 
 /**
@@ -43,7 +44,7 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 	public SEOMozImplFreeAPI(){
 
 		scope = LinksConstants.LINKS_SCOPE_PAGE_TO_PAGE;
-		filters = LinksConstants.LINKS_FILTER_FOLLOW + LinksConstants.LINKS_FILTER_301 + LinksConstants.LINKS_FILTER_EXTERNAL; 
+		filters = LinksConstants.LINKS_FILTER_FOLLOW + "+" + LinksConstants.LINKS_FILTER_301 + "+" + LinksConstants.LINKS_FILTER_EXTERNAL; 
 		sort = LinksConstants.LINKS_SORT_PAGE_AUTHORITY; //The Sources with the highest Page Authority are returned first.
 		sourceCols = URLMetricsConstants.URLMETRICS_COL_URL;
 		targetCols = URLMetricsConstants.URLMETRICS_COL_URL;
@@ -159,23 +160,20 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 			try{ 
 				response = linksService.getLinks(urlMinusHttp, scope, filters, sort, sourceCols, targetCols, linkCols, offSet, Constants.FREE_API_LINK_QUERY_MAX);
 			}catch(Exception e){ // most likely time out from SEOMoz server....
-
-				//String msg = "Exception in getLinks getting data for: " + urlTarget + ". SEOMozImplFreeAPI: getLinks";
-				//logger.logp(Level.SEVERE, "SEOMozImplFreeAPI", "getLinks",msg ,e);
-				//e.printStackTrace();	
-				//log.severe(msg + e.getMessage());
-
-				//return allLinksDAPA; // return null;??
-				
-				//replaced all the above with throwing the exception up the chain so we can deal with accordingly
 				
 				throw(e);
-
 			}
-
+			
+			log.info("Response back from SEOMoz: " + response.substring(0, 50));
+			
 			if (response.length() > 2) { // check for "[]" = empty response
 
+				//22-7-13: bug here: SEOMoz returning wrong kind of JSON: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT
+				//OLD:
 				tempLinks = gson.fromJson(response, linksListType);
+				
+				// New:
+				//tempLinks = JsonWrapper.getObjectListFromJson(response);
 
 				allLinksDAPA.addAll(tempLinks); //append templinks to allLinksDAPA
 				offSet = Constants.FREE_API_LINK_QUERY_MAX; //Old version: offSet = allLinksDAPA.size(); // move along to query next links...  and go back for more links

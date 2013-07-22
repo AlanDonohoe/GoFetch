@@ -30,7 +30,7 @@ public class ProcessNewTargets extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L; 
 
-	private static Logger log = Logger.getLogger(ProcessNewTargets.class
+	private static Logger log =  Logger.getLogger(ProcessNewTargets.class
 			.getName());
 
 	/**
@@ -99,7 +99,7 @@ public class ProcessNewTargets extends HttpServlet {
 
 		if (!unprocessedURLs.isEmpty()) {
 			
-			log.info("No of unprocessed URLs: " + String.valueOf(unprocessedURLs.size()));
+			log.info("Number of unprocessed URLs: " + String.valueOf(unprocessedURLs.size()));
 			
 			for (URL currentURL : unprocessedURLs) {
 				//if (currentURL.isGet_backlinks()) { - already taken into account in the getUnproccessedTargetURLs(); call
@@ -128,8 +128,9 @@ public class ProcessNewTargets extends HttpServlet {
 					} catch (Exception e) {
 						String msg = "Exception thrown getting backlink data for: "
 								+ currentTargetAddress + " ProcessNewTargets"
-								+ "- SEOMoz block. Exception - ";
-						log.warning(msg + e.getMessage());
+								+ "- SEOMoz block 1: seoMoz.getLinks(...). Exception - ";
+						log.warning(msg);
+						log.warning(e.getMessage());
 
 						getLinksSuccessful = false;
 
@@ -150,9 +151,10 @@ public class ProcessNewTargets extends HttpServlet {
 									seoMoz);
 						}catch(Exception e) {
 							String msg = "Exception thrown getting authority data for: "
-									+ currentTargetAddress + "ProcessNewTargets"
-									+ "- SEOMoz block. Exception - ";
-							log.warning(msg + e.getMessage());
+									+ currentTargetAddress + "ProcessNewTargets - getAuthorityAndDomainData(...)"
+									+ "- SEOMoz block 2.";
+							log.warning(msg);
+							log.warning(e.getMessage());
 
 						}
 

@@ -2,9 +2,12 @@ package com.gofetch.seomoz;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.logging.Logger;
 
+import com.gofetch.json.JsonWrapper;
 import com.gofetch.seomoz.Authenticator;
 import com.gofetch.utils.ConnectionUtil;
+import com.gofetch.utils.HttpResponseReader;
 
 /**
  * 
@@ -17,6 +20,10 @@ import com.gofetch.utils.ConnectionUtil;
  */
 public class LinksService {
 	private Authenticator authenticator;
+	
+	private static Logger log = Logger.getLogger(LinksService.class
+			.getName());
+
 
 	public LinksService() {
 
@@ -61,7 +68,9 @@ public class LinksService {
 	 */
 	public String getLinks(String objectURL, String scope, String filters,
 			String sort, long colSource, long colTarget, long colLink,
-			int offset, int limit) throws IOException {
+			int offset, int limit) throws IOException, Exception{
+		
+		log.info("Entering getLinks(...)");
 		// TODO: replace depreciated method -
 		// http://stackoverflow.com/questions/213506/java-net-urlencoder-encodestring-is-deprecated-what-should-i-use-instead
 		String urlToFetch = "http://lsapi.seomoz.com/linkscape/links/"
@@ -95,6 +104,18 @@ public class LinksService {
 		}
 
 		String response = ConnectionUtil.makeRequest(urlToFetch);
+		
+		//these JSON assistant methods - were causing more exceptions than they were worth..
+		
+//		if(!HttpResponseReader.successfulResponse(response)){
+//			
+//			log.info("Call unsuccessful");
+//			
+//			String errMsg = JsonWrapper.getJsonString(response, "error_message");
+//			Exception exp = new Exception(errMsg);
+//			
+//			throw (exp);
+//		}	
 
 		return response;
 	}

@@ -22,11 +22,10 @@ import java.util.logging.Logger;
  */
 public class ConnectionUtil {
 
-	public static final String TAG = "ConnectionUtil"; // used for logging
+	//public static final String TAG = "ConnectionUtil"; // used for logging
 														// errors
-	private static Logger log = Logger.getLogger(TAG); // used for logging
-														// errors
-	private static String errorMsg; // used for logging errorsÏ
+	private static Logger log = Logger.getLogger(ConnectionUtil.class.getName()); // used for logging errors
+	private static String errorMsg; // used for logging errors
 
 	public static String post(String urlPage, String postData) throws Exception {
 
@@ -76,6 +75,9 @@ public class ConnectionUtil {
 	 * @throws IOException
 	 */
 	public static String makeRequest(String urlToFetch) throws IOException {
+		
+		log.info("Entering makeRequest(...)");
+		
 		String responseBody = "";
 
 		// new implementation - GAE version:

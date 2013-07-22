@@ -179,9 +179,8 @@ public class SEOMozWrapper {
 		String response = null;
 		try {
 			response = linksService.getLinks(url, scope, filters, sort, sourceCols, targetCols, linkCols, offset, noOfLinks);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			log.warning(e.getMessage());
 		}
 
 		if (response.length() > 2) { // check for "[]" = empty reponse
