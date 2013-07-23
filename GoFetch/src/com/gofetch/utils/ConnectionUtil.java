@@ -76,7 +76,7 @@ public class ConnectionUtil {
 	 */
 	public static String makeRequest(String urlToFetch) throws IOException {
 		
-		log.info("Entering makeRequest(...)");
+		//log.info("Entering makeRequest(...)");
 		
 		String responseBody = "";
 

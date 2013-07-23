@@ -2,6 +2,7 @@ package com.gofetch.seomoz;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.logging.Logger;
 
 import com.gofetch.seomoz.Authenticator;
 import com.gofetch.utils.ConnectionUtil;
@@ -19,6 +20,10 @@ import com.gofetch.utils.ConnectionUtil;
 public class URLMetricsService 
 {
 	private Authenticator authenticator;
+	
+	private static Logger log =  Logger.getLogger(URLMetricsService.class
+			.getName());
+
 	
 	public URLMetricsService()
 	{
@@ -53,7 +58,12 @@ public class URLMetricsService
 		{
 			urlToFetch = urlToFetch + "&Cols=" + col;
 		}
+		
+		log.info("urlToFetch:" + urlToFetch);
+		
 		String response = ConnectionUtil.makeRequest(urlToFetch);
+		
+		log.info("response:" + response);
 		
 		return response;
 	}
