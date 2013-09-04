@@ -25,21 +25,25 @@ public class TextUtil {
 
 	/**
 	 * 
-	 * @param url 
+	 * @param url ex: http://www.marksandspencer.com/Maternity....
 	 * @return - section between the 1st '.' and 1st '/' of the url param
+	 * 	ex: marksandspencer.com
+	 * 
+	 * Issue: goo.gl/gf1PY - returns gl as domain.... Not goo.gl
 	 */
 	public static String returnDomainName(String url){
 
 		int firstDot, firstSlash;
-		String newURL;
 
-		//replaced 2 lines below with this line
-		newURL = url.replaceFirst("www.", "");
+		if(url.contains("www")){
+			firstDot = url.indexOf('.');
+			firstDot++;
+		}else // dealing with shortened URL:
+			firstDot = 0;
 
-		firstSlash = newURL.indexOf('/', 0); 
-		firstSlash++;
+		firstSlash = url.indexOf('/', firstDot); 
 
-		return newURL.substring(0, firstSlash);
+		return url.substring(firstDot, firstSlash);
 
 	}
 

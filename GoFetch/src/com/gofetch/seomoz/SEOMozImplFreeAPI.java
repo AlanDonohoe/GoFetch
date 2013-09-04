@@ -44,7 +44,7 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 	public SEOMozImplFreeAPI(){
 
 		scope = LinksConstants.LINKS_SCOPE_PAGE_TO_PAGE;
-		filters = LinksConstants.LINKS_FILTER_FOLLOW + "+" + LinksConstants.LINKS_FILTER_301 + "+" + LinksConstants.LINKS_FILTER_EXTERNAL; 
+		filters = LinksConstants.LINKS_FILTER_FOLLOW + "+" + LinksConstants.LINKS_FILTER_EXTERNAL; 
 		sort = LinksConstants.LINKS_SORT_PAGE_AUTHORITY; //The Sources with the highest Page Authority are returned first.
 		sourceCols = URLMetricsConstants.URLMETRICS_COL_URL;
 		targetCols = URLMetricsConstants.URLMETRICS_COL_URL;
@@ -164,7 +164,10 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 				throw(e);
 			}
 			
-			log.info("Response back from SEOMoz: " + response.substring(0, 50));
+			if(response.length() > 50)
+				log.info("Response back from SEOMoz: " + response.substring(0, 50));
+			else
+				log.info("Response back from SEOMoz: " + response);
 			
 			if (response.length() > 2) { // check for "[]" = empty response
 

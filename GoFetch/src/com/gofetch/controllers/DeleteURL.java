@@ -195,7 +195,7 @@ public class DeleteURL extends HttpServlet{
 	 * 1) just a single URL with no entry in links table, but does have social data and SEOMoz data.
 	 * 
 	 * Then post-condition: 
-	 * Target: Url entry in ÒurlÓ table and all its associated social, SEOMoz data (in tables: misc_social_data, twitter_mention, seomoz_data) is deleted.
+	 * Target: Url entry in ï¿½urlï¿½ table and all its associated social, SEOMoz data (in tables: misc_social_data, twitter_mention, seomoz_data) is deleted.
 	 * 						
 	 * ---------------
 	 * 2) a target in DB, with the number of its occurrences in links table that equals the no of backlinks of this tree of links alone, 
@@ -205,7 +205,7 @@ public class DeleteURL extends HttpServlet{
 	 * 
 	 * Then Post-condition: 
 	 * Target: URL plus associated social, etc data are deleted
-	 * Source: all urls in this tree of links plus associated social, etc data are deleted from the ÒurlÓ table, 
+	 * Source: all urls in this tree of links plus associated social, etc data are deleted from the ï¿½urlï¿½ table, 
 	 * Links: All entries with this target url as final target url in links table are deleted.
 	 * 
 	 * ---------------
@@ -216,8 +216,8 @@ public class DeleteURL extends HttpServlet{
 	 * 		Target url and source urls in tree have social, etc associated data.
 	 * 
 	 * Then post-condition: 
-	 * target is not deleted from the ÒurlÓ table, nor is it's associated social, etc data, 
-	 * source all urls in this tree of links plus associated social, etc data are deleted from the ÒurlÓ table,
+	 * target is not deleted from the ï¿½urlï¿½ table, nor is it's associated social, etc data, 
+	 * source all urls in this tree of links plus associated social, etc data are deleted from the ï¿½urlï¿½ table,
 	 * Links: every link associated with this tree IS deleted from the link table.
 	 * 
 	 *  4) a target in DB, with the number of its occurrences in links table that EQUALS the no of backlinks of this tree of links alone, 
@@ -226,9 +226,9 @@ public class DeleteURL extends HttpServlet{
 	 * 		Target url and source urls in tree have social, etc associated data.
 	 * 
 	 * Then post-condition: 
-	 * target IS deleted from the ÒurlÓ table, AND is it's associated social, etc data, 
-	 * source: urls plus associated social, etc data, in this tree of links that DO occur more than once in links table are NOT deleted from the ÒurlÓ table,
-	 * 		   urls plus associated social, etc data, in this tree of links that DO NOT occur more than once in links table ARE deleted from the ÒurlÓ table,
+	 * target IS deleted from the ï¿½urlï¿½ table, AND is it's associated social, etc data, 
+	 * source: urls plus associated social, etc data, in this tree of links that DO occur more than once in links table are NOT deleted from the ï¿½urlï¿½ table,
+	 * 		   urls plus associated social, etc data, in this tree of links that DO NOT occur more than once in links table ARE deleted from the ï¿½urlï¿½ table,
 	 * Links: every link associated with this tree IS deleted from the link table.
 	 * 
 	 * @param urlTarget - url that sits at the root of the tree of links - ie: the final target url - to delete.
@@ -276,8 +276,9 @@ public class DeleteURL extends HttpServlet{
 							// run through them, checking that the only final_target_url is our current one...
 							for(Link linkSub : linksThisURLIsIn){
 								// if there's a link, that has a final target url, that isnt the current target - then do NOT delete this url
-								if(!linkSub.getFinal_target_url().contentEquals(url.getUrl_address())){
-									deleteURLFlag = false;
+								//OLD: if(!linkSub.getFinal_target_url().contentEquals(url.getUrl_address())){
+								if(linkSub.getFinal_target_url_id() != url.getId()){
+								 	deleteURLFlag = false;
 									//TODO: write to report: current backlink is involved in more than just one link.. so can not delete url, social and seomoz, etc, data.
 									
 								}

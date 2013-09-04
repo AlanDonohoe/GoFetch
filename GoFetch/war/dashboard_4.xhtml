@@ -160,9 +160,7 @@ this works - but issue with ajax -
         
         <p:dataList value="#{clientTargetURLsBean.clientAndTUrlList}"
                    var ="selectedClients"  id="selectedClientList"  paginator="false" type="none">  
-         <p:column>          
-  	 <p:commandButton process="@this" id="btn3" value="+" actionListener="#{fullScreenDashboardBean.updateTURLs}" update=":centreContentForm"/>
-         </p:column> 
+ 		<p:column>
 
               <h:panelGrid styleClass="clientAndTUrlsGrid">
                    
@@ -201,9 +199,6 @@ this works - but issue with ajax -
 								update=":centreContentForm" />  
                      
         		</p:selectBooleanCheckbox> 
-
-               
-               
                 
         		</p:column>
         		<h:outputText value="#{turl.url.url_address}" styleClass="target_url_li" />
@@ -214,7 +209,7 @@ this works - but issue with ajax -
                 </div>
                 </h:panelGroup>
             </h:panelGrid>
-            
+            </p:column>
     </p:dataList> 
     
     

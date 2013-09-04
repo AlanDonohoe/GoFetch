@@ -20,4 +20,18 @@
     <schedule>every 5 minutes from 09:00 to 18:00</schedule>
     <timezone>Europe/London</timezone>
   </cron> 
+  <cron>
+    <url>/authoritycrawl</url>
+    <target>backgroundprocess</target>
+    <description>Crawl all urls for domain and page authority - limit of 100</description>
+    <schedule>every 30 minutes from 00:00 to 11:30</schedule>
+    <timezone>Europe/London</timezone>
+  </cron>
+  <cron>
+    <url>/monthlybacklinkupdate</url>
+    <target>backgroundprocess</target>
+    <description>Update all target URLs to have their backlinks_got flag set to false</description>
+    <schedule>1st monday 09:00</schedule>
+    <timezone>Europe/London</timezone>
+  </cron>
 </cronentries>

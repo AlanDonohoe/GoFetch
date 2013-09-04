@@ -15,6 +15,7 @@ import javax.persistence.TemporalType;
 
 import com.gofetch.images.ImageConstants;
 import com.gofetch.utils.DateUtil;
+import com.gofetch.utils.TextUtil;
 
 /**
  * Service class for CRUD operations on URL entity
@@ -24,14 +25,41 @@ import com.gofetch.utils.DateUtil;
 
 public class URLDBService implements Serializable{
 
-//	@PersistenceUnit(unitName="GoFetch")
-//	EntityManagerFactory emf;
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(URLDBService.class.getName());
+	
+	/**
+	 * Pulls all URLs that have their get_backlinks = true;
+	 * and sets their backlinks_got = false.
+	 * So that they will pulled by ProcessNewTargets to check for new backlinks every month
+	 * This is called via a cron job, at the beginning of every month.
+	 */
+	public void updateTURLsGetBacklinks(){
+		
+		log.info("Entering updateTURLsGetBacklinks");
+
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		//sql equiv: update url set backlinks_got = false where get_backlinks = true;
+		try {   
+			mgr.getTransaction().begin();
+			mgr.createQuery("UPDATE URL SET backlinks_got = FALSE WHERE get_backlinks = TRUE").executeUpdate();
+			mgr.getTransaction().commit();
+			
+		}catch(Exception e){
+			String msg = "Exception thrown. URLDBService: updateTURLsGetBacklinks. ";
+
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		
+	}
 	
 	
 	/**
@@ -45,13 +73,7 @@ public class URLDBService implements Serializable{
 		log.info("Entering getBackLinkURLs");
 		
 		List<URL> result = null;
-		//Integer id = targetURL.getId();
-		
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
+
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -68,7 +90,6 @@ public class URLDBService implements Serializable{
 
 		} finally {
 			mgr.close();
-			//PersistenceManager.getInstance().closeEntityManagerFactory();
 		}
 			
 		return result; 
@@ -97,8 +118,9 @@ public class URLDBService implements Serializable{
 	 * essentially a wrapper for "getURLAndLinkData(Integer targetURLid)"
 	 *  - just gets the id of the url address.
 	 * @return
+	 * @throws Exception 
 	 */
-	public List<URLAndLinkData> getURLAndLinkData(String urlAddress){
+	public List<URLAndLinkData> getURLAndLinkData(String urlAddress) throws Exception{
 	
 		Integer url_id = getURLIDFromAddress(urlAddress);
 		
@@ -112,92 +134,49 @@ public class URLDBService implements Serializable{
 	 * 
 	 * @param targetURL_ID id of the target URL to get all urls and link data for 
 	 * @return
+	 * @throws Exception 
 	 */
-	public List<URLAndLinkData> getURLAndLinkData(Integer targetURLid){
+	public List<URLAndLinkData> getURLAndLinkData(Integer targetURLid) throws Exception{
 		
 		log.info("Entering getURLAndLinkData");
 		
-		List<URLAndLinkData> result = null;
+		throw(new Exception("Method not implemented"));
 		
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
+	//	List<URLAndLinkData> result = null;
+//
+//		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 //		EntityManager mgr = emf.createEntityManager();
+//		
+//	
+//		try {   
+////			result= (List<URLAndLinkData>) mgr.createQuery("SELECT l FROM Link l INNER JOIN l.targetURL" )
+////					.getResultList(); 
+//			
+//			
+//		}catch(Exception e){
+//			String msg = "Exception thrown. URLService: getURLAndLinkData. ";
+//
+//			log.severe(msg + e.getMessage());
+//
+//		} finally {
+//			mgr.close();
+//		}
 		
-		// NEW
-		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
-		EntityManager mgr = emf.createEntityManager();
 		
-		//TODO:  need to replace with as JPA join eventually...
+//		log.info("Exiting getURLAndLinkData");
 		
-		// actual working sql:
-		// select * from links INNER JOIN url ON links.target_id = url.url_id and links.target_id = 15051; 
-		try {   
-//			result= (List<URLAndLinkData>) mgr.createQuery("SELECT l FROM Link l INNER JOIN l.targetURL" )
-//					.getResultList(); 
-			
-			
-		}catch(Exception e){
-			String msg = "Exception thrown. URLService: getURLAndLinkData. ";
+		//return result;
+	
 
-			log.severe(msg + e.getMessage());
-
-		} finally {
-			mgr.close();
-		}
-		
-		
-		log.info("Exiting getURLAndLinkData");
-		
-		return result;
-		
-		/*
-		 * Double max = (Double) em.createQuery("SELECT MAX(p.price) FROM PurchaseOrder 
-	                   o JOIN o.orderLineItems l JOIN l.product p JOIN p.supplier s WHERE s.sup_name = 'Tortuga Trading'")
-	                              .getSingleResult(); 
-	        out.println("The highest price for an ordered product supplied by Tortuga Trading: "+ max + "<br/>");
-		 
-		
-	log.info("Entering getBackLinkURLs");
-		
-		List<URL> result = null;
-		//Integer id = targetURL.getId();
-		
-		emf = Persistence.createEntityManagerFactory("GoFetch");
-		EntityManager mgr = emf.createEntityManager();
-
-
-		try {   
-			result= mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = ANY (SELECT l.source_id FROM Link l WHERE l.target_id = :id)")
-					.setParameter("id", targetURLid)
-					.getResultList();
-			
-		}catch(Exception e){
-			String msg = "Exception thrown. URLService: getBackLinkURLs. ";
-
-			log.severe(msg + e.getMessage());
-
-		} finally {
-			mgr.close();
-		}
-			
-		return result; 
-		
-		*/
 			
 	}
 
-	//TODO: dont know if this works - JQPL Selecting single field.. rather than whole entity...
 	@SuppressWarnings("unchecked")
 	public List<String> getURLAddresses(){
 
 		log.info("Entering getURLAddresses");
 		List<String> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -226,11 +205,6 @@ public class URLDBService implements Serializable{
 		
 		boolean urlInDB = false; // flag, set to true if URL already exists in DB.
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -280,11 +254,6 @@ public class URLDBService implements Serializable{
 		log.info("Entering getURL[" + id + "]");
 		URL result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-	
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -317,11 +286,6 @@ public class URLDBService implements Serializable{
 
 		List<URL> url = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -331,7 +295,7 @@ public class URLDBService implements Serializable{
 					.getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown getting URL: " + address + "URLService: getURL";
-			//logger.logp(Level.SEVERE, "URLService", "getURL",msg ,e);
+			
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -356,11 +320,6 @@ public class URLDBService implements Serializable{
 		log.info("Entering getURLs");
 		List<URL> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -368,7 +327,7 @@ public class URLDBService implements Serializable{
 			result= mgr.createQuery("SELECT u FROM URL u ORDER BY u.url_address").getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLs";
-			//logger.logp(Level.SEVERE, "URLService", "getURLs",msg ,e);
+			
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -387,11 +346,6 @@ public class URLDBService implements Serializable{
 		log.info("Entering getURLs");
 		List<URL> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -445,11 +399,6 @@ public class URLDBService implements Serializable{
 		log.info("Entering getTargetURLsFrom");
 		List<URL> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -460,7 +409,7 @@ public class URLDBService implements Serializable{
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getTargetURLsFrom";
-			//logger.logp(Level.SEVERE, "URLService", "getTargetURLsFrom",msg ,e);
+			
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -503,11 +452,6 @@ public class URLDBService implements Serializable{
 		log.info("Entering getURLsBetween");
 		List<URL> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -536,43 +480,20 @@ public class URLDBService implements Serializable{
 	// TODO: make an efficient look up service here..... see:
 	// http://stackoverflow.com/questions/558978/most-efficient-way-to-see-if-an-arraylist-contains-an-object-in-java
 	private boolean urlInDB(URL urlInDB){
-		
-		// new code - 
-		
+			
 		return urlInDB(urlInDB.getUrl_address());
 
-		// 	old code -  v inefficent....
-//		List<URL> urlList = getURLs();
-//
-//		for(URL urlCurrent: urlList){
-//			if(urlCurrent.getUrl_address().equals(urlCheck.getUrl_address()))
-//				return true;
-//		}
-//
-//		return false;
 	}
 
 	// TODO: make an efficient look up service here..... see:
 	// http://stackoverflow.com/questions/558978/most-efficient-way-to-see-if-an-arraylist-contains-an-object-in-java
 	public boolean urlInDB(String urlAddress){
 		
-		//old code doesnt make any sense.... pulls all the urls into RAM - just query DB and return false if its not in DB
-		
-		//new code:
 		if(null == getURL(urlAddress))
 			return false;
 		else
 			return true;
 		
-		//OLD Code:
-//		List<URL> urlList = getURLs();
-//
-//		for(URL urlCurrent: urlList){
-//			if(urlCurrent.getUrl_address().equals(urlAddress))
-//				return true;
-//		}
-//
-//		return false;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -581,11 +502,6 @@ public class URLDBService implements Serializable{
 		Integer url_id;
 		List<URL> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -595,7 +511,7 @@ public class URLDBService implements Serializable{
 					.getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown: URLService: getURLIDFromAddress";
-			//logger.logp(Level.SEVERE, "URLService", "getURLIDFromAddress",msg ,e);
+			
 			log.severe(msg + e.getMessage());
 
 		}  finally {
@@ -616,11 +532,6 @@ public class URLDBService implements Serializable{
 		String address;
 		List<URL> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -630,7 +541,7 @@ public class URLDBService implements Serializable{
 					.getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown: URLService: getURLIDFromAddress";
-			//logger.logp(Level.SEVERE, "URLService", "getURLIDFromAddress",msg ,e);
+			
 			log.severe(msg + e.getMessage());
 
 		}  finally {
@@ -646,7 +557,7 @@ public class URLDBService implements Serializable{
 	}
 
 	/**
-	 * Updates record with url address with new page authority (pa) & domain authority (da) data
+	 * Updates record with url address with new page authority (pa) & domain authority (da) data AND sets "get_authority_data" = false.
 	 * 
 	 * @param urlAddress - target url 
 	 * @param pa - Page Authority
@@ -654,11 +565,6 @@ public class URLDBService implements Serializable{
 	 */
 	public void updateURLAuthorityData(String urlAddress, Integer pa, Integer da){
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -673,13 +579,55 @@ public class URLDBService implements Serializable{
 			URL url = mgr.find(URL.class, url_id);
 			url.setPage_authority(pa);
 			url.setDomain_authority(da);
+			url.setGet_authority_data(false);
 
 			mgr.merge(url);
 			mgr.getTransaction().commit();
 
 		}catch(Exception e){
 			String msg = "Exception thrown: URLService: updateURLAuthorityData";
-			//logger.logp(Level.SEVERE, "URLService", "updateURLAuthorityData",msg ,e);
+			
+			log.severe(msg + e.getMessage());
+
+		}  finally {
+			mgr.close();
+		}
+
+
+	}
+	
+	/**
+	 * Updates record with url address with new domain authority (da) data AND sets "get_authority_data" = false.
+	 * 
+	 * @param urlAddress - target url 
+	 * @param pa - Page Authority
+	 * @param da - Domain Authority
+	 */
+	public void updateURLDomainAuthorityData(String urlAddress, Integer da){
+
+		log.info("updateURLDomainAuthorityData() for: " + urlAddress);
+		
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		int url_id;
+
+		try {
+
+			url_id = getURLIDFromAddress(urlAddress);
+
+			mgr.getTransaction().begin();
+
+			URL url = mgr.find(URL.class, url_id);
+			url.setDomain_authority(da);
+			url.setGet_authority_data(false);
+
+			mgr.merge(url);
+			mgr.getTransaction().commit();
+
+		}catch(Exception e){
+			String msg = "Exception thrown: URLService: updateURLDomainAuthorityData";
+			
 			log.severe(msg + e.getMessage());
 
 		}  finally {
@@ -690,7 +638,8 @@ public class URLDBService implements Serializable{
 	}
 
 	/**
-	 * Updates record with url address with new page authority (pa) & domain authority (da) data
+	 * Updates record with url address with new page authority (pa), domain authority (da), docTitle data
+	 * Then sets URL's get_authority_data to false.
 	 * 
 	 * @param urlAddress - target url 
 	 * @param pa - Page Authority
@@ -698,12 +647,9 @@ public class URLDBService implements Serializable{
 	 * @param domainName - Domain name of url.
 	 */
 	public void updateURLData(String urlAddress, Integer pa, Integer da, String docTitle){
-
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
 		
-		// NEW
+		log.info("Entering updateURLData(...) for: " + urlAddress);
+
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -719,13 +665,14 @@ public class URLDBService implements Serializable{
 			url.setPage_authority(pa);
 			url.setDomain_authority(da);
 			url.setDoc_title(docTitle);
+			url.setGet_authority_data(false);
 
 			mgr.merge(url);
 			mgr.getTransaction().commit();
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: updateURLData";
-			//logger.logp(Level.SEVERE, "URLService", "updateURLData",msg ,e);
+			
 			log.severe(msg + e.getMessage());
 
 		}  finally {
@@ -738,11 +685,6 @@ public class URLDBService implements Serializable{
 		
 		log.info("Entering URLService::updateSocialFrequencyData");
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -763,7 +705,6 @@ public class URLDBService implements Serializable{
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: updateSocialFrequencyData";
-			//logger.logp(Level.SEVERE, "URLService", "updateDomainNames",msg ,e);
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -775,11 +716,7 @@ public class URLDBService implements Serializable{
 
 	public void updateDomainNames(List<URL> urls){
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-//		// NEW
+	
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -799,7 +736,6 @@ public class URLDBService implements Serializable{
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: updateDomainNames";
-			//logger.logp(Level.SEVERE, "URLService", "updateDomainNames",msg ,e);
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -819,11 +755,6 @@ public class URLDBService implements Serializable{
 	 */
 	public void updateBackLinksGot(URL url, boolean backLinksGot ){
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -864,11 +795,6 @@ public class URLDBService implements Serializable{
 		log.info("Entering getSociallyTrackedURLs");
 		List<URL> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -878,7 +804,6 @@ public class URLDBService implements Serializable{
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getSociallyTrackedURLs";
-			//logger.logp(Level.SEVERE, "URLService", "getSociallyTrackedURLs",msg ,e);
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -896,14 +821,8 @@ public class URLDBService implements Serializable{
 	public List<URL> getURLsFromIDs(List<Integer> idList){
 
 		log.info("Entering getURLsFromIDs");
-		// List<URL> result = null; // used if we use option 1
 		List<URL> urls = new ArrayList<URL>(); //used if we use option 2.
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -928,7 +847,6 @@ public class URLDBService implements Serializable{
 
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getURLsFromIDs";
-			//logger.logp(Level.SEVERE, "URLService", "getSociallyTrackedURLs",msg ,e);
 			log.severe(msg + e.getMessage());
 
 		} finally {
@@ -989,11 +907,6 @@ public class URLDBService implements Serializable{
 		log.info("Entering deleteURL. Deleting " + url_id);
 
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -1024,23 +937,19 @@ public class URLDBService implements Serializable{
 	 * Returns list of urls that have had their get_backlinks flag checked, but have not yet got their backlink data eg: from SEOMoz
 	 */
 	@SuppressWarnings("unchecked")
-	public List<URL> getUnproccessedTargetURLs(){
+	public List<URL> getUnproccessedTargetURLs(Integer limit){
 
 		log.info("Entering getUnproccessedTargetURLs");
 
 		List<URL> urls = null; 
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
 		try {
 
 			urls = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_backlinks = TRUE and u.backlinks_got = false")
+					.setMaxResults(limit)
 					.getResultList();
 
 		}catch(Exception e){
@@ -1055,6 +964,72 @@ public class URLDBService implements Serializable{
 		return urls;
 
 	}
+	
+	/**
+	 * @param maxResults no of URLs to pull
+	 * @return 	Pulls any URLs that have get_authority_data = TRUE
+	 */
+	@SuppressWarnings("unchecked")
+	public List<URL> getUnProccessedAuthorityData(Integer maxResults){
+		
+		log.info("Entering getUnProccessedAuthorityData()");
+		
+		List<URL> urls = null; 
+		
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		try {
+
+			urls = (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_authority_data = TRUE")
+					.setMaxResults(maxResults)
+					.getResultList();
+
+		}catch(Exception e){
+			String msg = "Exception thrown. URLDBService: getUnProccessedAuthorityData";
+			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+
+		return urls;
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @return the SEOMoz metric: Domain Authority, if there's already a URL in the DB
+	 *  from that domain, - this saves hitting the SEOMoz server unnec.
+	 *  IF there's no url's with domain with the DB, then returns null
+	 */
+	public Integer getDomainAuthorityForThisDomain(String domainName){
+		
+		Integer result = null;
+//		String domain = "http://";
+//		domain += TextUtil.returnDomainName(url);
+		
+
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+
+		try { 
+			result = (Integer) mgr.createQuery("SELECT u.domain_authority FROM URL u WHERE u.domain_authority > 0 AND u.url_address LIKE :query")
+					.setMaxResults(1)
+					.setParameter("query", "%" + domainName + "%")
+					.getSingleResult();
+		
+		}catch(Exception e){
+			String msg = "Exception thrown. URLService: getDomainAuthorityForThisDomain";
+
+			log.info(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+
+		return result;
+	}
 
 	/*
 	 * returns all URLs that have a social_data_date less than or equal to todays date and get_social_data = true
@@ -1066,11 +1041,6 @@ public class URLDBService implements Serializable{
 		List<URL> result = null;
 		Date date = DateUtil.getTodaysDate();
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -1102,11 +1072,6 @@ public class URLDBService implements Serializable{
 		log.info("Entering getURLsOfClientCategory. Client Category = " + clientCategoryID);
 		List<URL> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -1144,11 +1109,7 @@ public class URLDBService implements Serializable{
 		log.info("Entering getClientsURLs. Client ID = " + clientID);
 		List<URL> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
+	
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -1173,7 +1134,7 @@ public class URLDBService implements Serializable{
 
 		} finally {
 			mgr.close();
-			//PersistenceManager.getInstance().closeEntityManagerFactory();
+			
 		}
 		if (result == null) {
 			log.info("No URLs returned");
@@ -1188,12 +1149,6 @@ public class URLDBService implements Serializable{
 	//	and sets client_target_url = true.
 	public void updateURLClientAndCampaign(URL targetURLDB) {
 		
-
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -1226,11 +1181,6 @@ public class URLDBService implements Serializable{
 		//log.info("Entering getURLAddresses");
 		List<String> result = null;
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -1259,11 +1209,6 @@ public class URLDBService implements Serializable{
 		List<URL> result = null;
 		Date date = DateUtil.getTodaysDate();
 
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -1306,15 +1251,10 @@ public class URLDBService implements Serializable{
 		query.setMaxResults(limitEnd);
 
 		try {   
-			//NEW:
+			
 			result= query.getResultList();
 			log.info("getBackLinkURLs: No Of Results: " + Integer.toString(result.size()));
 			
-			//OLD:
-//			result= (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.url_id = ANY (SELECT l.source_id FROM Link l WHERE l.target_id = :id)")
-//					.setFirstResult(limitStart).setMaxResults(limitEnd)
-//					.setParameter("id", targetURLId)
-//					.getResultList();
 			
 		}catch(Exception e){
 			String msg = "Exception thrown. URLService: getBackLinkURLs. ";
@@ -1370,8 +1310,7 @@ public class URLDBService implements Serializable{
 	public List<URL> getURLsWithImage() {
 		log.info("Entering getURLsWithImage");
 		List<URL> result = null;
-		
-		// NEW
+	
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		

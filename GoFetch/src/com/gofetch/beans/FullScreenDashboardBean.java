@@ -706,6 +706,32 @@ public class FullScreenDashboardBean implements Serializable {
     
     public void updateTURLs(){
     	log.info("- - - - - -- -  -- - Entering updateTURLs()");
+    	
+    	// go through all selected users....
+    	for(ClientAndTUrls clientsAndURLs: clientTargetURLsBean.getClientAndTUrlList()){
+    		
+    		// got through all the selected users' selected T URLs
+    		for(URLAndBoolSelection urlAndSelection: clientsAndURLs.getUrls()){
+    			
+    			//backLinkTableBean.getDataModel()
+    			
+    			if(urlAndSelection.isSelected()){
+    				
+    				// add to list if not already added:
+    				if(!selectedTargetURLIds.contains(urlAndSelection.getUrl().getId()))
+    					selectedTargetURLIds.add(urlAndSelection.getUrl().getId());
+    				
+    			}
+    			else{ // user has unselected this T URL - must be a more efficient way of doing this...
+    				if(selectedTargetURLIds.contains(urlAndSelection.getUrl().getId()))
+    					selectedTargetURLIds.remove(urlAndSelection.getUrl().getId());
+    			}
+    		}
+    	}
+    	
+    	// update the data model with the ID of the target URL...
+		backLinkTableBean.addBackLinksToTable(selectedTargetURLIds);
+		
     }
     
     public String testInnerButtonAction() {

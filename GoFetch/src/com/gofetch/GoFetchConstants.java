@@ -17,6 +17,8 @@ public class GoFetchConstants {
 	public static final int URL_ENTERED_BY_SEOMOZ = 0;
 	public static final int URL_ENTERED_BY_USER = 1;
 	
+	public static final int NO_OF_URLS_TO_PROCESS = 20; // no of urls to process (get backlinks for from SEOMoz) on a daily basis 
+	
 	///////////////////
 	// used when hitting social services for data - url goes in between preEndpoint and postEndPoint
 

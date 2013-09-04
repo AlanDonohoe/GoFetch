@@ -40,7 +40,7 @@ public class PremierLeagueCrawl extends HttpServlet {
 		
 		//TODO: replace with REAL code that selects target urls which have been selected to be monitored as per prem league...
 		//urlDBUnit.getPremierLeagueURLs();
-		List<URL> urls = urlDBUnit.getUnproccessedTargetURLs();
+		List<URL> urls = urlDBUnit.getUnproccessedTargetURLs(100);
 		List<URLPlusDataPoints> links;
 		
 		// 2: run though each url and get its backLink data...

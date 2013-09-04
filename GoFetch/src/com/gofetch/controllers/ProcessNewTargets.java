@@ -91,7 +91,8 @@ public class ProcessNewTargets extends HttpServlet {
 
 
 		//new implementation: returns all the urls that have get_backlinks = true && backlinks_got = false
-		List<URL> unprocessedURLs = urlDBUnit.getUnproccessedTargetURLs();
+		// currently 20 - per day
+		List<URL> unprocessedURLs = urlDBUnit.getUnproccessedTargetURLs(GoFetchConstants.NO_OF_URLS_TO_PROCESS);
 		
 		if(testing)
 			unprocessedURLs.clear();
@@ -137,26 +138,28 @@ public class ProcessNewTargets extends HttpServlet {
 					}
 					// this section below ONLY called if we have has a successful call to SEOMoz - even if there's no links for this target.
 					if(getLinksSuccessful){
-						// 2: for each new target - get its page & domain
-						// authority... .. and persist...
-						// : another hit to SEOMoz here.. need to delay....
-						try {
-							Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
-						} catch (InterruptedException e) {
-
-							log.warning( e.getMessage());
-						}
-						try{
-							getAuthorityAndDomainData(currentURL.getUrl_address(),
-									seoMoz);
-						}catch(Exception e) {
-							String msg = "Exception thrown getting authority data for: "
-									+ currentTargetAddress + "ProcessNewTargets - getAuthorityAndDomainData(...)"
-									+ "- SEOMoz block 2.";
-							log.warning(msg);
-							log.warning(e.getMessage());
-
-						}
+						//////////////
+						// AD 23-7-13: moved all DA & PA functionality to DomainPageAuthorityCrawl controller
+//						// 2: for each new target - get its page & domain
+//						// authority... .. and persist...
+//						// : another hit to SEOMoz here.. need to delay....
+//						try {
+//							Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
+//						} catch (InterruptedException e) {
+//
+//							log.warning( e.getMessage());
+//						}
+//						try{
+//							getAuthorityAndDomainData(currentURL.getUrl_address(),
+//									seoMoz);
+//						}catch(Exception e) {
+//							String msg = "Exception thrown getting authority data for: "
+//									+ currentTargetAddress + "ProcessNewTargets - getAuthorityAndDomainData(...)"
+//									+ "- SEOMoz block 2.";
+//							log.warning(msg);
+//							log.warning(e.getMessage());
+//
+//						}
 
 						if (!backLinks.isEmpty()) { // if we have successfully
 							// got some data from SEOmoz
@@ -182,23 +185,29 @@ public class ProcessNewTargets extends HttpServlet {
 								log.warning("Error in creating new links / urls. "  + e.getMessage());
 							}
 
-							// 5: Get PA and DA for single link from each unique
-							// domain....
-							// use getURLsPointingTo(currentURL) and retrieve
-							// first url, get its PA and DA... then loop through
-							// the next urls until currentBackLinkdomainName !=
-							// latestBackLinkDomainName
-							// then get PA and DA for that.....
-							// then queries to only unique domain backlinks can
-							// query those with only PA & DA that != null ????
-
-							// another hit to SEOMoz here.. need to delay....
-							try {
-								Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
-							} catch (InterruptedException e) {
-								log.warning( e.getMessage());
-							}
-							getDataForUniqueDomains(currentURL, seoMoz);
+							///////////////
+							// 24-7-13: AD : moved all get DA & PA to : DomainPageAuthorityCrawl controller
+//							// 5: Get PA and DA for single link from each unique
+//							// domain....
+//							// use getURLsPointingTo(currentURL) and retrieve
+//							// first url, get its PA and DA... then loop through
+//							// the next urls until currentBackLinkdomainName !=
+//							// latestBackLinkDomainName
+//							// then get PA and DA for that.....
+//							// then queries to only unique domain backlinks can
+//							// query those with only PA & DA that != null ????
+//
+//							// another hit to SEOMoz here.. need to delay....
+//							try {
+//								Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
+//							} catch (InterruptedException e) {
+//								log.warning( e.getMessage());
+//							}
+//							/////////
+//							// 24-7-13: AD : moved all get DA & PA to : DomainPageAuthorityCrawl controller
+//							//getDataForUniqueDomains(currentURL, seoMoz);
+//							//
+//							///////////
 
 						} else {
 							log.info("No backlinks from SEOMoz for: "
@@ -305,6 +314,8 @@ public class ProcessNewTargets extends HttpServlet {
 			url.setSeomoz_url(true); //TODO: delete this field
 			url.setBacklinks_got(false);
 			url.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_SEOMOZ); 
+			
+			url.setGet_authority_data(true); // add to get PA and DA crawl....
 			
 			if(null != currentURL.getClient_category_id())
 				url.setClient_category_id(currentURL.getClient_category_id());
@@ -441,73 +452,73 @@ public class ProcessNewTargets extends HttpServlet {
 		}
 	}
 
-	/**
-	 * retrieves the PA and DA of the target url, and persists them to the DB.
-	 * 
-	 * @param currentURL
-	 *            - url to retrieve and persist the domain and page authority of
-	 */
-	@SuppressWarnings("unused")
-	private void getAuthorityAndDomainData(String url, SEOMoz seoMoz) {
-
-		URLDBService urlDBUnit = new URLDBService();
-		URLPlusDataPoints currentURLDAPA, resultingURLDAPA = null;
-		String docTitle, miniDocTitle; // need to keep this length under the 45
-		// varchar of the DB...
-
-		// need to create a URLPlusDataPoints object to communicate with SEOMoz
-		// interface
-		currentURLDAPA = new URLPlusDataPoints();
-
-		currentURLDAPA.setBackLinkURL(url);
-
-		try {
-
-			resultingURLDAPA = seoMoz.getURLMetricsData(currentURLDAPA);
-		} catch (Exception e) {
-			// deal with SEOMoz server time out
-			String msg = "Exception thrown getting getAuthorityAndDomainData for "
-					+ url + "\n";
-
-			log.warning(msg + e.getMessage());
-			//26-3-13: ADs
-			// and just cancel - 
-			return;
-		}
-
-		//		if ((null != resultingURLDAPA.getDocTitle())
-		//				|| (null != resultingURLDAPA)) {
-		//			docTitle = resultingURLDAPA.getDocTitle();
-		//			
-		// replaced the above code with:
-		if(null != resultingURLDAPA){
-
-			docTitle = resultingURLDAPA.getDocTitle();
-
-			if(null!=docTitle){
-
-				if (docTitle.length() > 44)
-					miniDocTitle = resultingURLDAPA.getDocTitle().substring(0, 44);
-				else
-					miniDocTitle = docTitle;
-			}else{
-				miniDocTitle = "";
-			}
-
-			// now persist the domain and page authority to the correct url in
-			// the DB.
-			urlDBUnit.updateURLData(url, resultingURLDAPA.getBackLinkPAInt(),
-					resultingURLDAPA.getBackLinkDAInt(), miniDocTitle);
-		} else {
-			// resultingURLDAPA = null
-			String msg = "SEOMoz server not returning Authority data for:  "
-					+ url + "\n";
-			// logger.logp(Level.SEVERE, "ProcessNewTargets",
-			// "getAuthorityAndDomainData",msg);
-			log.warning(msg);
-		}
-
-	}
+//	/**
+//	 * retrieves the PA and DA of the target url, and persists them to the DB.
+//	 * 
+//	 * @param currentURL
+//	 *            - url to retrieve and persist the domain and page authority of
+//	 */
+//	@SuppressWarnings("unused")
+//	private void getAuthorityAndDomainData(String url, SEOMoz seoMoz) {
+//
+//		URLDBService urlDBUnit = new URLDBService();
+//		URLPlusDataPoints currentURLDAPA, resultingURLDAPA = null;
+//		String docTitle, miniDocTitle; // need to keep this length under the 45
+//		// varchar of the DB...
+//
+//		// need to create a URLPlusDataPoints object to communicate with SEOMoz
+//		// interface
+//		currentURLDAPA = new URLPlusDataPoints();
+//
+//		currentURLDAPA.setBackLinkURL(url);
+//
+//		try {
+//
+//			resultingURLDAPA = seoMoz.getURLMetricsData(currentURLDAPA);
+//		} catch (Exception e) {
+//			// deal with SEOMoz server time out
+//			String msg = "Exception thrown getting getAuthorityAndDomainData for "
+//					+ url + "\n";
+//
+//			log.warning(msg + e.getMessage());
+//			//26-3-13: ADs
+//			// and just cancel - 
+//			return;
+//		}
+//
+//		//		if ((null != resultingURLDAPA.getDocTitle())
+//		//				|| (null != resultingURLDAPA)) {
+//		//			docTitle = resultingURLDAPA.getDocTitle();
+//		//			
+//		// replaced the above code with:
+//		if(null != resultingURLDAPA){
+//
+//			docTitle = resultingURLDAPA.getDocTitle();
+//
+//			if(null!=docTitle){
+//
+//				if (docTitle.length() > 44)
+//					miniDocTitle = resultingURLDAPA.getDocTitle().substring(0, 44);
+//				else
+//					miniDocTitle = docTitle;
+//			}else{
+//				miniDocTitle = "";
+//			}
+//
+//			// now persist the domain and page authority to the correct url in
+//			// the DB.
+//			urlDBUnit.updateURLData(url, resultingURLDAPA.getBackLinkPAInt(),
+//					resultingURLDAPA.getBackLinkDAInt(), miniDocTitle);
+//		} else {
+//			// resultingURLDAPA = null
+//			String msg = "SEOMoz server not returning Authority data for:  "
+//					+ url + "\n";
+//			// logger.logp(Level.SEVERE, "ProcessNewTargets",
+//			// "getAuthorityAndDomainData",msg);
+//			log.warning(msg);
+//		}
+//
+//	}
 
 	private List<URL> getURLsPointingTo(URL targetURL) {
 
@@ -542,59 +553,59 @@ public class ProcessNewTargets extends HttpServlet {
 	 *            - target url
 	 * @param seoMoz
 	 */
-	private void getDataForUniqueDomains(URL targetURL, SEOMoz seoMoz) {
-
-		List<URL> urls = getURLsPointingTo(targetURL);
-		List<String> uniqueDomains = new ArrayList<String>();
-
-		String currentDomain;
-
-		if (null == urls)
-			return;
-
-		if (urls.isEmpty())
-			return;
-
-		// initialise unique domains with first domain and get its data
-		uniqueDomains.add(urls.get(0).getDomain());
-		getAuthorityAndDomainData(urls.get(0).getUrl_address(), seoMoz);
-
-		// loop through rest of the urls and get authority data for first link
-		// from unique domain encountered
-
-		for (int i = 1; i < urls.size(); i++) {
-
-			currentDomain = urls.get(i).getDomain();
-
-			if (!uniqueDomains.contains(currentDomain)) {
-				// add to unique domains
-				uniqueDomains.add(currentDomain);
-
-				// and get data
-				try {
-					Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
-				} catch (InterruptedException e) {
-					String msg = "Exception thrown: ProcessNewTargets - getDataForUniqueDomains \n";
-					// logger.logp(Level.SEVERE, "ProcessNewTargets",
-					// "getDataForUniqueDomains",msg ,e);
-					log.warning(msg + e.getMessage());
-
-				}
-
-				try {
-					getAuthorityAndDomainData(urls.get(i).getUrl_address(),
-							seoMoz);
-				} catch (Exception e) {
-					String msg = "Exception thrown getting data for "
-							+ urls.get(i).getUrl_address()
-							+ " ProcessNewTargets: getDataForUniqueDomains \n";
-					log.warning(msg + e.getMessage());
-
-				}
-			}
-		}
-
-	}
+//	private void getDataForUniqueDomains(URL targetURL, SEOMoz seoMoz) {
+//
+//		List<URL> urls = getURLsPointingTo(targetURL);
+//		List<String> uniqueDomains = new ArrayList<String>();
+//
+//		String currentDomain;
+//
+//		if (null == urls)
+//			return;
+//
+//		if (urls.isEmpty())
+//			return;
+//
+//		// initialise unique domains with first domain and get its data
+//		uniqueDomains.add(urls.get(0).getDomain());
+//		getAuthorityAndDomainData(urls.get(0).getUrl_address(), seoMoz);
+//
+//		// loop through rest of the urls and get authority data for first link
+//		// from unique domain encountered
+//
+//		for (int i = 1; i < urls.size(); i++) {
+//
+//			currentDomain = urls.get(i).getDomain();
+//
+//			if (!uniqueDomains.contains(currentDomain)) {
+//				// add to unique domains
+//				uniqueDomains.add(currentDomain);
+//
+//				// and get data
+//				try {
+//					Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
+//				} catch (InterruptedException e) {
+//					String msg = "Exception thrown: ProcessNewTargets - getDataForUniqueDomains \n";
+//					// logger.logp(Level.SEVERE, "ProcessNewTargets",
+//					// "getDataForUniqueDomains",msg ,e);
+//					log.warning(msg + e.getMessage());
+//
+//				}
+//
+//				try {
+//					getAuthorityAndDomainData(urls.get(i).getUrl_address(),
+//							seoMoz);
+//				} catch (Exception e) {
+//					String msg = "Exception thrown getting data for "
+//							+ urls.get(i).getUrl_address()
+//							+ " ProcessNewTargets: getDataForUniqueDomains \n";
+//					log.warning(msg + e.getMessage());
+//
+//				}
+//			}
+//		}
+//
+//	}
 
 	/**
 	 * retrieves a list of all urls in DB that have had their get "getSocialData

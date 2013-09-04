@@ -76,6 +76,12 @@ public class LinksService {
 		String urlToFetch = "http://lsapi.seomoz.com/linkscape/links/"
 				+ URLEncoder.encode(objectURL, "UTF-8") + "?"
 				+ authenticator.getAuthenticationStr();
+		
+		//29-7-13: getting issues with the encoded URL, not getting back links....
+		//alternative:
+//		String urlToFetch = "http://lsapi.seomoz.com/linkscape/links/"
+//				+ objectURL + "?"
+//				+ authenticator.getAuthenticationStr();
 
 		if (scope != null) {
 			urlToFetch = urlToFetch + "&Scope=" + scope;
@@ -103,6 +109,8 @@ public class LinksService {
 			urlToFetch = urlToFetch + "&TargetCols=" + colTarget;
 		}
 
+		log.info("urlToFetch: " + urlToFetch);
+		
 		String response = ConnectionUtil.makeRequest(urlToFetch);
 		
 		//these JSON assistant methods - were causing more exceptions than they were worth..

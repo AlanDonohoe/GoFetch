@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 filesCopiedToWebInfLib=appengine-api-1.0-sdk-1.7.2.1.jar|appengine-api-labs.jar|appengine-endpoints.jar|appengine-jsr107cache-1.7.2.1.jar|jsr107cache-1.1.jar
 gaeDatanucleusEnabled=false
+gaeDeployDialogSettings=
 gaeHrdEnabled=true
 gaeIsEclipseDefaultInstPath=true
 googleCloudSqlEnabled=true
@@ -10,7 +11,7 @@ mySqlDatabasePassword=kastle2
 mySqlDatabaseUser=kastle2
 mySqlHostName=localhost
 mySqlIsConfigured=true
-mySqlJdbcJar=/Applications/Development/eclipse/plugins/appengine-java-sdk-1.7.2.1/lib/impl/mysql-connector-java-5.1.22-bin.jar
+mySqlJdbcJar=/Applications/e/eclipse/plugins/appengine-java-sdk-1.7.2.1/lib/impl/mysql-connector-java-5.1.22-bin.jar
 mySqlPort=3306
 prodDatabaseName=url
 prodDatabasePassword=kastle2

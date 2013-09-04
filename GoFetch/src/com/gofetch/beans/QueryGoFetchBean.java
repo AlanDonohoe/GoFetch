@@ -103,7 +103,11 @@ public class QueryGoFetchBean implements Serializable{
 
 		urlPlusSocialList.clear(); //refresh on each call...
 
-		linksList = linkDB.getLinksInTreePointingTo(urlTarget);
+		//was:  dont think we need this at the moment...???
+		// "getLinksInTreePointingTo" uses old, links string field: final_target_url 
+		//  need to migrate it to use final_target_url_id.
+		//linksList = linkDB.getLinksInTreePointingTo(urlTarget);
+		
 
 		/////////////////////////
 		//get target URL and associated social data first:	
@@ -125,8 +129,8 @@ public class QueryGoFetchBean implements Serializable{
 		//
 		//////////////////////
 
-		String linksTotal = Integer.toString(linksList.size());
-		int linksCounter = 1;
+//		String linksTotal = Integer.toString(linksList.size());
+//		int linksCounter = 1;
 
 		//Commented this out - so this means we will only ever get the target data - not backlinks
 		//	to get them, use API or need to program in pagination and ajax - as large datasets cause a timeout

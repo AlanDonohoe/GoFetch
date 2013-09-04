@@ -3,18 +3,13 @@ package com.gofetch.entities;
 // see:
 // for datastore and images
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,7 +17,6 @@ import javax.persistence.TemporalType;
 import org.hibernate.validator.NotNull;
 
 import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.datastore.Blob;
 /**
  * 
  * @author alandonohoe

@@ -69,7 +69,11 @@ public class URL implements Serializable {
 	private boolean client_target_url;
 	
 	private Integer get_image;
-
+	
+	private boolean get_authority_data;
+	
+	
+	
 	// private Integer client_category;
 
 	// can not work out how to use JPAnnotation to make all the related objects
@@ -90,6 +94,8 @@ public class URL implements Serializable {
 		get_social_data = false;
 		get_backlinks = false;
 		seomoz_url = false;
+		get_authority_data = true;
+		get_image = 0;
 
 	}
 
@@ -124,9 +130,19 @@ public class URL implements Serializable {
 	// public void setNo_of_layers(Integer no_of_layers) {
 	// this.no_of_layers = no_of_layers;
 	// }
+	
+	
 
 	public Date getDate() {
 		return date;
+	}
+
+	public boolean isGet_authority_data() {
+		return get_authority_data;
+	}
+
+	public void setGet_authority_data(boolean get_authority_data) {
+		this.get_authority_data = get_authority_data;
 	}
 
 	public boolean isSeomoz_url() {
@@ -272,7 +288,7 @@ public class URL implements Serializable {
 	@Override
 	public String toString() {
 
-		return String.format("\"URL\":\"%s\"", url_address);
+		return String.format("\"URL\":\"%s\"", url_address);	
 
 	}
 
