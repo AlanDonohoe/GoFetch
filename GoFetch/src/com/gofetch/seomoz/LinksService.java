@@ -71,6 +71,8 @@ public class LinksService {
 			int offset, int limit) throws IOException, Exception{
 		
 		log.info("Entering getLinks(...)");
+		
+		String response= "";
 		// TODO: replace depreciated method -
 		// http://stackoverflow.com/questions/213506/java-net-urlencoder-encodestring-is-deprecated-what-should-i-use-instead
 		String urlToFetch = "http://lsapi.seomoz.com/linkscape/links/"
@@ -111,7 +113,14 @@ public class LinksService {
 
 		log.info("urlToFetch: " + urlToFetch);
 		
-		String response = ConnectionUtil.makeRequest(urlToFetch);
+		try{
+		
+		response = ConnectionUtil.makeRequest(urlToFetch);
+		}catch(Exception e){
+			log.severe(e.getMessage());
+			// send up stack so that we will NOT set "backlinks_got = true"
+			throw(e);
+		}
 		
 		//these JSON assistant methods - were causing more exceptions than they were worth..
 		

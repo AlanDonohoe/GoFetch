@@ -59,13 +59,13 @@ public class ProcessNewTargets extends HttpServlet {
 			throws IOException {
 
 		resp.setContentType("text/plain");
-		
+
 		boolean testing = false; // if true, then no urls are processsed and JUST social data sweep occurs....
-		 // if false, then servlet does tasks its supposed to. - process new targets and get social data
+		// if false, then servlet does tasks its supposed to. - process new targets and get social data
 
 		boolean firstRun = true; // only here for the free SEOMoz API limiter.
-		
-		
+
+
 		String currentTargetAddress;
 		String reportSummary; // used to either email urls' "owner" via their
 		// user_id, or write to log/report after the
@@ -73,19 +73,21 @@ public class ProcessNewTargets extends HttpServlet {
 
 		List<URLPlusDataPoints> backLinks = null;
 		URLDBService urlDBUnit = new URLDBService();
-		SEOMoz seoMoz = new SEOMozImplFreeAPI();	
-		
+		SEOMoz seoMoz = new SEOMozImplFreeAPI();
+
+		int counter = 1;
+
 
 		//////////////////////////////////
 		// Social metric crawl / processing of URLs...
 		// Now we have all the backlinks from SEOMoz entered into the DB, now
 		// get all the social data urls in DB that have FB and Twitter data
 		// selected...
-		
+
 		// 14-1-13 - Moved this to URLsSocialDataCrawl::doGet() - to separate calls for social crawl and processing SEOMoz URLs.
 		//if(!testing)
-//			getURLSocialData();
-		
+		//			getURLSocialData();
+
 		/////////
 		// SEOMoz processing of URLs.
 
@@ -93,134 +95,82 @@ public class ProcessNewTargets extends HttpServlet {
 		//new implementation: returns all the urls that have get_backlinks = true && backlinks_got = false
 		// currently 20 - per day
 		List<URL> unprocessedURLs = urlDBUnit.getUnproccessedTargetURLs(GoFetchConstants.NO_OF_URLS_TO_PROCESS);
-		
+
 		if(testing)
 			unprocessedURLs.clear();
 
-
 		if (!unprocessedURLs.isEmpty()) {
-			
+
 			log.info("Number of unprocessed URLs: " + String.valueOf(unprocessedURLs.size()));
-			
+
 			for (URL currentURL : unprocessedURLs) {
 				//if (currentURL.isGet_backlinks()) { - already taken into account in the getUnproccessedTargetURLs(); call
 
-					boolean getLinksSuccessful = true;
+				log.info("counter:" + counter++);
+				
+				boolean getLinksSuccessful = true; // reset this flag, in case preceding url failed.
 
-					currentTargetAddress = currentURL.getUrl_address();
-					
-					log.info("Current URL: " + currentTargetAddress);
+				currentTargetAddress = currentURL.getUrl_address(); 
 
-					if (!firstRun) {
-						try {
-							Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
-						} catch (InterruptedException e) {
+				log.info("Current URL: " + currentTargetAddress);
 
-							log.warning( e.getMessage());
-
-						}
-					}
-
-					firstRun = false;
-					//TODO: do while loop - so that SEOMoz is hit up to 5 times or until backlinks are got...
+				if (!firstRun) {
 					try {
-
-						backLinks = seoMoz.getLinks(currentTargetAddress);
-					} catch (Exception e) {
-						String msg = "Exception thrown getting backlink data for: "
-								+ currentTargetAddress + " ProcessNewTargets"
-								+ "- SEOMoz block 1: seoMoz.getLinks(...). Exception - ";
-						log.warning(msg);
-						log.warning(e.getMessage());
-
-						getLinksSuccessful = false;
-
+						//log.info("Entering sleep");
+						Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
+						//log.info("Exiting sleep");
+					} catch (InterruptedException e) {
+						log.warning("Sleep interrupted: " + e.getMessage());
 					}
-					// this section below ONLY called if we have has a successful call to SEOMoz - even if there's no links for this target.
-					if(getLinksSuccessful){
-						//////////////
-						// AD 23-7-13: moved all DA & PA functionality to DomainPageAuthorityCrawl controller
-//						// 2: for each new target - get its page & domain
-//						// authority... .. and persist...
-//						// : another hit to SEOMoz here.. need to delay....
-//						try {
-//							Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
-//						} catch (InterruptedException e) {
-//
-//							log.warning( e.getMessage());
-//						}
-//						try{
-//							getAuthorityAndDomainData(currentURL.getUrl_address(),
-//									seoMoz);
-//						}catch(Exception e) {
-//							String msg = "Exception thrown getting authority data for: "
-//									+ currentTargetAddress + "ProcessNewTargets - getAuthorityAndDomainData(...)"
-//									+ "- SEOMoz block 2.";
-//							log.warning(msg);
-//							log.warning(e.getMessage());
-//
-//						}
+				}
 
-						if (!backLinks.isEmpty()) { // if we have successfully
-							// got some data from SEOmoz
-							// TODO: write the new URLs and new Links as batch
-							// writes to DB ASAP...
-							// 3: write each backlink to url table. - with same
-							// data as target, BUT NOT get backlink data always
-							// = false.
-							
-							log.info("Getting backlinks for " + currentURL.getUrl_address() + ". No of links = " + String.valueOf(backLinks.size()));
-							
-							try{
-								linksToNewSEOMozURLs(backLinks, currentURL);
+				firstRun = false;
+				//TODO: do while loop - so that SEOMoz is hit until backlinks are got...
+				try {
+					backLinks = seoMoz.getLinks(currentTargetAddress);
+				} catch (Exception e) {
+					String msg = "Exception thrown getting backlink data for: "
+							+ currentTargetAddress + "- SEOMoz block 1: seoMoz.getLinks(...). Exception - ";
+					log.warning(msg + e.getMessage());
 
-								// 4: for each new source url - retrieve it's id and
-								// the target's id from DB and
-								// create new entry in link table, with target id
-								// and source id, anchor text, todays date and
-								// domain name extracted from url address.
-								linksToNewLinks(backLinks, currentURL);
+					getLinksSuccessful = false;
+				}
+				// this section below ONLY called if we have has a successful call to SEOMoz - even if there's no links for this target.
+				if(getLinksSuccessful){
 
-							}catch(Exception e){
-								log.warning("Error in creating new links / urls. "  + e.getMessage());
-							}
+					if (!backLinks.isEmpty()) { // if we have successfully  got some data from SEOmoz
 
-							///////////////
-							// 24-7-13: AD : moved all get DA & PA to : DomainPageAuthorityCrawl controller
-//							// 5: Get PA and DA for single link from each unique
-//							// domain....
-//							// use getURLsPointingTo(currentURL) and retrieve
-//							// first url, get its PA and DA... then loop through
-//							// the next urls until currentBackLinkdomainName !=
-//							// latestBackLinkDomainName
-//							// then get PA and DA for that.....
-//							// then queries to only unique domain backlinks can
-//							// query those with only PA & DA that != null ????
-//
-//							// another hit to SEOMoz here.. need to delay....
-//							try {
-//								Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
-//							} catch (InterruptedException e) {
-//								log.warning( e.getMessage());
-//							}
-//							/////////
-//							// 24-7-13: AD : moved all get DA & PA to : DomainPageAuthorityCrawl controller
-//							//getDataForUniqueDomains(currentURL, seoMoz);
-//							//
-//							///////////
+						// 3: write each backlink to url table. - with same
+						// data as target, BUT NOT get backlink data always  = false.
 
-						} else {
-							log.info("No backlinks from SEOMoz for: "
-									+ currentTargetAddress);
+						log.info("Got backlinks for " + currentURL.getUrl_address() + ". No of links = " + String.valueOf(backLinks.size()));
+
+						try{
+							linksToNewSEOMozURLs(backLinks, currentURL);
+
+							// 4: for each new source url - retrieve it's id and
+							// the target's id from DB and
+							// create new entry in link table, with target id
+							// and source id, anchor text, todays date and
+							// domain name extracted from url address.
+							linksToNewLinks(backLinks, currentURL);
+
+						}catch(Exception e){
+							log.warning("Error in creating new links / urls. "  + e.getMessage());
 						}
 
-						// change flag - so this will not be included in further calls for backlinks
-						urlDBUnit.updateBackLinksGot(currentURL, true);
-
+					} else {
+						log.info("No backlinks from SEOMoz for: "
+								+ currentTargetAddress);
 					}
 
-				//} // end of......... if (currentURL.isGet_backlinks()) 
-			}
+					// change flag - so this will not be included in further calls for backlinks
+					urlDBUnit.updateBackLinksGot(currentURL, true);
+
+				}else{ // getLinksSuccessful == false
+					urlDBUnit.updateBackLinksGot(currentURL, false); // problem getting backlinks - try again on next sweep.
+				}
+			} // end of: for (URL currentURL : unprocessedURLs)
 
 		} else {
 
@@ -266,12 +216,12 @@ public class ProcessNewTargets extends HttpServlet {
 	 */
 	private void linksToNewSEOMozURLs(List<URLPlusDataPoints> backLinks,
 			URL currentURL) {
-		
+
 		Integer noOfLinks = backLinks.size();
 		Integer counter = 1;
 		Integer noNewURLs = 0; //TODO: include these in a report to monitor how many new links we have this time
 		Integer noPreviouslyEnteredURLs = 0; 	// ..compared to last time.
-		
+
 
 		URLDBService urlDBUnit = new URLDBService();
 		String domainName;
@@ -298,15 +248,15 @@ public class ProcessNewTargets extends HttpServlet {
 			// SEOMoz returns urls with no http:// prefix
 			urlPlusHttp = TextUtil.addHTTPToURL(currentBackLink
 					.getBackLinkURL());
-			
+
 			log.info(String.valueOf(counter++) + " of " + String.valueOf(noOfLinks) + " links.");
-			
+
 			URL url = new URL();
 			url.setUrl_address(urlPlusHttp);
 			url.setDate(todaysDate);
 			url.setGet_social_data(false);
 			url.setGet_backlinks(false);
-			
+
 			url.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);
 			url.setSocial_data_date(todaysDate);
 
@@ -314,26 +264,26 @@ public class ProcessNewTargets extends HttpServlet {
 			url.setSeomoz_url(true); //TODO: delete this field
 			url.setBacklinks_got(false);
 			url.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_SEOMOZ); 
-			
+
 			url.setGet_authority_data(true); // add to get PA and DA crawl....
-			
+
 			if(null != currentURL.getClient_category_id())
 				url.setClient_category_id(currentURL.getClient_category_id());
-			
+
 			if(null != currentURL.getUsers_user_id())
 				url.setUsers_user_id(currentURL.getUsers_user_id());
 
 			//TODO: THIS IS SET TO ZERO for now - up above, as want to move this to the datatable page.
-//			url.setNo_of_layers(newNoOfLayers);
-//			if (newNoOfLayers > 0)
-//				url.setGet_backlinks(true); // this is a source URL, not a
-//			// target.
-//			else
-//				url.setGet_backlinks(false); // this is NOT a target URL, JUST  a source
+			//			url.setNo_of_layers(newNoOfLayers);
+			//			if (newNoOfLayers > 0)
+			//				url.setGet_backlinks(true); // this is a source URL, not a
+			//			// target.
+			//			else
+			//				url.setGet_backlinks(false); // this is NOT a target URL, JUST  a source
 
 			// returns true if DB not previously in DB and false if URL already in DB...
 			// need to do something here with the result - so that its not made into a new link....
-			
+
 			try {
 				if(urlDBUnit.createURL(url))
 					noNewURLs++;
@@ -403,11 +353,11 @@ public class ProcessNewTargets extends HttpServlet {
 
 		// run through all the backlinks....
 		for (URLPlusDataPoints currentURLBackLink : urlBackLinks) {
-			
+
 			// dealing with SEOMoz supplied urls - so add http://...
 			httpURL = TextUtil.addHTTPToURL(currentURLBackLink
 					.getBackLinkURL());
-			
+
 			log.info("Entering new link: " + httpURL);
 
 			// check that current backLink does not exist in target's links list
@@ -429,17 +379,17 @@ public class ProcessNewTargets extends HttpServlet {
 				link.setTarget_id(currentURL.getId());
 				link.setAnchor_text(currentURLBackLink.getBackLinkAnchorText());
 				link.setDate_detected(today);
-				
+
 				//6 - 2- 13: legacy code - replace with subsequent line:
 				//link.setFinal_target_url(currentURL.getUrl_address());
 				link.setFinal_target_url_id(currentURL.getId());
-				
+
 				link.setData_entered_by(GoFetchConstants.URL_ENTERED_BY_SEOMOZ);
-				
+
 				//set the client this link is associated with and the campaign if any...
 				if(null!=currentURL.getUsers_user_id())
 					link.setUsers_user_id(currentURL.getUsers_user_id());
-				
+
 				if(null!=currentURL.getClient_category_id())
 					link.setClient_category_id(currentURL.getClient_category_id());
 
@@ -452,73 +402,73 @@ public class ProcessNewTargets extends HttpServlet {
 		}
 	}
 
-//	/**
-//	 * retrieves the PA and DA of the target url, and persists them to the DB.
-//	 * 
-//	 * @param currentURL
-//	 *            - url to retrieve and persist the domain and page authority of
-//	 */
-//	@SuppressWarnings("unused")
-//	private void getAuthorityAndDomainData(String url, SEOMoz seoMoz) {
-//
-//		URLDBService urlDBUnit = new URLDBService();
-//		URLPlusDataPoints currentURLDAPA, resultingURLDAPA = null;
-//		String docTitle, miniDocTitle; // need to keep this length under the 45
-//		// varchar of the DB...
-//
-//		// need to create a URLPlusDataPoints object to communicate with SEOMoz
-//		// interface
-//		currentURLDAPA = new URLPlusDataPoints();
-//
-//		currentURLDAPA.setBackLinkURL(url);
-//
-//		try {
-//
-//			resultingURLDAPA = seoMoz.getURLMetricsData(currentURLDAPA);
-//		} catch (Exception e) {
-//			// deal with SEOMoz server time out
-//			String msg = "Exception thrown getting getAuthorityAndDomainData for "
-//					+ url + "\n";
-//
-//			log.warning(msg + e.getMessage());
-//			//26-3-13: ADs
-//			// and just cancel - 
-//			return;
-//		}
-//
-//		//		if ((null != resultingURLDAPA.getDocTitle())
-//		//				|| (null != resultingURLDAPA)) {
-//		//			docTitle = resultingURLDAPA.getDocTitle();
-//		//			
-//		// replaced the above code with:
-//		if(null != resultingURLDAPA){
-//
-//			docTitle = resultingURLDAPA.getDocTitle();
-//
-//			if(null!=docTitle){
-//
-//				if (docTitle.length() > 44)
-//					miniDocTitle = resultingURLDAPA.getDocTitle().substring(0, 44);
-//				else
-//					miniDocTitle = docTitle;
-//			}else{
-//				miniDocTitle = "";
-//			}
-//
-//			// now persist the domain and page authority to the correct url in
-//			// the DB.
-//			urlDBUnit.updateURLData(url, resultingURLDAPA.getBackLinkPAInt(),
-//					resultingURLDAPA.getBackLinkDAInt(), miniDocTitle);
-//		} else {
-//			// resultingURLDAPA = null
-//			String msg = "SEOMoz server not returning Authority data for:  "
-//					+ url + "\n";
-//			// logger.logp(Level.SEVERE, "ProcessNewTargets",
-//			// "getAuthorityAndDomainData",msg);
-//			log.warning(msg);
-//		}
-//
-//	}
+	//	/**
+	//	 * retrieves the PA and DA of the target url, and persists them to the DB.
+	//	 * 
+	//	 * @param currentURL
+	//	 *            - url to retrieve and persist the domain and page authority of
+	//	 */
+	//	@SuppressWarnings("unused")
+	//	private void getAuthorityAndDomainData(String url, SEOMoz seoMoz) {
+	//
+	//		URLDBService urlDBUnit = new URLDBService();
+	//		URLPlusDataPoints currentURLDAPA, resultingURLDAPA = null;
+	//		String docTitle, miniDocTitle; // need to keep this length under the 45
+	//		// varchar of the DB...
+	//
+	//		// need to create a URLPlusDataPoints object to communicate with SEOMoz
+	//		// interface
+	//		currentURLDAPA = new URLPlusDataPoints();
+	//
+	//		currentURLDAPA.setBackLinkURL(url);
+	//
+	//		try {
+	//
+	//			resultingURLDAPA = seoMoz.getURLMetricsData(currentURLDAPA);
+	//		} catch (Exception e) {
+	//			// deal with SEOMoz server time out
+	//			String msg = "Exception thrown getting getAuthorityAndDomainData for "
+	//					+ url + "\n";
+	//
+	//			log.warning(msg + e.getMessage());
+	//			//26-3-13: ADs
+	//			// and just cancel - 
+	//			return;
+	//		}
+	//
+	//		//		if ((null != resultingURLDAPA.getDocTitle())
+	//		//				|| (null != resultingURLDAPA)) {
+	//		//			docTitle = resultingURLDAPA.getDocTitle();
+	//		//			
+	//		// replaced the above code with:
+	//		if(null != resultingURLDAPA){
+	//
+	//			docTitle = resultingURLDAPA.getDocTitle();
+	//
+	//			if(null!=docTitle){
+	//
+	//				if (docTitle.length() > 44)
+	//					miniDocTitle = resultingURLDAPA.getDocTitle().substring(0, 44);
+	//				else
+	//					miniDocTitle = docTitle;
+	//			}else{
+	//				miniDocTitle = "";
+	//			}
+	//
+	//			// now persist the domain and page authority to the correct url in
+	//			// the DB.
+	//			urlDBUnit.updateURLData(url, resultingURLDAPA.getBackLinkPAInt(),
+	//					resultingURLDAPA.getBackLinkDAInt(), miniDocTitle);
+	//		} else {
+	//			// resultingURLDAPA = null
+	//			String msg = "SEOMoz server not returning Authority data for:  "
+	//					+ url + "\n";
+	//			// logger.logp(Level.SEVERE, "ProcessNewTargets",
+	//			// "getAuthorityAndDomainData",msg);
+	//			log.warning(msg);
+	//		}
+	//
+	//	}
 
 	private List<URL> getURLsPointingTo(URL targetURL) {
 
@@ -553,59 +503,59 @@ public class ProcessNewTargets extends HttpServlet {
 	 *            - target url
 	 * @param seoMoz
 	 */
-//	private void getDataForUniqueDomains(URL targetURL, SEOMoz seoMoz) {
-//
-//		List<URL> urls = getURLsPointingTo(targetURL);
-//		List<String> uniqueDomains = new ArrayList<String>();
-//
-//		String currentDomain;
-//
-//		if (null == urls)
-//			return;
-//
-//		if (urls.isEmpty())
-//			return;
-//
-//		// initialise unique domains with first domain and get its data
-//		uniqueDomains.add(urls.get(0).getDomain());
-//		getAuthorityAndDomainData(urls.get(0).getUrl_address(), seoMoz);
-//
-//		// loop through rest of the urls and get authority data for first link
-//		// from unique domain encountered
-//
-//		for (int i = 1; i < urls.size(); i++) {
-//
-//			currentDomain = urls.get(i).getDomain();
-//
-//			if (!uniqueDomains.contains(currentDomain)) {
-//				// add to unique domains
-//				uniqueDomains.add(currentDomain);
-//
-//				// and get data
-//				try {
-//					Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
-//				} catch (InterruptedException e) {
-//					String msg = "Exception thrown: ProcessNewTargets - getDataForUniqueDomains \n";
-//					// logger.logp(Level.SEVERE, "ProcessNewTargets",
-//					// "getDataForUniqueDomains",msg ,e);
-//					log.warning(msg + e.getMessage());
-//
-//				}
-//
-//				try {
-//					getAuthorityAndDomainData(urls.get(i).getUrl_address(),
-//							seoMoz);
-//				} catch (Exception e) {
-//					String msg = "Exception thrown getting data for "
-//							+ urls.get(i).getUrl_address()
-//							+ " ProcessNewTargets: getDataForUniqueDomains \n";
-//					log.warning(msg + e.getMessage());
-//
-//				}
-//			}
-//		}
-//
-//	}
+	//	private void getDataForUniqueDomains(URL targetURL, SEOMoz seoMoz) {
+	//
+	//		List<URL> urls = getURLsPointingTo(targetURL);
+	//		List<String> uniqueDomains = new ArrayList<String>();
+	//
+	//		String currentDomain;
+	//
+	//		if (null == urls)
+	//			return;
+	//
+	//		if (urls.isEmpty())
+	//			return;
+	//
+	//		// initialise unique domains with first domain and get its data
+	//		uniqueDomains.add(urls.get(0).getDomain());
+	//		getAuthorityAndDomainData(urls.get(0).getUrl_address(), seoMoz);
+	//
+	//		// loop through rest of the urls and get authority data for first link
+	//		// from unique domain encountered
+	//
+	//		for (int i = 1; i < urls.size(); i++) {
+	//
+	//			currentDomain = urls.get(i).getDomain();
+	//
+	//			if (!uniqueDomains.contains(currentDomain)) {
+	//				// add to unique domains
+	//				uniqueDomains.add(currentDomain);
+	//
+	//				// and get data
+	//				try {
+	//					Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
+	//				} catch (InterruptedException e) {
+	//					String msg = "Exception thrown: ProcessNewTargets - getDataForUniqueDomains \n";
+	//					// logger.logp(Level.SEVERE, "ProcessNewTargets",
+	//					// "getDataForUniqueDomains",msg ,e);
+	//					log.warning(msg + e.getMessage());
+	//
+	//				}
+	//
+	//				try {
+	//					getAuthorityAndDomainData(urls.get(i).getUrl_address(),
+	//							seoMoz);
+	//				} catch (Exception e) {
+	//					String msg = "Exception thrown getting data for "
+	//							+ urls.get(i).getUrl_address()
+	//							+ " ProcessNewTargets: getDataForUniqueDomains \n";
+	//					log.warning(msg + e.getMessage());
+	//
+	//				}
+	//			}
+	//		}
+	//
+	//	}
 
 	/**
 	 * retrieves a list of all urls in DB that have had their get "getSocialData
@@ -614,406 +564,406 @@ public class ProcessNewTargets extends HttpServlet {
 	 * If it is different: a new social entry is created with yesterdays date,
 	 * and the url's current data is persisted.
 	 */
-//	private void getURLSocialData() {
-//
-//		// 1: get list of all urls that have "get_social_data" checked...
-//
-//		String urlAddressNoSlash, urlAddressSlash, urlAddress;
-//
-//		// URL database communication
-//		URLDBService urlDBUnit = new URLDBService();
-//
-//		// urls back from DB
-//		List<URL> urls;
-//
-//		// used for social data database communication
-//		MiscSocialDataDBService socialDataDBUnit = new MiscSocialDataDBService();
-//		MiscSocialData socialDataFromDB = null;
-//
-//		// used to get current social data for urls using external APIs
-//		SocialData sharedCountAPI = new SharedCountImpl();
-//		// used as the more costly, manual backup social data service	
-//		SocialData manualSocialData = new ManualSocialDataImpl();
-//
-//		MiscSocialData socialDataAPINoSlash = null;
-//		MiscSocialData socialDataAPISlash = null;
-//		MiscSocialData assimilatedSocialData = null;
-//
-//		//urls = urlDBUnit.getSociallyTrackedURLs();
-//		
-//		// replaced the above with:
-//		// get urls where get social data = true 
-//		//	and social data date <= todays date (not just = today's date, in case there was an error with updating the social date some urls would be left behind & lost)
-//		// 11-1-13 - changed query so that most out of date urls are at the top of the list - ie: select ..... from url order by social_data_date asc;
-//		
-//		urls = urlDBUnit.getTodaysSocialCrawlURLs();
-//		
-//		
-//		// 2: loop through checking to see if their social data has changed from
-//		// previous entry... update if true.
-//
-//		String noOfSocialURLs = String.valueOf(urls.size());
-//		log.info("No of URLs to get social data for: " + noOfSocialURLs );
-//		int i = 0;
-//
-//		for (URL currentURL : urls) {
-//
-//			// reset on every loop
-//			socialDataAPINoSlash = null;
-//			socialDataAPISlash = null;
-//			assimilatedSocialData = null;
-//			boolean manualSocialDataGot = true; 
-//			boolean sharedCountFailedSlash = true; // make true so that we call manual implementation - we are now bypassing sharedcount - keeps failing...
-//			boolean sharedCountFailedNoSlash = true; 
-//			double pcDifferenceBtwnSocialData;
-//
-//			urlAddress = currentURL.getUrl_address();
-//			
-//			i++;
-//
-//			log.info(String.valueOf(i) + " of " + noOfSocialURLs + " : " + urlAddress);
-//
-//			// remove final / if present...
-//			if(urlAddress.endsWith("/")){
-//				urlAddress = urlAddress.substring(0,(urlAddress.length() -1));
-//			}
-//
-//			urlAddressNoSlash = urlAddress;
-//			urlAddressSlash = urlAddress + "/";
-//
-////			///////////
-////			// shared count API
-////			// get current social data from the url... first - WITH the trailing slash
-////			try {
-////
-////				socialDataAPISlash = sharedCountAPI.getAllSocialData(urlAddressSlash);
-////				//also - have to get StumbleUpon data manually... as sharedcount is failing to get this data
-////				socialDataAPISlash.setStumble_upon(manualSocialData.getStumbleUponData(urlAddressSlash));
-////
-////			} catch (Exception e) {
-////				String msg = "Shared Count API failed for: "
-////						+ urlAddressSlash
-////						+ ". ProcessNewTargets: getURLSocialData. Calling manual implementation \n";
-////				log.warning(msg + e.getMessage());
-////
-////				sharedCountFailedSlash = true; // so now call manual implementation
-////			}
-////
-////			// get current social data from the url... - now without the trailing slash
-////			try {
-////				socialDataAPINoSlash = sharedCountAPI.getAllSocialData(urlAddressNoSlash);
-////
-////				//also - have to get StumbleUpon data manually... as sharedcount is failing to get this data
-////				socialDataAPINoSlash.setStumble_upon(manualSocialData.getStumbleUponData(urlAddressNoSlash));
-////
-////			} catch (Exception e) {
-////				String msg = "Shared Count API failed for: "
-////						+ urlAddressNoSlash
-////						+ ". ProcessNewTargets: getURLSocialData. Calling manual implementation \n";
-////				log.warning(msg + e.getMessage());
-////
-////				sharedCountFailedNoSlash = true; // so now call manual implementation
-////			}
-////			// end shared count API
-////			//////////
-//
-//
-//			////////////
-//			// manual social data service
-//			if (sharedCountFailedSlash) {
-//
-//				try {
-//					//TODO: need to break calls into respective social services, then if first call to delicious and / or stumbled fails,
-//					// 	then we can skip them in the subsequent call using urlAddressNoSlash.
-//					//		need to bring up the construction of the miscsocialdata object up to this layer....
-//					socialDataAPISlash = manualSocialData.getAllSocialData(urlAddressSlash);
-//
-//				} catch (Exception e) {
-//					String msg = "Manual Implementation Social data for: "
-//							+ urlAddressSlash + " failed"
-//							+ ". ProcessNewTargets: getURLSocialData.  \n";
-//					log.severe(msg + e.getMessage());
-//
-//					manualSocialDataGot = false;
-//				}
-//			}
-//
-//			if (sharedCountFailedNoSlash) {
-//
-//				try {
-//
-//					socialDataAPINoSlash = manualSocialData.getAllSocialData(urlAddressNoSlash);
-//
-//				} catch (Exception e) {
-//					String msg = "Manual Implementation Social data for: "
-//							+ urlAddressNoSlash + " failed"
-//							+ ". ProcessNewTargets: getURLSocialData. \n";
-//					log.severe(msg + e.getMessage());
-//
-//					manualSocialDataGot = false;
-//				}
-//			}
-//			// end manual implementation....
-//			///////////////////
-//
-//
-//			if(manualSocialDataGot){ // this is ONLY false, if all calls to the social APIs have failed - v unlikely..
-//
-//				//////
-//				// assimilate the two collection of Social data metrics (from both url + slash and url no slash)
-//				//	
-//				assimilatedSocialData = assimilateSocialData(socialDataAPINoSlash, socialDataAPISlash);
-//
-//				// get most recently persisted social data.....
-//				socialDataFromDB = socialDataDBUnit.getMostRecentSocialData(currentURL.getId());
-//
-//				// if social data from DB, is empty or different from most
-//				// recent social data from APIs... then persist new social data
-//
-//				pcDifferenceBtwnSocialData = persistSocialData(socialDataFromDB, assimilatedSocialData, socialDataDBUnit, currentURL.getId());
-//				
-//				updateSocialCrawlFrequency(currentURL, pcDifferenceBtwnSocialData, urlDBUnit);
-//
-//				//TODO: here add the code that will check and set the frequency of check_freq: for every url.
-//				//	daily = 1, weekly = 2, monthly =3, daily - get all urls that have check_freq < 2, weekly get all urls with check_freq < 3, etc
-//				// checkURLsSocialCheckFreq() {update url increase / decrease freq. and email "owner" if there's a spike - or on monthly
-//				//	when there's no change from one month to another - email owner - to ask if they want to delete URL}
-//
-//			} else { // if all calls to the social APIs have failed
-//
-//				// TODO: record urls and email/ alert user (using their email) /
-//				// error screen somehow that of this list.....
-//				String msg = "Retrieving social data for: "
-//						+ urlAddress + " completely failed. -  ProcessNewTargets: getURLSocialData ";
-//
-//				log.severe(msg);
-//
-//
-//				// maybe check here for a 404 - and if true - then delete url?
-//			}
-//		}
-//	}
-	
-//	private void updateSocialCrawlFrequency(URL currentURL,
-//			double pcDifferenceBtwnSocialData, URLDBService urlDBUnit) {
-//		
-//		int socialFreq = currentURL.getSocial_data_freq();
-//		
-//		//need to check if it just new URL with no previous social data - so pcDifference would be set to 0, but shouldnt be...
-//		if(pcDifferenceBtwnSocialData < 0){
-//			currentURL.setSocial_data_date(DateUtil.getTommorrowsDate());
-//			urlDBUnit.updateSocialFrequencyData(currentURL);
-//			return;
-//		}
-//		
-//		if(pcDifferenceBtwnSocialData < GoFetchConstants.SOCIAL_DATA_RANGE_MIN){
-//			
-//			currentURL.decreaseSocialCrawlFrequency();
-//
-//		}
-//		
-//		if(pcDifferenceBtwnSocialData > GoFetchConstants.SOCIAL_DATA_RANGE_MAX){
-//
-//			currentURL.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);
-//		}
-//		
-//		// now update the URL's next date to be included in the social data crawl
-//		// if may of been increased or decreased:
-//		socialFreq = currentURL.getSocial_data_freq();
-//			
-//		if(GoFetchConstants.DAILY_FREQ==socialFreq){
-//			// then make social data date tmw.
-//			currentURL.setSocial_data_date(DateUtil.getTommorrowsDate());
-//			
-//		}
-//		
-//		if(GoFetchConstants.WEEKLY_FREQ==socialFreq){
-//			// then make social data date next week.
-//			currentURL.setSocial_data_date(DateUtil.getNextWeeksDate());
-//		}
-//		
-//		if(GoFetchConstants.MONTHLY_FREQ==socialFreq){
-//			
-//			//TODO: implement this...
-//			if(0 ==pcDifferenceBtwnSocialData){
-//				//then.. check difference btwn dates?? and if there's x days or weeks.. set getSocialData(false)???
-//				// this is typically socially dead backlinks...
-//				
-//			}
-//			
-//			// then make social data date next month.
-//			currentURL.setSocial_data_date(DateUtil.getNextMonthsDate());
-//		}
-//		
-//		urlDBUnit.updateSocialFrequencyData(currentURL);
-//		
-//		
-//	}
+	//	private void getURLSocialData() {
+	//
+	//		// 1: get list of all urls that have "get_social_data" checked...
+	//
+	//		String urlAddressNoSlash, urlAddressSlash, urlAddress;
+	//
+	//		// URL database communication
+	//		URLDBService urlDBUnit = new URLDBService();
+	//
+	//		// urls back from DB
+	//		List<URL> urls;
+	//
+	//		// used for social data database communication
+	//		MiscSocialDataDBService socialDataDBUnit = new MiscSocialDataDBService();
+	//		MiscSocialData socialDataFromDB = null;
+	//
+	//		// used to get current social data for urls using external APIs
+	//		SocialData sharedCountAPI = new SharedCountImpl();
+	//		// used as the more costly, manual backup social data service	
+	//		SocialData manualSocialData = new ManualSocialDataImpl();
+	//
+	//		MiscSocialData socialDataAPINoSlash = null;
+	//		MiscSocialData socialDataAPISlash = null;
+	//		MiscSocialData assimilatedSocialData = null;
+	//
+	//		//urls = urlDBUnit.getSociallyTrackedURLs();
+	//		
+	//		// replaced the above with:
+	//		// get urls where get social data = true 
+	//		//	and social data date <= todays date (not just = today's date, in case there was an error with updating the social date some urls would be left behind & lost)
+	//		// 11-1-13 - changed query so that most out of date urls are at the top of the list - ie: select ..... from url order by social_data_date asc;
+	//		
+	//		urls = urlDBUnit.getTodaysSocialCrawlURLs();
+	//		
+	//		
+	//		// 2: loop through checking to see if their social data has changed from
+	//		// previous entry... update if true.
+	//
+	//		String noOfSocialURLs = String.valueOf(urls.size());
+	//		log.info("No of URLs to get social data for: " + noOfSocialURLs );
+	//		int i = 0;
+	//
+	//		for (URL currentURL : urls) {
+	//
+	//			// reset on every loop
+	//			socialDataAPINoSlash = null;
+	//			socialDataAPISlash = null;
+	//			assimilatedSocialData = null;
+	//			boolean manualSocialDataGot = true; 
+	//			boolean sharedCountFailedSlash = true; // make true so that we call manual implementation - we are now bypassing sharedcount - keeps failing...
+	//			boolean sharedCountFailedNoSlash = true; 
+	//			double pcDifferenceBtwnSocialData;
+	//
+	//			urlAddress = currentURL.getUrl_address();
+	//			
+	//			i++;
+	//
+	//			log.info(String.valueOf(i) + " of " + noOfSocialURLs + " : " + urlAddress);
+	//
+	//			// remove final / if present...
+	//			if(urlAddress.endsWith("/")){
+	//				urlAddress = urlAddress.substring(0,(urlAddress.length() -1));
+	//			}
+	//
+	//			urlAddressNoSlash = urlAddress;
+	//			urlAddressSlash = urlAddress + "/";
+	//
+	////			///////////
+	////			// shared count API
+	////			// get current social data from the url... first - WITH the trailing slash
+	////			try {
+	////
+	////				socialDataAPISlash = sharedCountAPI.getAllSocialData(urlAddressSlash);
+	////				//also - have to get StumbleUpon data manually... as sharedcount is failing to get this data
+	////				socialDataAPISlash.setStumble_upon(manualSocialData.getStumbleUponData(urlAddressSlash));
+	////
+	////			} catch (Exception e) {
+	////				String msg = "Shared Count API failed for: "
+	////						+ urlAddressSlash
+	////						+ ". ProcessNewTargets: getURLSocialData. Calling manual implementation \n";
+	////				log.warning(msg + e.getMessage());
+	////
+	////				sharedCountFailedSlash = true; // so now call manual implementation
+	////			}
+	////
+	////			// get current social data from the url... - now without the trailing slash
+	////			try {
+	////				socialDataAPINoSlash = sharedCountAPI.getAllSocialData(urlAddressNoSlash);
+	////
+	////				//also - have to get StumbleUpon data manually... as sharedcount is failing to get this data
+	////				socialDataAPINoSlash.setStumble_upon(manualSocialData.getStumbleUponData(urlAddressNoSlash));
+	////
+	////			} catch (Exception e) {
+	////				String msg = "Shared Count API failed for: "
+	////						+ urlAddressNoSlash
+	////						+ ". ProcessNewTargets: getURLSocialData. Calling manual implementation \n";
+	////				log.warning(msg + e.getMessage());
+	////
+	////				sharedCountFailedNoSlash = true; // so now call manual implementation
+	////			}
+	////			// end shared count API
+	////			//////////
+	//
+	//
+	//			////////////
+	//			// manual social data service
+	//			if (sharedCountFailedSlash) {
+	//
+	//				try {
+	//					//TODO: need to break calls into respective social services, then if first call to delicious and / or stumbled fails,
+	//					// 	then we can skip them in the subsequent call using urlAddressNoSlash.
+	//					//		need to bring up the construction of the miscsocialdata object up to this layer....
+	//					socialDataAPISlash = manualSocialData.getAllSocialData(urlAddressSlash);
+	//
+	//				} catch (Exception e) {
+	//					String msg = "Manual Implementation Social data for: "
+	//							+ urlAddressSlash + " failed"
+	//							+ ". ProcessNewTargets: getURLSocialData.  \n";
+	//					log.severe(msg + e.getMessage());
+	//
+	//					manualSocialDataGot = false;
+	//				}
+	//			}
+	//
+	//			if (sharedCountFailedNoSlash) {
+	//
+	//				try {
+	//
+	//					socialDataAPINoSlash = manualSocialData.getAllSocialData(urlAddressNoSlash);
+	//
+	//				} catch (Exception e) {
+	//					String msg = "Manual Implementation Social data for: "
+	//							+ urlAddressNoSlash + " failed"
+	//							+ ". ProcessNewTargets: getURLSocialData. \n";
+	//					log.severe(msg + e.getMessage());
+	//
+	//					manualSocialDataGot = false;
+	//				}
+	//			}
+	//			// end manual implementation....
+	//			///////////////////
+	//
+	//
+	//			if(manualSocialDataGot){ // this is ONLY false, if all calls to the social APIs have failed - v unlikely..
+	//
+	//				//////
+	//				// assimilate the two collection of Social data metrics (from both url + slash and url no slash)
+	//				//	
+	//				assimilatedSocialData = assimilateSocialData(socialDataAPINoSlash, socialDataAPISlash);
+	//
+	//				// get most recently persisted social data.....
+	//				socialDataFromDB = socialDataDBUnit.getMostRecentSocialData(currentURL.getId());
+	//
+	//				// if social data from DB, is empty or different from most
+	//				// recent social data from APIs... then persist new social data
+	//
+	//				pcDifferenceBtwnSocialData = persistSocialData(socialDataFromDB, assimilatedSocialData, socialDataDBUnit, currentURL.getId());
+	//				
+	//				updateSocialCrawlFrequency(currentURL, pcDifferenceBtwnSocialData, urlDBUnit);
+	//
+	//				//TODO: here add the code that will check and set the frequency of check_freq: for every url.
+	//				//	daily = 1, weekly = 2, monthly =3, daily - get all urls that have check_freq < 2, weekly get all urls with check_freq < 3, etc
+	//				// checkURLsSocialCheckFreq() {update url increase / decrease freq. and email "owner" if there's a spike - or on monthly
+	//				//	when there's no change from one month to another - email owner - to ask if they want to delete URL}
+	//
+	//			} else { // if all calls to the social APIs have failed
+	//
+	//				// TODO: record urls and email/ alert user (using their email) /
+	//				// error screen somehow that of this list.....
+	//				String msg = "Retrieving social data for: "
+	//						+ urlAddress + " completely failed. -  ProcessNewTargets: getURLSocialData ";
+	//
+	//				log.severe(msg);
+	//
+	//
+	//				// maybe check here for a 404 - and if true - then delete url?
+	//			}
+	//		}
+	//	}
+
+	//	private void updateSocialCrawlFrequency(URL currentURL,
+	//			double pcDifferenceBtwnSocialData, URLDBService urlDBUnit) {
+	//		
+	//		int socialFreq = currentURL.getSocial_data_freq();
+	//		
+	//		//need to check if it just new URL with no previous social data - so pcDifference would be set to 0, but shouldnt be...
+	//		if(pcDifferenceBtwnSocialData < 0){
+	//			currentURL.setSocial_data_date(DateUtil.getTommorrowsDate());
+	//			urlDBUnit.updateSocialFrequencyData(currentURL);
+	//			return;
+	//		}
+	//		
+	//		if(pcDifferenceBtwnSocialData < GoFetchConstants.SOCIAL_DATA_RANGE_MIN){
+	//			
+	//			currentURL.decreaseSocialCrawlFrequency();
+	//
+	//		}
+	//		
+	//		if(pcDifferenceBtwnSocialData > GoFetchConstants.SOCIAL_DATA_RANGE_MAX){
+	//
+	//			currentURL.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);
+	//		}
+	//		
+	//		// now update the URL's next date to be included in the social data crawl
+	//		// if may of been increased or decreased:
+	//		socialFreq = currentURL.getSocial_data_freq();
+	//			
+	//		if(GoFetchConstants.DAILY_FREQ==socialFreq){
+	//			// then make social data date tmw.
+	//			currentURL.setSocial_data_date(DateUtil.getTommorrowsDate());
+	//			
+	//		}
+	//		
+	//		if(GoFetchConstants.WEEKLY_FREQ==socialFreq){
+	//			// then make social data date next week.
+	//			currentURL.setSocial_data_date(DateUtil.getNextWeeksDate());
+	//		}
+	//		
+	//		if(GoFetchConstants.MONTHLY_FREQ==socialFreq){
+	//			
+	//			//TODO: implement this...
+	//			if(0 ==pcDifferenceBtwnSocialData){
+	//				//then.. check difference btwn dates?? and if there's x days or weeks.. set getSocialData(false)???
+	//				// this is typically socially dead backlinks...
+	//				
+	//			}
+	//			
+	//			// then make social data date next month.
+	//			currentURL.setSocial_data_date(DateUtil.getNextMonthsDate());
+	//		}
+	//		
+	//		urlDBUnit.updateSocialFrequencyData(currentURL);
+	//		
+	//		
+	//	}
 
 	/* If there is new social data - then persists this...
 	 * returns the percentage difference between the new social data and the previous entry. Returns 0, if no change and -1 if no previous entry in DB for this URL. 
 	 */
-//	private double persistSocialData(MiscSocialData socialDataFromDB, MiscSocialData assimilatedSocialData, MiscSocialDataDBService socialDataDBUnit,  Integer currentURLID){
-//
-//		
-//		//used as running total of all social data- so we can check the %age difference below
-//		double totalSocialDataDB, totalSocialDataToday; 
-//		double pcDifference;
-//		Integer deliciousDB, deliciousToday, fbTotalCountDB, fbTotalCountToday, googlePlusDB, googlePlusToday, 
-//				linkedInDB, linkedInToday, pinterestDB, pinterestToday, stumbleUponDB, stumbleUponToday, twitterDB, twitterToday;
-//		
-//		// if there's no social data for this URL in DB yet - just add this as first entry
-//		if (null == socialDataFromDB){
-//
-//			assimilatedSocialData.setDate(DateUtil.getTodaysDate());
-//
-//			assimilatedSocialData.setUrl_id(currentURLID);
-//
-//			socialDataDBUnit.createNewSocialData(assimilatedSocialData);
-//
-//			return -1;
-//		}
-//
-//		// if there's no difference between DB data and today's data: then don't create a new entry in DB:
-//		if(socialDataFromDB.equals(assimilatedSocialData)){
-//
-//			log.info("Todays social data no different from last saved data. url id:  " + String.valueOf(currentURLID));
-//			
-//			return 0;
-//		}
-//
-//		// check individual properties of the assimilated social data against the socialDataDBUnit
-//		//	- if the assimilated data has any entry that is a 0, and if the DBdata is NOT 0, then use the 
-//		//	DB data in the new entry - this means the call to that particular social API has failed, 
-//		// so rather than let the rest of the data go to waste, just use previous record and update the 
-//		//	the social calls that DID work...
-//
-//		MiscSocialData newSocialData = new MiscSocialData();
-//
-//		newSocialData.setDate(DateUtil.getTodaysDate());
-//		newSocialData.setUrl_id(currentURLID);
-//
-//		/////////Assimilate individual social metrics//////////////////////////////////////////
-//		//TODO: here we can get the new data and old data and look for a spike...
-//		// if DB data is Less than most recent API data this means the social data has increased - use API data
-//		
-//		deliciousDB = socialDataFromDB.getDelicious();
-//		deliciousToday = assimilatedSocialData.getDelicious();
-//		
-//		fbTotalCountDB = socialDataFromDB.getFb_total_Count(); 
-//		fbTotalCountToday = assimilatedSocialData.getFb_total_Count();
-//		
-//		googlePlusDB = socialDataFromDB.getGoogle_plus_one(); 
-//		googlePlusToday = assimilatedSocialData.getGoogle_plus_one();
-//		
-//		linkedInDB = socialDataFromDB.getLinkedin(); 
-//		linkedInToday = assimilatedSocialData.getLinkedin();
-//		
-//		pinterestDB = socialDataFromDB.getPinterest(); 
-//		pinterestToday = assimilatedSocialData.getPinterest();
-//		
-//		stumbleUponDB = socialDataFromDB.getStumble_upon(); 
-//		stumbleUponToday = assimilatedSocialData.getStumble_upon();
-//		
-//		twitterDB = socialDataFromDB.getTwitter(); 
-//		twitterToday = assimilatedSocialData.getTwitter();
-//		
-//		// get summation of social data for both DB and current social data
-//		totalSocialDataDB = deliciousDB + fbTotalCountDB + googlePlusDB + linkedInDB + pinterestDB + stumbleUponDB + twitterDB;
-//		totalSocialDataToday = deliciousToday + fbTotalCountToday + googlePlusToday + linkedInToday + pinterestToday + stumbleUponToday + twitterToday;
-//		
-//		// work out %age difference...
-//		pcDifference = (double) ((totalSocialDataToday - totalSocialDataDB)/ totalSocialDataDB) * 100;
-//		
-//			
-//		////////////////////////
-//		// delicious.....
-//		if(deliciousDB < deliciousToday)
-//			newSocialData.setDelicious(deliciousToday);
-//		else
-//			newSocialData.setDelicious(deliciousDB); // else API call has failed or its not changed from DB data
-//
-//		// Facebook
-//		if(fbTotalCountDB < fbTotalCountToday){
-//			newSocialData.setFb_click_Count(assimilatedSocialData.getFb_click_Count());
-//			newSocialData.setFb_comment_Count(assimilatedSocialData.getFb_comment_Count());
-//			newSocialData.setFb_commentsbox_count(assimilatedSocialData.getFb_commentsbox_count());
-//			newSocialData.setFb_like_Count(assimilatedSocialData.getFb_like_Count());
-//			newSocialData.setFb_share_Count(assimilatedSocialData.getFb_share_Count());
-//			newSocialData.setFb_total_Count(fbTotalCountToday);
-//		}else{ 
-//			newSocialData.setFb_click_Count(socialDataFromDB.getFb_click_Count());
-//			newSocialData.setFb_comment_Count(socialDataFromDB.getFb_comment_Count());
-//			newSocialData.setFb_commentsbox_count(socialDataFromDB.getFb_commentsbox_count());
-//			newSocialData.setFb_like_Count(socialDataFromDB.getFb_like_Count());
-//			newSocialData.setFb_share_Count(socialDataFromDB.getFb_share_Count());
-//			newSocialData.setFb_total_Count(fbTotalCountDB);
-//		}
-//
-//		//Google+
-//		if(googlePlusDB < googlePlusToday)
-//			newSocialData.setGoogle_plus_one(googlePlusToday);
-//		else
-//			newSocialData.setGoogle_plus_one(googlePlusDB);
-//
-//		//LinkedIn
-//		if(linkedInDB < linkedInToday)
-//			newSocialData.setLinkedin(linkedInToday);
-//		else
-//			newSocialData.setLinkedin(linkedInDB);
-//
-//		// Pinterest
-//		if(pinterestDB < pinterestToday)
-//			newSocialData.setPinterest(pinterestToday);
-//		else
-//			newSocialData.setPinterest(pinterestDB);
-//
-//		//StumbleUpon
-//		if(stumbleUponDB < stumbleUponToday)
-//			newSocialData.setStumble_upon(stumbleUponToday);
-//		else
-//			newSocialData.setStumble_upon(stumbleUponDB);
-//
-//		//Twitter
-//		if(twitterDB < twitterToday)
-//			newSocialData.setTwitter(twitterToday);
-//		else
-//			newSocialData.setTwitter(twitterDB);
-//
-//		///////////////////////////////////////////////
-//
-//		log.info("New social data entry for url: " + String.valueOf(currentURLID));
-//		socialDataDBUnit.createNewSocialData(newSocialData);
-//	
-//
-//		return pcDifference;
-//
-//	}
+	//	private double persistSocialData(MiscSocialData socialDataFromDB, MiscSocialData assimilatedSocialData, MiscSocialDataDBService socialDataDBUnit,  Integer currentURLID){
+	//
+	//		
+	//		//used as running total of all social data- so we can check the %age difference below
+	//		double totalSocialDataDB, totalSocialDataToday; 
+	//		double pcDifference;
+	//		Integer deliciousDB, deliciousToday, fbTotalCountDB, fbTotalCountToday, googlePlusDB, googlePlusToday, 
+	//				linkedInDB, linkedInToday, pinterestDB, pinterestToday, stumbleUponDB, stumbleUponToday, twitterDB, twitterToday;
+	//		
+	//		// if there's no social data for this URL in DB yet - just add this as first entry
+	//		if (null == socialDataFromDB){
+	//
+	//			assimilatedSocialData.setDate(DateUtil.getTodaysDate());
+	//
+	//			assimilatedSocialData.setUrl_id(currentURLID);
+	//
+	//			socialDataDBUnit.createNewSocialData(assimilatedSocialData);
+	//
+	//			return -1;
+	//		}
+	//
+	//		// if there's no difference between DB data and today's data: then don't create a new entry in DB:
+	//		if(socialDataFromDB.equals(assimilatedSocialData)){
+	//
+	//			log.info("Todays social data no different from last saved data. url id:  " + String.valueOf(currentURLID));
+	//			
+	//			return 0;
+	//		}
+	//
+	//		// check individual properties of the assimilated social data against the socialDataDBUnit
+	//		//	- if the assimilated data has any entry that is a 0, and if the DBdata is NOT 0, then use the 
+	//		//	DB data in the new entry - this means the call to that particular social API has failed, 
+	//		// so rather than let the rest of the data go to waste, just use previous record and update the 
+	//		//	the social calls that DID work...
+	//
+	//		MiscSocialData newSocialData = new MiscSocialData();
+	//
+	//		newSocialData.setDate(DateUtil.getTodaysDate());
+	//		newSocialData.setUrl_id(currentURLID);
+	//
+	//		/////////Assimilate individual social metrics//////////////////////////////////////////
+	//		//TODO: here we can get the new data and old data and look for a spike...
+	//		// if DB data is Less than most recent API data this means the social data has increased - use API data
+	//		
+	//		deliciousDB = socialDataFromDB.getDelicious();
+	//		deliciousToday = assimilatedSocialData.getDelicious();
+	//		
+	//		fbTotalCountDB = socialDataFromDB.getFb_total_Count(); 
+	//		fbTotalCountToday = assimilatedSocialData.getFb_total_Count();
+	//		
+	//		googlePlusDB = socialDataFromDB.getGoogle_plus_one(); 
+	//		googlePlusToday = assimilatedSocialData.getGoogle_plus_one();
+	//		
+	//		linkedInDB = socialDataFromDB.getLinkedin(); 
+	//		linkedInToday = assimilatedSocialData.getLinkedin();
+	//		
+	//		pinterestDB = socialDataFromDB.getPinterest(); 
+	//		pinterestToday = assimilatedSocialData.getPinterest();
+	//		
+	//		stumbleUponDB = socialDataFromDB.getStumble_upon(); 
+	//		stumbleUponToday = assimilatedSocialData.getStumble_upon();
+	//		
+	//		twitterDB = socialDataFromDB.getTwitter(); 
+	//		twitterToday = assimilatedSocialData.getTwitter();
+	//		
+	//		// get summation of social data for both DB and current social data
+	//		totalSocialDataDB = deliciousDB + fbTotalCountDB + googlePlusDB + linkedInDB + pinterestDB + stumbleUponDB + twitterDB;
+	//		totalSocialDataToday = deliciousToday + fbTotalCountToday + googlePlusToday + linkedInToday + pinterestToday + stumbleUponToday + twitterToday;
+	//		
+	//		// work out %age difference...
+	//		pcDifference = (double) ((totalSocialDataToday - totalSocialDataDB)/ totalSocialDataDB) * 100;
+	//		
+	//			
+	//		////////////////////////
+	//		// delicious.....
+	//		if(deliciousDB < deliciousToday)
+	//			newSocialData.setDelicious(deliciousToday);
+	//		else
+	//			newSocialData.setDelicious(deliciousDB); // else API call has failed or its not changed from DB data
+	//
+	//		// Facebook
+	//		if(fbTotalCountDB < fbTotalCountToday){
+	//			newSocialData.setFb_click_Count(assimilatedSocialData.getFb_click_Count());
+	//			newSocialData.setFb_comment_Count(assimilatedSocialData.getFb_comment_Count());
+	//			newSocialData.setFb_commentsbox_count(assimilatedSocialData.getFb_commentsbox_count());
+	//			newSocialData.setFb_like_Count(assimilatedSocialData.getFb_like_Count());
+	//			newSocialData.setFb_share_Count(assimilatedSocialData.getFb_share_Count());
+	//			newSocialData.setFb_total_Count(fbTotalCountToday);
+	//		}else{ 
+	//			newSocialData.setFb_click_Count(socialDataFromDB.getFb_click_Count());
+	//			newSocialData.setFb_comment_Count(socialDataFromDB.getFb_comment_Count());
+	//			newSocialData.setFb_commentsbox_count(socialDataFromDB.getFb_commentsbox_count());
+	//			newSocialData.setFb_like_Count(socialDataFromDB.getFb_like_Count());
+	//			newSocialData.setFb_share_Count(socialDataFromDB.getFb_share_Count());
+	//			newSocialData.setFb_total_Count(fbTotalCountDB);
+	//		}
+	//
+	//		//Google+
+	//		if(googlePlusDB < googlePlusToday)
+	//			newSocialData.setGoogle_plus_one(googlePlusToday);
+	//		else
+	//			newSocialData.setGoogle_plus_one(googlePlusDB);
+	//
+	//		//LinkedIn
+	//		if(linkedInDB < linkedInToday)
+	//			newSocialData.setLinkedin(linkedInToday);
+	//		else
+	//			newSocialData.setLinkedin(linkedInDB);
+	//
+	//		// Pinterest
+	//		if(pinterestDB < pinterestToday)
+	//			newSocialData.setPinterest(pinterestToday);
+	//		else
+	//			newSocialData.setPinterest(pinterestDB);
+	//
+	//		//StumbleUpon
+	//		if(stumbleUponDB < stumbleUponToday)
+	//			newSocialData.setStumble_upon(stumbleUponToday);
+	//		else
+	//			newSocialData.setStumble_upon(stumbleUponDB);
+	//
+	//		//Twitter
+	//		if(twitterDB < twitterToday)
+	//			newSocialData.setTwitter(twitterToday);
+	//		else
+	//			newSocialData.setTwitter(twitterDB);
+	//
+	//		///////////////////////////////////////////////
+	//
+	//		log.info("New social data entry for url: " + String.valueOf(currentURLID));
+	//		socialDataDBUnit.createNewSocialData(newSocialData);
+	//	
+	//
+	//		return pcDifference;
+	//
+	//	}
 
-//	private MiscSocialData assimilateSocialData(MiscSocialData data1, MiscSocialData data2){
-//
-//		MiscSocialData assimilatedData = new MiscSocialData();	
-//
-//		/////////////////////////
-//
-//		// run through every data type... using assimilateHelper method to return one or sum of the values from the sharedCount objects...
-//		assimilatedData.setDelicious(			assimilateHelper(data1.getDelicious(),		 data2.getDelicious(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setGoogle_plus_one(		assimilateHelper(data1.getGoogle_plus_one(), data2.getGoogle_plus_one(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setLinkedin(			assimilateHelper(data1.getLinkedin(),		 data2.getLinkedin(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setPinterest(			assimilateHelper(data1.getPinterest(),		 data2.getPinterest(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setStumble_upon(		assimilateHelper(data1.getStumble_upon(),	 data2.getStumble_upon(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setTwitter(				assimilateHelper(data1.getTwitter(),		 data2.getTwitter(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));	
-//		//facebook data:
-//		assimilatedData.setFb_click_Count(			assimilateHelper(data1.getFb_click_Count(),		 data2.getFb_click_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setFb_comment_Count(		assimilateHelper(data1.getFb_comment_Count(), 	 data2.getFb_comment_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setFb_commentsbox_count(	assimilateHelper(data1.getFb_commentsbox_count(),data2.getFb_commentsbox_count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setFb_like_Count(			assimilateHelper(data1.getFb_like_Count(),		 data2.getFb_like_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setFb_share_Count(			assimilateHelper(data1.getFb_share_Count(),		 data2.getFb_share_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//		assimilatedData.setFb_total_Count(			assimilateHelper(data1.getFb_total_Count(),		 data2.getFb_total_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
-//
-//		return assimilatedData;
-//
-//	}
+	//	private MiscSocialData assimilateSocialData(MiscSocialData data1, MiscSocialData data2){
+	//
+	//		MiscSocialData assimilatedData = new MiscSocialData();	
+	//
+	//		/////////////////////////
+	//
+	//		// run through every data type... using assimilateHelper method to return one or sum of the values from the sharedCount objects...
+	//		assimilatedData.setDelicious(			assimilateHelper(data1.getDelicious(),		 data2.getDelicious(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setGoogle_plus_one(		assimilateHelper(data1.getGoogle_plus_one(), data2.getGoogle_plus_one(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setLinkedin(			assimilateHelper(data1.getLinkedin(),		 data2.getLinkedin(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setPinterest(			assimilateHelper(data1.getPinterest(),		 data2.getPinterest(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setStumble_upon(		assimilateHelper(data1.getStumble_upon(),	 data2.getStumble_upon(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setTwitter(				assimilateHelper(data1.getTwitter(),		 data2.getTwitter(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));	
+	//		//facebook data:
+	//		assimilatedData.setFb_click_Count(			assimilateHelper(data1.getFb_click_Count(),		 data2.getFb_click_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setFb_comment_Count(		assimilateHelper(data1.getFb_comment_Count(), 	 data2.getFb_comment_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setFb_commentsbox_count(	assimilateHelper(data1.getFb_commentsbox_count(),data2.getFb_commentsbox_count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setFb_like_Count(			assimilateHelper(data1.getFb_like_Count(),		 data2.getFb_like_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setFb_share_Count(			assimilateHelper(data1.getFb_share_Count(),		 data2.getFb_share_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//		assimilatedData.setFb_total_Count(			assimilateHelper(data1.getFb_total_Count(),		 data2.getFb_total_Count(),GoFetchConstants.ALLOWED_SOCIAL_DATA_DIFFERENCE));
+	//
+	//		return assimilatedData;
+	//
+	//	}
 
 	/**
 	 * 
@@ -1022,13 +972,13 @@ public class ProcessNewTargets extends HttpServlet {
 	 * @return - if data1 and data2 are the same, then returns that value,
 	 * if different - returns the sum of the two values
 	 */
-//	private int assimilateHelper(int data1, int data2){
-//
-//		if(data1 != data2 )
-//			return (data1 + data2);
-//		else
-//			return data1;
-//	}
+	//	private int assimilateHelper(int data1, int data2){
+	//
+	//		if(data1 != data2 )
+	//			return (data1 + data2);
+	//		else
+	//			return data1;
+	//	}
 
 	/**
 	 * 
@@ -1067,41 +1017,41 @@ public class ProcessNewTargets extends HttpServlet {
 	 * 
 	 * 
 	 */
-//	//TODO: test this - can use unit testing here - assert return values based on params.
-//	private int assimilateHelper(int data1, int data2, double pcAllowedVariation){
-//
-//		if(data1 != data2 ){
-//
-//			int largestValue, smallestValue;
-//			double difference;
-//
-//			/////////////
-//			//1. assign largest and smallest values
-//			if(data1 > data2){
-//				largestValue = data1;
-//				smallestValue = data2;
-//			}
-//			else{
-//				largestValue = data2;
-//				smallestValue = data1;
-//			}
-//			/////////////////
-//
-//			//2. calc %age difference
-//			difference = (double)(((double)largestValue - (double)smallestValue)/(double)largestValue) *100.0;
-//
-//			//3.a: return sum - if difference is greater than allowed %age
-//			if(difference > pcAllowedVariation){
-//				return (data1 + data2);
-//
-//				//3.b:	its under the allowed %age - return the largest value
-//			}else{ 
-//				return largestValue;
-//			}
-//
-//		}
-//		else // they are the same so just return one of them.
-//			return data1;
-//
-//	}
+	//	//TODO: test this - can use unit testing here - assert return values based on params.
+	//	private int assimilateHelper(int data1, int data2, double pcAllowedVariation){
+	//
+	//		if(data1 != data2 ){
+	//
+	//			int largestValue, smallestValue;
+	//			double difference;
+	//
+	//			/////////////
+	//			//1. assign largest and smallest values
+	//			if(data1 > data2){
+	//				largestValue = data1;
+	//				smallestValue = data2;
+	//			}
+	//			else{
+	//				largestValue = data2;
+	//				smallestValue = data1;
+	//			}
+	//			/////////////////
+	//
+	//			//2. calc %age difference
+	//			difference = (double)(((double)largestValue - (double)smallestValue)/(double)largestValue) *100.0;
+	//
+	//			//3.a: return sum - if difference is greater than allowed %age
+	//			if(difference > pcAllowedVariation){
+	//				return (data1 + data2);
+	//
+	//				//3.b:	its under the allowed %age - return the largest value
+	//			}else{ 
+	//				return largestValue;
+	//			}
+	//
+	//		}
+	//		else // they are the same so just return one of them.
+	//			return data1;
+	//
+	//	}
 }

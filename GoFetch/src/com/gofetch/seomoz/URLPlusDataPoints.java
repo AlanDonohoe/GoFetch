@@ -13,40 +13,47 @@ public class URLPlusDataPoints implements Comparable<URLPlusDataPoints> {
 	
     private String uu; // backlink URL
     private String cleanURL; // URL thats been cleaned of buggy escape characters
-    private String lt; // anchor text
-    private String luuu; // target URL
+    private String lt; // anchor text //TODO: change this into a user-friendly name!
+    private String luuu; // target URL //TODO: change this into a user-friendly name!
     private String domainName; // domain....
     private String docTitle;
-    //private static String targetUrlDA; //class wide member - this backlink's target's DA
-    //private static String targetUrlPA; //class wide member - this backlink's target's PA
+    private String noOfExtLinks; // The number of external equity links to the URL
+    private String noOfAllLinks; // The number of links (equity or nonequity or not, internal or external) 
     
     SEOMozURLData seoMozData = new SEOMozURLData();
     
-//
-//	public static String getTargetUrlDA() {
-//        return targetUrlDA;
-//		
-//    }
-//
-//    public static void setTargetUrlDA(String targetUrlDA) {
-//        URLPlusDataPoints.targetUrlDA = targetUrlDA;
-//    }
-//
-//    public static String getTargetUrlPA() {
-//        return targetUrlPA;
-//        
-//    }
-//
-//    public static void setTargetUrlPA(String targetUrlPA) {
-//        URLPlusDataPoints.targetUrlPA = targetUrlPA;
-//    }
     
-    
+    /**
+     * 
+     * @return The number of external equity links to the URL
+     */
+    public String getNoOfExtLinks() {
+		return noOfExtLinks;
+	}
+
+	public void setNoOfExtLinks(String noOfExtLinks) {
+		this.noOfExtLinks = noOfExtLinks;
+	}
+
+
+	/**
+	 * 
+	 * @return The number of links (equity or nonequity or not, internal or external) 
+	 */
+	
+	public String getNoOfAllLinks() {
+		return noOfAllLinks;
+	}
+
+	public void setNoOfAllLinks(String noOfAllLinks) {
+		this.noOfAllLinks = noOfAllLinks;
+	}
+	
 	public void setDocTitle(String docTitle) {
 		this.docTitle = docTitle;
 		
 	}
-	
+
 	public String getDocTitle(){
 		return docTitle;
 	}

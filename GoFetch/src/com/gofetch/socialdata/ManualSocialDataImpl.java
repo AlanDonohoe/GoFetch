@@ -73,6 +73,8 @@ public class ManualSocialDataImpl implements SocialData {
 		
 	}
 
+	//NB: 9-9-2013: GAE getting 403 - Forbidden back from Pinterest for every call
+	// have turned off the pinterest section of this function until we have a workaround like a proxy server
 	@Override
 	public MiscSocialData getAllSocialData(String url) throws Exception {
 
@@ -160,20 +162,20 @@ public class ManualSocialDataImpl implements SocialData {
 
 		/////////
 		// Pinterest:
-
-		Integer pinterest = getSingleSocialMetric(GoFetchConstants.pinterestEndPoint, url);
-
-		if(null == pinterest){
-			if(!minimalLoging)
-			{
-			String errorMsg = "ManualSocialDataImp: Call to Pinterest failed to get data for: " + url;
-
-			log.warning(errorMsg);
-			}
-
-		}else{
-			miscSocialData.setPinterest(pinterest);
-		}
+		//NB: turned this off, 9-9-13:
+//		Integer pinterest = getSingleSocialMetric(GoFetchConstants.pinterestEndPoint, url);
+//
+//		if(null == pinterest){
+//			if(!minimalLoging)
+//			{
+//			String errorMsg = "ManualSocialDataImp: Call to Pinterest failed to get data for: " + url;
+//
+//			log.warning(errorMsg);
+//			}
+//
+//		}else{
+//			miscSocialData.setPinterest(pinterest);
+//		}
 
 		//
 		/////////	
@@ -243,7 +245,7 @@ public class ManualSocialDataImpl implements SocialData {
 		if(null == response)
 			return null;
 
-		// deal with specific delicious api issue...
+		// deal with specific delicious api issue... it has returned "[]"
 		if(preEndPoint.contains("delicious.com")){
 			if(response.length() < 3)
 				return null;
@@ -320,9 +322,8 @@ public class ManualSocialDataImpl implements SocialData {
 		String response;
 		JSONArray jsonArray; // = null;
 
-
-		String faceBookEndPoint = "http://api.ak.facebook.com/restserver.php?v=1.0&method=links.getStats&urls="
-				+ url + "&format=json";
+		String faceBookEndPoint = GoFetchConstants.faceBookPreEndPoint
+				+ url + GoFetchConstants.faceBookPostEndPoint;
 
 		try {
 			response = ConnectionUtil.makeRequest(faceBookEndPoint);

@@ -49,7 +49,7 @@ public class URLMetricsService
 	 * @return
 	 * @throws IOException 
 	 */
-	public String getUrlMetrics(String objectURL, long col) throws IOException
+	public String getUrlMetrics(String objectURL, long col) throws Exception
 	{
 		
 		String urlToFetch = "http://lsapi.seomoz.com/linkscape/url-metrics/" + URLEncoder.encode(objectURL) + "?" + authenticator.getAuthenticationStr();
@@ -78,7 +78,7 @@ public class URLMetricsService
 	 * 
 	 * @see URLMetricsService#getUrlMetrics(String, int)
 	 */
-	public String getUrlMetrics(String objectURL) throws IOException
+	public String getUrlMetrics(String objectURL) throws Exception
 	{
 		return getUrlMetrics(objectURL, 0);		
 	}

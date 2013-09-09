@@ -134,7 +134,7 @@ public class SEOMozWrapper {
 		String response = null;
 		try {
 			response = urlMetrics.getUrlMetrics(url);
-		} catch (IOException e) {
+		} catch (Exception e) {
 
 			// problem with SEOMoz server - just return 0
 

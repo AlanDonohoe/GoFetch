@@ -138,18 +138,31 @@ public class URLsSocialDataCrawl extends HttpServlet {
 			
 			//TODO: add other chars here we want to encode: " ' " seemed to make subsequent calls to social APIs fail..
 			if(urlAddress.contains("#")){
-				
+				log.info("Encoding: " + urlAddress);
 				try {
 					urlAddress = URLEncoder.encode(urlAddress, "UTF-8");
 				} catch (UnsupportedEncodingException e1) {
 
 					log.warning("Problem encoding: " + urlAddress + "" + e1.getMessage());
 				}
+				log.info("Is now: " + urlAddress);
 				
 			}
+			
+			// and spaces:
+			if(urlAddress.contains(" ")){
+				log.info("Encoding: " + urlAddress);
+				try {
+					urlAddress = URLEncoder.encode(urlAddress, "UTF-8");
+				} catch (UnsupportedEncodingException e1) {
 
+					log.warning("Problem encoding: " + urlAddress + "" + e1.getMessage());
+				}
+				log.info("Is now: " + urlAddress);
+				
+			}
 			
-			
+
 			i++;
 
 			log.info(String.valueOf(i) + " of " + noOfSocialURLs + " : " + urlAddress);
@@ -223,7 +236,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 				// TODO: record urls and email/ alert user (using their email) /
 				// error screen somehow that of this list.....
 				String msg = "Retrieving social data for: "
-						+ urlAddress + " completely failed. -  URLsSocialDataCrawl: getURLSocialData ";
+						+ urlAddress + " completely failed.";
 
 				log.severe(msg);
 
