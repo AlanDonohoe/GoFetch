@@ -602,8 +602,9 @@ public class URLDBService implements Serializable{
 	 * @param urlAddress - target url 
 	 * @param pa - Page Authority
 	 * @param da - Domain Authority
+	 * @throws Exception - if unable to update DA
 	 */
-	public void updateURLDomainAuthorityData(String urlAddress, Integer da){
+	public void updateURLDomainAuthorityData(String urlAddress, Integer da) throws Exception{
 
 		log.info("updateURLDomainAuthorityData() for: " + urlAddress);
 		
@@ -629,6 +630,7 @@ public class URLDBService implements Serializable{
 			String msg = "Exception thrown: URLService: updateURLDomainAuthorityData";
 			
 			log.severe(msg + e.getMessage());
+			throw(e);
 
 		}  finally {
 			mgr.close();

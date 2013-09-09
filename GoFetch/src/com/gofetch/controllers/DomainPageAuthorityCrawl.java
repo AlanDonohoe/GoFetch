@@ -34,7 +34,7 @@ public class DomainPageAuthorityCrawl extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
+
 		log.info("Entering DomainPageAuthorityCrawl()");
 
 		List<URL> unprocessedURLs = null;
@@ -44,10 +44,10 @@ public class DomainPageAuthorityCrawl extends HttpServlet{
 		String domain;
 		Integer noOfURLs; 
 		Integer counter = 1;
-		
+
 		unprocessedURLs = urlDBUnit.getUnProccessedAuthorityData(500);
 		noOfURLs = unprocessedURLs.size();
-		
+
 		log.info("No of Unprocessed URLs: " + noOfURLs);
 
 		for (URL currentURL : unprocessedURLs) {
@@ -58,16 +58,21 @@ public class DomainPageAuthorityCrawl extends HttpServlet{
 
 			domain = currentURL.getDomain();
 			log.info(counter + " of " + noOfURLs + " Current Domain: " + domain);
-			
+
 			if(null == domain){
 				//TODO: update/persist the new domain name?
 				currentURL.setDomain(TextUtil.returnDomainName(currentURL.getUrl_address())); 
 			}
 
+			// first get DA for this domain from GoFetch system (before hitting SeoMoz)
 			da = urlDBUnit.getDomainAuthorityForThisDomain(currentURL.getDomain()); 
 
 			if(null!= da){
-				urlDBUnit.updateURLDomainAuthorityData(currentURL.getUrl_address(), da);
+				try {
+					urlDBUnit.updateURLDomainAuthorityData(currentURL.getUrl_address(), da);
+				} catch (Exception e) {
+					log.severe(e.getMessage());
+				}
 
 				log.info("Got DA (" + da + ") from DB");
 			}else{
@@ -117,7 +122,7 @@ public class DomainPageAuthorityCrawl extends HttpServlet{
 	private void getAuthorityAndDomainData(String url) {
 
 		log.info("Entering getAuthorityAndDomainData");
-		
+
 		URLDBService urlDBUnit = new URLDBService();
 		URLPlusDataPoints currentURLDAPA, resultingURLDAPA = null;
 		String docTitle, miniDocTitle; // need to keep this length under the 45
