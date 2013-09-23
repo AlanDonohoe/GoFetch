@@ -31,18 +31,18 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 	private static Logger log = Logger.getLogger(ProcessNewTargets.class
 			.getName());
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 
 		resp.setContentType("text/plain");
-		
+
 		//TODO: put this in the admin table in DB.
 		int noOfURLsToCheck = 500; //GAE seems to have an issue getting more than 500...
-		
+
 		getURLSocialData(noOfURLsToCheck);
-	
+
 
 		try {
 			getServletContext().getRequestDispatcher("/index.jsf").forward(
@@ -61,7 +61,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 		doGet(req, resp);
 	}
-	
+
 
 	/**
 	 * retrieves a list of all urls in DB that have had their get "getSocialData
@@ -74,10 +74,10 @@ public class URLsSocialDataCrawl extends HttpServlet {
 	private void getURLSocialData(int noOfURLsToCheck) {
 
 		// 1: get list of all urls that have "get_social_data" checked...
-		
+
 		// urls back from DB
 		List<URL> urls = null;
-		
+
 		MiscSocialData socialDataAPINoSlash = null;
 		MiscSocialData socialDataAPISlash = null;
 		MiscSocialData assimilatedSocialData = null;
@@ -85,41 +85,41 @@ public class URLsSocialDataCrawl extends HttpServlet {
 		SocialData manualSocialData = null;
 		MiscSocialDataDBService socialDataDBUnit = null;
 		URLDBService urlDBUnit = null;
-		
+
 		int i = 0;
-		
+
 		String urlAddressNoSlash, urlAddressSlash, urlAddress, noOfSocialURLs = null, urlAddressEncoded;
-		
+
 		try{
 
-		// URL database communication
-		urlDBUnit = new URLDBService();
+			// URL database communication
+			urlDBUnit = new URLDBService();
 
-		// used for social data database communication
-		socialDataDBUnit = new MiscSocialDataDBService();
-		socialDataFromDB = null;	
+			// used for social data database communication
+			socialDataDBUnit = new MiscSocialDataDBService();
+			socialDataFromDB = null;	
 
-		// used as the more costly, manual backup social data service	
-		manualSocialData = new ManualSocialDataImpl();
+			// used as the more costly, manual backup social data service	
+			manualSocialData = new ManualSocialDataImpl();
 
 
-		// get urls where get social data = true 
-		//	and social data date <= todays date (not just = today's date, in case there was an error with updating the social date some urls would be left behind & lost)
-		// 11-1-13 - changed query so that most out of date urls are at the top of the list - ie: select ..... from url order by social_data_date asc;
-		
-		urls = urlDBUnit.getTodaysSocialCrawlURLs(noOfURLsToCheck);
-		
-		// 2: loop through checking to see if their social data has changed from
-		// previous entry... update if true.
+			// get urls where get social data = true 
+			//	and social data date <= todays date (not just = today's date, in case there was an error with updating the social date some urls would be left behind & lost)
+			// 11-1-13 - changed query so that most out of date urls are at the top of the list - ie: select ..... from url order by social_data_date asc;
 
-		noOfSocialURLs = String.valueOf(urls.size());
-		
-		
-		
-	}catch(Exception e){
-		
-		log.severe("Exception: " + e.getMessage());
-	}
+			urls = urlDBUnit.getTodaysSocialCrawlURLs(noOfURLsToCheck);
+
+			// 2: loop through checking to see if their social data has changed from
+			// previous entry... update if true.
+
+			noOfSocialURLs = String.valueOf(urls.size());
+
+
+
+		}catch(Exception e){
+
+			log.severe("Exception: " + e.getMessage());
+		}
 
 		for (URL currentURL : urls) {
 
@@ -131,14 +131,14 @@ public class URLsSocialDataCrawl extends HttpServlet {
 			double pcDifferenceBtwnSocialData;
 
 			urlAddress = currentURL.getUrl_address();
-			
+
 			//TODO: there;s some issues with hashtags, and other non-text characters not getting any data back from any of the data providers
 			//	need to : encode: and test.. ex: http://www.visitnorway.com/uk/the-scream/#content - becomes - http%3A%2F%2Fwww.visitnorway.com%2Fuk%2Fthe-scream%2F%23content
 			// 	but still not getting all the data back  - but some - so for now, better than nothing...
-			
+
 			//TODO: add other chars here we want to encode: " ' " seemed to make subsequent calls to social APIs fail..
 			if(urlAddress.contains("#")){
-				log.info("Encoding: " + urlAddress);
+				log.info("URL contains #. Encoding: " + urlAddress);
 				try {
 					urlAddress = URLEncoder.encode(urlAddress, "UTF-8");
 				} catch (UnsupportedEncodingException e1) {
@@ -146,22 +146,22 @@ public class URLsSocialDataCrawl extends HttpServlet {
 					log.warning("Problem encoding: " + urlAddress + "" + e1.getMessage());
 				}
 				log.info("Is now: " + urlAddress);
-				
+
 			}
-			
-			// and spaces:
+
+			// and spaces: - this seems to be breaking Google+ calls
 			if(urlAddress.contains(" ")){
-				log.info("Encoding: " + urlAddress);
-				try {
-					urlAddress = URLEncoder.encode(urlAddress, "UTF-8");
-				} catch (UnsupportedEncodingException e1) {
+				log.info("URL contains spaces. Encoding: " + urlAddress);
+//				try {
+//					urlAddress = URLEncoder.encode(urlAddress, "UTF-8");
+//				} catch (UnsupportedEncodingException e1) {
+//
+//					log.warning("Problem encoding: " + urlAddress + "" + e1.getMessage());
+//				}
+//				log.info("Is now: " + urlAddress);
 
-					log.warning("Problem encoding: " + urlAddress + "" + e1.getMessage());
-				}
-				log.info("Is now: " + urlAddress);
-				
 			}
-			
+
 
 			i++;
 
@@ -177,36 +177,36 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 
 
-				try {
-					//TODO: need to break calls into respective social services, then if first call to delicious and / or stumbled fails,
-					// 	then we can skip them in the subsequent call using urlAddressNoSlash.
-					//		need to bring up the construction of the miscsocialdata object up to this layer....
-					// actually - might just best to move the call to twitter here - and any other APIS that
-					// 	have the same data for both slashed and non-slashed urls.
-					socialDataAPISlash = manualSocialData.getAllSocialData(urlAddressSlash);
-					
+			try {
+				//TODO: need to break calls into respective social services, then if first call to delicious and / or stumbled fails,
+				// 	then we can skip them in the subsequent call using urlAddressNoSlash.
+				//		need to bring up the construction of the miscsocialdata object up to this layer....
+				// actually - might just best to move the call to twitter here - and any other APIS that
+				// 	have the same data for both slashed and non-slashed urls.
+				socialDataAPISlash = manualSocialData.getAllSocialData(urlAddressSlash);
 
-				} catch (Exception e) {
-//					String msg = "Manual Implementation Social data for: "
-//							+ urlAddressSlash + " failed"
-//							+ ". URLsSocialDataCrawl: getURLSocialData.  \n";
-//					log.severe(msg + e.getMessage());
 
-					manualSocialDataGot = false;
-				}
+			} catch (Exception e) {
+				//					String msg = "Manual Implementation Social data for: "
+				//							+ urlAddressSlash + " failed"
+				//							+ ". URLsSocialDataCrawl: getURLSocialData.  \n";
+				//					log.severe(msg + e.getMessage());
 
-				try {
+				manualSocialDataGot = false;
+			}
 
-					socialDataAPINoSlash = manualSocialData.getAllSocialData(urlAddressNoSlash);
+			try {
 
-				} catch (Exception e) {
-//					String msg = "Manual Implementation Social data for: "
-//							+ urlAddressNoSlash + " failed"
-//							+ ". URLsSocialDataCrawl: getURLSocialData. \n";
-//					log.severe(msg + e.getMessage());
+				socialDataAPINoSlash = manualSocialData.getAllSocialData(urlAddressNoSlash);
 
-					manualSocialDataGot = false;
-				}
+			} catch (Exception e) {
+				//					String msg = "Manual Implementation Social data for: "
+				//							+ urlAddressNoSlash + " failed"
+				//							+ ". URLsSocialDataCrawl: getURLSocialData. \n";
+				//					log.severe(msg + e.getMessage());
+
+				manualSocialDataGot = false;
+			}
 
 
 			if(manualSocialDataGot){ // this is ONLY false, if all calls to the social APIs have failed - v unlikely..
@@ -223,7 +223,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 				// recent social data from APIs... then persist new social data
 
 				pcDifferenceBtwnSocialData = persistSocialData(socialDataFromDB, assimilatedSocialData, socialDataDBUnit, currentURL.getId());
-				
+
 				updateSocialCrawlFrequency(currentURL, pcDifferenceBtwnSocialData, urlDBUnit);
 
 				//TODO: here add the code that will check and set the frequency of check_freq: for every url.
@@ -270,7 +270,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 		return assimilatedData;
 
 	}
-	
+
 
 	/**
 	 * 
@@ -361,20 +361,20 @@ public class URLsSocialDataCrawl extends HttpServlet {
 			return data1;
 
 	}
-	
+
 
 	/* If there is new social data - then persists this...
 	 * returns the percentage difference between the new social data and the previous entry. Returns 0, if no change and -1 if no previous entry in DB for this URL. 
 	 */
 	private double persistSocialData(MiscSocialData socialDataFromDB, MiscSocialData assimilatedSocialData, MiscSocialDataDBService socialDataDBUnit,  Integer currentURLID){
 
-		
+
 		//used as running total of all social data- so we can check the %age difference below
 		double totalSocialDataDB, totalSocialDataToday; 
 		double pcDifference;
 		Integer deliciousDB, deliciousToday, fbTotalCountDB, fbTotalCountToday, googlePlusDB, googlePlusToday, 
-				linkedInDB, linkedInToday, pinterestDB, pinterestToday, stumbleUponDB, stumbleUponToday, twitterDB, twitterToday;
-		
+		linkedInDB, linkedInToday, pinterestDB, pinterestToday, stumbleUponDB, stumbleUponToday, twitterDB, twitterToday;
+
 		// if there's no social data for this URL in DB yet - just add this as first entry
 		if (null == socialDataFromDB){
 
@@ -391,7 +391,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 		if(socialDataFromDB.equals(assimilatedSocialData)){
 
 			log.info("Todays social data no different from last saved data. url id:  " + String.valueOf(currentURLID));
-			
+
 			return 0;
 		}
 
@@ -409,36 +409,36 @@ public class URLsSocialDataCrawl extends HttpServlet {
 		/////////Assimilate individual social metrics//////////////////////////////////////////
 		//TODO: here we can get the new data and old data and look for a spike...
 		// if DB data is Less than most recent API data this means the social data has increased - use API data
-		
+
 		deliciousDB = socialDataFromDB.getDelicious();
 		deliciousToday = assimilatedSocialData.getDelicious();
-		
+
 		fbTotalCountDB = socialDataFromDB.getFb_total_Count(); 
 		fbTotalCountToday = assimilatedSocialData.getFb_total_Count();
-		
+
 		googlePlusDB = socialDataFromDB.getGoogle_plus_one(); 
 		googlePlusToday = assimilatedSocialData.getGoogle_plus_one();
-		
+
 		linkedInDB = socialDataFromDB.getLinkedin(); 
 		linkedInToday = assimilatedSocialData.getLinkedin();
-		
+
 		pinterestDB = socialDataFromDB.getPinterest(); 
 		pinterestToday = assimilatedSocialData.getPinterest();
-		
+
 		stumbleUponDB = socialDataFromDB.getStumble_upon(); 
 		stumbleUponToday = assimilatedSocialData.getStumble_upon();
-		
+
 		twitterDB = socialDataFromDB.getTwitter(); 
 		twitterToday = assimilatedSocialData.getTwitter();
-		
+
 		// get summation of social data for both DB and current social data
 		totalSocialDataDB = deliciousDB + fbTotalCountDB + googlePlusDB + linkedInDB + pinterestDB + stumbleUponDB + twitterDB;
 		totalSocialDataToday = deliciousToday + fbTotalCountToday + googlePlusToday + linkedInToday + pinterestToday + stumbleUponToday + twitterToday;
-		
+
 		// work out %age difference...
 		pcDifference = (double) ((totalSocialDataToday - totalSocialDataDB)/ totalSocialDataDB) * 100;
-		
-			
+
+
 		////////////////////////
 		// delicious.....
 		if(deliciousDB < deliciousToday)
@@ -497,7 +497,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 		log.info("New social data entry for url: " + String.valueOf(currentURLID));
 		socialDataDBUnit.createNewSocialData(newSocialData);
-	
+
 
 		return pcDifference;
 
@@ -505,63 +505,63 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 	private void updateSocialCrawlFrequency(URL currentURL,
 			double pcDifferenceBtwnSocialData, URLDBService urlDBUnit) {
-		
+
 		log.info("Entering updateSocialCrawlFrequency");
-		
+
 		int socialFreq = currentURL.getSocial_data_freq();
-		
+
 		//need to check if it just new URL with no previous social data - so pcDifference would be set to 0, but shouldnt be...
 		if(pcDifferenceBtwnSocialData < 0){
 			currentURL.setSocial_data_date(DateUtil.getTommorrowsDate());
 			urlDBUnit.updateSocialFrequencyData(currentURL);
 			return;
 		}
-		
+
 		if(pcDifferenceBtwnSocialData < GoFetchConstants.SOCIAL_DATA_RANGE_MIN){
-			
+
 			currentURL.decreaseSocialCrawlFrequency();
 
 		}
-		
+
 		if(pcDifferenceBtwnSocialData > GoFetchConstants.SOCIAL_DATA_RANGE_MAX){
 
 			currentURL.setSocial_data_freq(GoFetchConstants.DAILY_FREQ);
 		}
-		
+
 		// now update the URL's next date to be included in the social data crawl
 		// if may of been increased or decreased:
 		socialFreq = currentURL.getSocial_data_freq();
-			
+
 		if(GoFetchConstants.DAILY_FREQ==socialFreq){
 			// then make social data date tmw.
 			currentURL.setSocial_data_date(DateUtil.getTommorrowsDate());
-			
+
 		}
-		
+
 		if(GoFetchConstants.WEEKLY_FREQ==socialFreq){
 			// then make social data date next week.
 			currentURL.setSocial_data_date(DateUtil.getNextWeeksDate());
 		}
-		
+
 		if(GoFetchConstants.MONTHLY_FREQ==socialFreq){
-			
+
 			//TODO: implement this...
 			if(0 ==pcDifferenceBtwnSocialData){
 				//then.. check difference btwn dates?? and if there's x days or weeks.. set getSocialData(false)???
 				// this is typically socially dead backlinks...
-				
+
 			}
-			
+
 			// then make social data date next month.
 			currentURL.setSocial_data_date(DateUtil.getNextMonthsDate());
 		}
-		
+
 		urlDBUnit.updateSocialFrequencyData(currentURL);
-		
-		
+
+
 	}
 
-	
+
 }
 
 

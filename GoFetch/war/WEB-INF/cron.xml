@@ -24,7 +24,7 @@
     <url>/authoritycrawl</url>
     <target>backgroundprocess</target>
     <description>Crawl all urls for domain and page authority - limit of 100</description>
-    <schedule>every 30 minutes from 00:00 to 11:30</schedule>
+    <schedule>every 30 minutes from 00:00 to 11:30</schedule> <!--  as to not interfere with: processnewtargets which runs from 12:00 -->
     <timezone>Europe/London</timezone>
   </cron>
   <cron>

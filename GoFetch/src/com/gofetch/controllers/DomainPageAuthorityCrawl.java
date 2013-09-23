@@ -60,7 +60,7 @@ public class DomainPageAuthorityCrawl extends HttpServlet{
 			log.info(counter + " of " + noOfURLs + " Current Domain: " + domain);
 
 			if(null == domain){
-				//TODO: update/persist the new domain name?
+				
 				currentURL.setDomain(TextUtil.returnDomainName(currentURL.getUrl_address())); 
 			}
 

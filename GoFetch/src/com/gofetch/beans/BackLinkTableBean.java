@@ -50,17 +50,6 @@ public class BackLinkTableBean implements Serializable {
 		
 
 	}
-	
-//TODO: delete after testing - replaced this with method that accepts multiple TURLs
-//	public void addBackLinksToTable(Integer targetURLId) {
-//
-//		log.info("Entering BacklinkTableBean::addBackLinksToTable(...) targetURLId = "
-//				+ Integer.toString(targetURLId));
-//
-//		// when load gets called - we just make lazy load calls to DB
-//		// there... based on page size, etc...
-//		((LazyBackLinksDataModel) dataModel).setTargetURLId(targetURLId);
-//	}
 
 	public URLAndLinkData getSelectedBackLink() {
 		return selectedBackLink;
@@ -98,17 +87,13 @@ public class BackLinkTableBean implements Serializable {
 	}
 
 	public void checkBoxSelected(SelectEvent se) {
-
 //		int i = 0;
 //		i++;
-
 	}
 
 	public void checkBoxUnselected(UnselectEvent se) {
-
 //		int i = 0;
 //		i++;
-
 	}
 	
 	public String getEarliestLinkDate() {
@@ -133,13 +118,11 @@ public class BackLinkTableBean implements Serializable {
 		this.earliestLinkDate = earliestLinkDate;
 	}
 
-
-
 	public void setLatestLinkDate(String latestLinkDate) {
 		this.latestLinkDate = latestLinkDate;
 	}
 
-	/*
+	/**
 	 * Pulls earliest and latest links' dates from the selected array of url and link data
 	 */
 	private void extractDates() {

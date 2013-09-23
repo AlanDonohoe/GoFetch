@@ -24,6 +24,7 @@ public class ChartBean implements Serializable{
 		this.beanData = beanData;
 	}
 	
+	//Code lifted from the JSF primefaces example:
 //	private CartesianChartModel categoryModel;  
 //	  
 //    private CartesianChartModel linearModel;  

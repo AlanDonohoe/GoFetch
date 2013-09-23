@@ -122,6 +122,10 @@ public class LinksService {
 			throw(e);
 		}
 		
+		if(null == response){
+			throw (new Exception("null response from: " + urlToFetch));
+		}
+		
 		//these JSON assistant methods - were causing more exceptions than they were worth..
 		
 //		if(!HttpResponseReader.successfulResponse(response)){

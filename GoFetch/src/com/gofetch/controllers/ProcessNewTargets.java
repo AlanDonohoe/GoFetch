@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gofetch.GoFetchConstants;
+import com.gofetch.email.AdminEmailHelper;
 import com.gofetch.entities.Link;
 import com.gofetch.entities.LinkDBService;
 import com.gofetch.entities.URL;
@@ -58,6 +59,8 @@ public class ProcessNewTargets extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 
+		log.info("in doGet");
+		
 		resp.setContentType("text/plain");
 
 		boolean testing = false; // if true, then no urls are processsed and JUST social data sweep occurs....
@@ -134,6 +137,14 @@ public class ProcessNewTargets extends HttpServlet {
 					log.warning(msg + e.getMessage());
 
 					getLinksSuccessful = false;
+					
+					AdminEmailHelper emailHelper = new AdminEmailHelper();
+					
+					try {
+						emailHelper.sendWarningEmailToAdministrator(msg);
+					} catch (Exception emailEx) {
+						log.warning(emailEx.getMessage());
+					}
 				}
 				// this section below ONLY called if we have has a successful call to SEOMoz - even if there's no links for this target.
 				if(getLinksSuccessful){

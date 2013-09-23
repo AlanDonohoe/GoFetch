@@ -537,7 +537,6 @@ public class DataEntryBacking implements Serializable {
 
 		return(clients.get(0).getId());
 
-
 	}
 
 

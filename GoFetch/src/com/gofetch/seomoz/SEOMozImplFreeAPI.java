@@ -184,7 +184,6 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 
 			}else{ // one time only code:
 				calledOnce = true; // now there will be a delay on next iteration.... 
-				
 			}
 
 			try{ 
@@ -469,8 +468,16 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 	private void Authenticate(){
 
 		authentSEOMoz = new Authenticator(); 
-		authentSEOMoz.setAccessID(Constants.ACCESS_ID);
-		authentSEOMoz.setSecretKey(Constants.SECRET_KEY);
+		// was:
+//		authentSEOMoz.setAccessID(Constants.GARYS_ACCESS_ID);
+//		authentSEOMoz.setSecretKey(Constants.GARYS_SECRET_KEY);
+		// is:
+//		authentSEOMoz.setAccessID(Constants.ALANS_ACCESS_ID);
+//		authentSEOMoz.setSecretKey(Constants.ALANS_SECRET_KEY);
+		//3rd try:
+		authentSEOMoz.setAccessID(Constants.ALANS_HOTMAIL_ACCESS_ID);
+		authentSEOMoz.setSecretKey(Constants.ALANS_HOTMAIL_SECRET_KEY);
+		
 
 	}
 

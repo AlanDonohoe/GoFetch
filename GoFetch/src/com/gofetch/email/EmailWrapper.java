@@ -2,6 +2,7 @@ package com.gofetch.email;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -11,12 +12,33 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.gofetch.seomoz.SEOMozImplFreeAPI;
+
+/**
+ * Wraps standard email functionality
+ * @author alandonohoe
+ *
+ */
 public class EmailWrapper {
 
-	public static void SendEmail(String toAddress, String toPersonalName, 
+	private static Logger log = Logger.getLogger(EmailWrapper.class.getName());
+
+	public static void sendEmail(Email email) throws Exception{
+		
+		sendEmail(email.getToAddress(), email.getToPersonalName(),
+					email.getFromAddress(), email.getFromPersonalName(),
+					email.getMsgText(), email.getMsgSubject());
+	}
+
+	public static void sendEmail(String toAddress, String toPersonalName, 
 			String fromAddress, String fromPersonalName,
 			String msgText,
-			String msgSubject){
+			String msgSubject) throws Exception{
+		
+		if(toAddress.isEmpty() || toPersonalName.isEmpty() || fromAddress.isEmpty() || 
+				fromPersonalName.isEmpty() || fromPersonalName.isEmpty() || msgText.isEmpty()
+				|| msgSubject.isEmpty())
+			throw(new Exception("One of more email fields are empty"));
 
 		Properties props = new Properties();
 		Session session = Session.getDefaultInstance(props, null);
@@ -24,29 +46,24 @@ public class EmailWrapper {
 		try {
 			Message msg = new MimeMessage(session);
 
-			//New:
-				msg.setFrom(new InternetAddress(fromAddress, fromPersonalName));
-				msg.addRecipient(Message.RecipientType.TO,
-						new InternetAddress(toAddress, toPersonalName));
-				msg.setSubject(msgSubject);
-				msg.setText(msgText);         
+			msg.setFrom(new InternetAddress(fromAddress, fromPersonalName));
+			msg.addRecipient(Message.RecipientType.TO,
+					new InternetAddress(toAddress, toPersonalName));
+			msg.setSubject(msgSubject);
+			msg.setText(msgText);         
 
-				// OLD
-				//         msg.setFrom(new InternetAddress("admin@example.com", "Example.com Admin"));
-				//         msg.addRecipient(Message.RecipientType.TO,
-				//                          new InternetAddress("alandonohoe123@gmail.com", "Mr. User"));
-				//         msg.setSubject("Your Example.com account has been activated");
-				//         msg.setText("Hello World");
-
-
-				Transport.send(msg);
+			Transport.send(msg);
 
 		} catch (AddressException eAd) {
-			//TODO ...
+			log.warning(eAd.getMessage());
+			throw(eAd);
 		} catch (MessagingException eMsg) {
-			//TODO ...
+			log.warning(eMsg.getMessage());
+			throw(eMsg);
 		} catch (UnsupportedEncodingException e) {
-			//TODO ...
+			log.warning(e.getMessage());
+			throw(e);
 		}
 	}
+	
 }

@@ -498,7 +498,7 @@ public class URLDBService implements Serializable{
 
 	@SuppressWarnings("unchecked")
 	public Integer getURLIDFromAddress(String urlAddress){
-
+		log.info("Entering getURLIDFromAddress()");
 		Integer url_id;
 		List<URL> result = null;
 
@@ -518,11 +518,12 @@ public class URLDBService implements Serializable{
 			mgr.close();
 		}
 		if (result == null || result.isEmpty()) {
+			log.info("Could not find URL: " + urlAddress);
 			return 0;
 		}
 
 		url_id = result.get(0).getId();
-
+		log.info("url_id: " + url_id);
 		return url_id;
 	}
 
@@ -592,8 +593,6 @@ public class URLDBService implements Serializable{
 		}  finally {
 			mgr.close();
 		}
-
-
 	}
 	
 	/**
@@ -630,7 +629,7 @@ public class URLDBService implements Serializable{
 			String msg = "Exception thrown: URLService: updateURLDomainAuthorityData";
 			
 			log.severe(msg + e.getMessage());
-			throw(e);
+			throw(e); 
 
 		}  finally {
 			mgr.close();

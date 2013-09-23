@@ -16,7 +16,6 @@ public class ClientAndTUrls implements Serializable{
 	List<URLAndBoolSelection> urls; // and client's associated target URLs
 	boolean selected; // if user selects the client and thus all client's target urls
 						// if this is selected true - then cascade down to all client's t-urls
-	
 	String id; // used by client side JS script to hide & show panel with this data in.
 	
 	static int instanceCounter = 0;
@@ -45,8 +44,6 @@ public class ClientAndTUrls implements Serializable{
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
-	
-	
 	
 	public String getId() {
 		return id;

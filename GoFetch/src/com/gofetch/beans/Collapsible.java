@@ -53,8 +53,6 @@ public class Collapsible implements Serializable {
         boolean selected;
          
         // getters and setters
-        
-        
         public String getId () {
             return id;
         }
@@ -67,7 +65,6 @@ public class Collapsible implements Serializable {
 		public void setId (String s) {
             id=s;
         }
-        // Other getters and setters
 		public String getTitle() {
 			return title;
 		}
