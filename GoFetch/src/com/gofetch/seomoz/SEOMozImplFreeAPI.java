@@ -169,9 +169,9 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 			if (calledOnce) /// no need to call the first time.. 
 			{
 				try {
-					log.info("Entering Sleep");
+					//log.info("Entering Sleep");
 					Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY); 
-					log.info("Exiting Sleep");
+					//log.info("Exiting Sleep");
 				} catch (InterruptedException ex) {
 
 					// from: http://stackoverflow.com/questions/9139128/a-sleeping-thread-is-getting-interrupted-causing-loss-of-connection-to-db

@@ -30,10 +30,17 @@ public class User implements Serializable {
 	private String password;
 	
 	private String email;
-	
 	private String displayed_name;
-	
 	private boolean client;
+	private boolean administrator;
+
+	public boolean isAdministrator() {
+		return administrator;
+	}
+
+	public void setAdministrator(boolean administrator) {
+		this.administrator = administrator;
+	}
 
 	public Integer getId() {
 		return id;

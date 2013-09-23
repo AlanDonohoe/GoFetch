@@ -114,7 +114,7 @@ public class ConnectionUtil {
 		for (int i = 0 ; i < retries ; i++) {
 
 			try {
-
+				log.info("i: " + i);
 				System.setProperty("http.keepAlive", "false"); // fix for seomoz.api/links  timeout issue....
 				connection= (HttpURLConnection) url.openConnection();
 				connection.setConnectTimeout(timeout);

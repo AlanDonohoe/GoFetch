@@ -116,7 +116,7 @@ public class UserDBService {
 		EntityManager mgr = emf.createEntityManager();
 
 		try { 														
-			administrators= (List<User>) mgr.createQuery("SELECT u FROM User u WHERE u.administrator")
+			administrators= (List<User>) mgr.createQuery("SELECT u FROM User u WHERE u.administrator = true")
 					.getResultList();
 		}catch(Exception e){
 			String msg = "Exception thrown. UserDBService::getAdministrator";
