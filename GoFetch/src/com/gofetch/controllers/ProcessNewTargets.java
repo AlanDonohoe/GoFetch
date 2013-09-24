@@ -133,18 +133,18 @@ public class ProcessNewTargets extends HttpServlet {
 					backLinks = seoMoz.getLinks(currentTargetAddress);
 				} catch (Exception e) {
 					String msg = "Exception thrown getting backlink data for: "
-							+ currentTargetAddress + "- SEOMoz block 1: seoMoz.getLinks(...). Exception - ";
-					log.warning(msg + e.getMessage());
+							+ currentTargetAddress + ": " + e.getMessage();
+					log.warning(msg);
 
 					getLinksSuccessful = false;
 					
-					AdminEmailHelper emailHelper = new AdminEmailHelper();
-					
-					try {
-						emailHelper.sendWarningEmailToAdministrator(msg);
-					} catch (Exception emailEx) {
-						log.warning(emailEx.getMessage());
-					}
+//					AdminEmailHelper emailHelper = new AdminEmailHelper();
+//					
+//					try {
+//						emailHelper.sendWarningEmailToAdministrator(msg);
+//					} catch (Exception emailEx) {
+//						log.warning(emailEx.getMessage());
+//					}
 				}
 				// this section below ONLY called if we have has a successful call to SEOMoz - even if there's no links for this target.
 				if(getLinksSuccessful){

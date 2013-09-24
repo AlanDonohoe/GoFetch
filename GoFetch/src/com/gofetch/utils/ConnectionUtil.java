@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import com.gofetch.seomoz.Constants;
 
 /**
  * 
@@ -22,11 +23,7 @@ import java.util.logging.Logger;
  */
 public class ConnectionUtil {
 
-	//public static final String TAG = "ConnectionUtil"; // used for logging
-	// errors
 	private static Logger log = Logger.getLogger(ConnectionUtil.class.getName()); // used for logging errors
-	private static int timeout = 60000; // no of milliseconds to wait before calling time out
-	private static int retries = 10;
 
 	/**
 	 * 
@@ -96,13 +93,14 @@ public class ConnectionUtil {
 	 * @return the http get response
 	 * @throws Exception 
 	 */
-	public static String makeRequest(String urlToFetch) throws Exception {
+	public static String get(String urlToFetch) throws Exception {
 
 		String line, responseBody = "";
 		URL url;
 		HttpURLConnection connection = null;
 		int http_status;
 		BufferedReader reader = null;
+		InputStream in = null;
 
 		try{
 			url = new URL(urlToFetch);
@@ -111,102 +109,38 @@ public class ConnectionUtil {
 			throw (e);
 		}
 
-		for (int i = 0 ; i < retries ; i++) {
+		try {
 
-			try {
-				log.info("i: " + i);
-				System.setProperty("http.keepAlive", "false"); // fix for seomoz.api/links  timeout issue....
-				connection= (HttpURLConnection) url.openConnection();
-				connection.setConnectTimeout(timeout);
-				connection.setReadTimeout(timeout);
+			System.setProperty("http.keepAlive", "false"); // fix for seomoz.api/links  timeout issue....
+			connection= (HttpURLConnection) url.openConnection();
+			connection.setConnectTimeout(Constants.TIMEOUT);
+			connection.setReadTimeout(Constants.TIMEOUT);
+			connection.setRequestProperty("Connection", "close");
 
-				reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			in = connection.getInputStream();
+			reader=new BufferedReader(new InputStreamReader(in));
+			http_status = connection.getResponseCode();
 
-				http_status = connection.getResponseCode();
-
-				if (http_status / 100 != 2) {
-					log.warning(http_status + " status back from: " + urlToFetch);
-				}
-
-			} catch (IOException e) {
-				log.warning(e.getMessage() + "fail no: " + i);
-				connection.disconnect(); 
-				reader.close();
-				continue;
+			if (http_status / 100 != 2) {
+				log.warning(http_status + " status back from: " + urlToFetch);
 			}
 
 			while ((line = reader.readLine()) != null) {
 				responseBody += line;
 			}
 
+			return responseBody;
+
+		}catch (Exception e){
+			log.severe(e.getMessage());
+			throw (e);
+
+		} finally {
 			connection.disconnect(); 
 			reader.close();
-
-			return responseBody;
 		}
-
-
-		//		try {
-
-
-		//			System.setProperty("http.keepAlive", "false"); // fix for seomoz.api/links  timeout issue....
-		//			connection= (HttpURLConnection) url.openConnection();
-		//			connection.setConnectTimeout(timeout);
-		//			connection.setReadTimeout(timeout);
-		//
-		//			reader = new BufferedReader(new InputStreamReader(url.openStream()));
-		//		
-		//			http_status = connection.getResponseCode();
-		//
-		//			if (http_status / 100 != 2) {
-		//				log.warning(http_status + " status back from: " + urlToFetch);
-		//			}
-
-		//			while ((line = reader.readLine()) != null) {
-		//				responseBody += line;
-		//			}
-		//
-		//			reader.close();
-		//
-		//		}catch (IOException e){
-		//						http_status = ((HttpURLConnection)connection).getResponseCode();
-		//						log.severe("makeRequest Error:" + e.getMessage());
-		//						throw (e);
-
-		//			try {
-		//				int ret = 0;
-		//				String errorResp = "";
-		//
-		//				http_status = ((HttpURLConnection)connection).getResponseCode();
-		//				log.severe("http_status: " + http_status);
-		//				es = ((HttpURLConnection)connection).getErrorStream();
-		//
-		//				// read the error response body
-		//				while ((ret = es.read(buf)) > 0) {
-		//					errorResp += buf.toString();
-		//				}
-		//				log.severe(errorResp);
-		//				// close the errorstream
-		//				es.close();
-		//				throw (e);
-
-		//			} catch(IOException ex) {
-		//				
-		//				log.severe("Inner exception block: " +ex.getMessage());
-		//				throw (ex);
-		//			}
-
-
-		//	} finally {
-		//		connection.disconnect(); 
-		//		reader.close();
-		//		//es.close();
-		//	}
-		connection.disconnect(); 
-		reader.close();
-
-		throw(new Exception("Exceeded max no of retries: " + retries));
 	}
+
 
 	// see:
 	// http://stackoverflow.com/questions/2295221/java-net-url-read-stream-to-byte

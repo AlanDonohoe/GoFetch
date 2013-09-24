@@ -235,7 +235,7 @@ public class ManualSocialDataImpl implements SocialData {
 		Integer socialCount;
 
 		try {
-			response = ConnectionUtil.makeRequest(request);
+			response = ConnectionUtil.get(request);
 		} catch (Exception e) {
 
 			return null;
@@ -326,7 +326,7 @@ public class ManualSocialDataImpl implements SocialData {
 				+ url + GoFetchConstants.faceBookPostEndPoint;
 
 		try {
-			response = ConnectionUtil.makeRequest(faceBookEndPoint);
+			response = ConnectionUtil.get(faceBookEndPoint);
 		} catch (Exception e) {
 
 			return null;

@@ -42,7 +42,7 @@ public class SharedCountImpl implements SocialData{
 	
 		try{
 
-			response = ConnectionUtil.makeRequest(sharedCountURL);
+			response = ConnectionUtil.get(sharedCountURL);
 
 		} catch (Exception e){
 			String msg = "Exception thrown... target url = " + url + " SharedCountImpl: getAllSocialData";

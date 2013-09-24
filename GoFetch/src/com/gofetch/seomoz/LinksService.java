@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.logging.Logger;
 
+import com.gofetch.email.AdminEmailHelper;
 import com.gofetch.json.JsonWrapper;
 import com.gofetch.seomoz.Authenticator;
 import com.gofetch.utils.ConnectionUtil;
 import com.gofetch.utils.HttpResponseReader;
+import com.google.api.server.spi.Constant;
 
 /**
  * 
@@ -20,7 +22,7 @@ import com.gofetch.utils.HttpResponseReader;
  */
 public class LinksService {
 	private Authenticator authenticator;
-	
+
 	private static Logger log = Logger.getLogger(LinksService.class
 			.getName());
 
@@ -69,21 +71,23 @@ public class LinksService {
 	public String getLinks(String objectURL, String scope, String filters,
 			String sort, long colSource, long colTarget, long colLink,
 			int offset, int limit) throws IOException, Exception{
-		
-		log.info("Entering getLinks(...)");
-		
+
+		log.info("Entering getLinks");
+		int counter = 0;
+		boolean success = false;
+
 		String response= "";
 		// TODO: replace depreciated method -
 		// http://stackoverflow.com/questions/213506/java-net-urlencoder-encodestring-is-deprecated-what-should-i-use-instead
 		String urlToFetch = "http://lsapi.seomoz.com/linkscape/links/"
 				+ URLEncoder.encode(objectURL, "UTF-8") + "?"
 				+ authenticator.getAuthenticationStr();
-		
+
 		//29-7-13: getting issues with the encoded URL, not getting back links....
 		//alternative:
-//		String urlToFetch = "http://lsapi.seomoz.com/linkscape/links/"
-//				+ objectURL + "?"
-//				+ authenticator.getAuthenticationStr();
+		//		String urlToFetch = "http://lsapi.seomoz.com/linkscape/links/"
+		//				+ objectURL + "?"
+		//				+ authenticator.getAuthenticationStr();
 
 		if (scope != null) {
 			urlToFetch = urlToFetch + "&Scope=" + scope;
@@ -112,32 +116,50 @@ public class LinksService {
 		}
 
 		log.info("urlToFetch: " + urlToFetch);
-		
-		try{
-		
-		response = ConnectionUtil.makeRequest(urlToFetch);
-		}catch(Exception e){
-			log.severe(e.getMessage());
-			// send up stack so that we will NOT set "backlinks_got = true"
-			throw(e);
-		}
-		
-		if(null == response){
-			throw (new Exception("null response from: " + urlToFetch));
-		}
-		
-		//these JSON assistant methods - were causing more exceptions than they were worth..
-		
-//		if(!HttpResponseReader.successfulResponse(response)){
-//			
-//			log.info("Call unsuccessful");
-//			
-//			String errMsg = JsonWrapper.getJsonString(response, "error_message");
-//			Exception exp = new Exception(errMsg);
-//			
-//			throw (exp);
-//		}	
 
+		while(!success && (counter++ < Constants.HTTP_RETRIES )){
+			log.info("Try no: " + counter);
+			
+			if(counter > 1){
+				try {
+					log.info("Entering Sleep");
+					Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
+					log.info("Exiting Sleep");
+				} catch (InterruptedException e) {}
+			}
+
+			try{
+				response = ConnectionUtil.get(urlToFetch);
+				success = true;
+			}catch(Exception e){
+				log.severe(e.getMessage());
+				success = false;
+				// send up stack so that we will NOT set "backlinks_got = true"
+				//throw(e);
+				// new: loop x times, so that we can deal with retrying  
+
+			}
+
+			if(null == response){
+				log.warning("response == null");
+				success = false;
+				//throw (new Exception("null response from: " + urlToFetch));
+			}
+			
+			if(response.isEmpty()){
+				log.warning("response.isEmpty");
+				success = false;
+			}
+		}
+		//finally, if the request has failed Constants.HTTP_RETRIES times...
+		if(false == success){
+			AdminEmailHelper emailHelper = new AdminEmailHelper();
+			
+			try {
+				emailHelper.sendWarningEmailToAdministrator("In: " + LinksService.class
+						.getName() + "\n After " +Constants.HTTP_RETRIES + " attempts. Failed to get: " + urlToFetch);
+			} catch (Exception emailEx) {}
+		}
 		return response;
 	}
 

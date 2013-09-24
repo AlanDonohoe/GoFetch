@@ -61,7 +61,7 @@ public class URLMetricsService
 		
 		log.info("urlToFetch:" + urlToFetch);
 		
-		String response = ConnectionUtil.makeRequest(urlToFetch);
+		String response = ConnectionUtil.get(urlToFetch);
 		
 		log.info("response:" + response);
 		

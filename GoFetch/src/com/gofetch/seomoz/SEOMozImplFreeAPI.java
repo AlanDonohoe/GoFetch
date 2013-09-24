@@ -122,7 +122,7 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 
 		boolean calledOnce = false; // used in timer delay to hit SEOMoz server multiple times....
 		boolean moreLinksLeft = true; // flag set to false when SEOMoz not sending back any more links...
-		String response = null;
+		String response = null, noBackLinks;
 		String urlMinusHttp = urlTarget.replaceFirst("http://", ""); // SEOMoz server must have http:// removed from url
 
 		ArrayList<URLPlusDataPoints> tempLinks     = new ArrayList<URLPlusDataPoints>();  
@@ -141,7 +141,7 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 		//////////////
 		// get total no of links for this target URL:
 		try{
-			String noBackLinks = getNoOfBackLinks(urlMinusHttp); // could use this in the loop to check for more links below...
+			noBackLinks = getNoOfBackLinks(urlMinusHttp); // could use this in the loop to check for more links below...
 			log.info("noBackLinks: " + noBackLinks);
 		}catch(Exception e){
 			log.warning("Problem getting no of backlinks for: " + urlMinusHttp + " " + e.getMessage());
@@ -204,8 +204,6 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 
 			if (response.length() > 2) { // check for "[]" = empty response
 
-				//22-7-13: bug here: SEOMoz returning "wrong" kind of JSON: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was BEGIN_OBJECT
-				//OLD:
 				tempLinks = gson.fromJson(response, linksListType);
 
 				int linksSubSetSize = tempLinks.size();
