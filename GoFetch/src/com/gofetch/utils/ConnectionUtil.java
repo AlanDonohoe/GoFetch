@@ -95,6 +95,8 @@ public class ConnectionUtil {
 	 */
 	public static String get(String urlToFetch) throws Exception {
 
+		log.info("Entering get: " + urlToFetch);
+		
 		String line, responseBody = "";
 		URL url;
 		HttpURLConnection connection = null;
@@ -123,6 +125,7 @@ public class ConnectionUtil {
 
 			if (http_status / 100 != 2) {
 				log.warning(http_status + " status back from: " + urlToFetch);
+				throw(new Exception(String.valueOf(http_status)));
 			}
 
 			while ((line = reader.readLine()) != null) {

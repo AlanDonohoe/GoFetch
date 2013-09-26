@@ -126,12 +126,7 @@ public class MiscSocialDataDBService {
 	public List<MiscSocialData> getAllSocialData(int url_id){
 
 		List<MiscSocialData> result = null;
-
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
 		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 
@@ -149,13 +144,6 @@ public class MiscSocialDataDBService {
 	
 	public void deleteSocialData(int url_id){
 		
-		//log.info("Entering deleteSocialData.");
-
-		//OLD
-//		emf = Persistence.createEntityManagerFactory("GoFetch");
-//		EntityManager mgr = emf.createEntityManager();
-		
-		// NEW
 		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		EntityManager mgr = emf.createEntityManager();
 		
@@ -177,9 +165,28 @@ public class MiscSocialDataDBService {
 				mgr.close();
 			}
 
+	}
 
-		//log.info("Exiting deleteSocialData.");
+	/**
+	 * 
+	 * @return count of all social data entries
+	 */
+	public int getNoOfTotalSocialData() {
 
+		int result;
+
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+
+		try {
+			result = ((Number) mgr.createQuery("SELECT COUNT(u) FROM MiscSocialData u")
+					.getSingleResult()).intValue();
+
+		} finally {
+			mgr.close();
+		}
+
+		return result;
 	}
 
 }

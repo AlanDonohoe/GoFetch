@@ -149,17 +149,12 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 		
 		// now need to make sleep until next call:
 		try {
-			log.info("Entering Sleep");
+			//log.info("Entering Sleep");
 			Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY); 
-			log.info("Exiting Sleep");
+			//log.info("Exiting Sleep");
 		} catch (InterruptedException ex) {
-
 			// from: http://stackoverflow.com/questions/9139128/a-sleeping-thread-is-getting-interrupted-causing-loss-of-connection-to-db
 			Thread.currentThread().interrupt(); // restore interrupted status
-
-			String msg = "InterruptedException: ";
-
-			log.severe(msg + ex.getMessage());
 		}
 		
 
@@ -173,13 +168,8 @@ public class SEOMozImplFreeAPI implements SEOMoz {
 					Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY); 
 					//log.info("Exiting Sleep");
 				} catch (InterruptedException ex) {
-
 					// from: http://stackoverflow.com/questions/9139128/a-sleeping-thread-is-getting-interrupted-causing-loss-of-connection-to-db
 					Thread.currentThread().interrupt(); // restore interrupted status
-
-					String msg = "InterruptedException: ";
-
-					log.severe(msg + ex.getMessage());
 				}
 
 			}else{ // one time only code:

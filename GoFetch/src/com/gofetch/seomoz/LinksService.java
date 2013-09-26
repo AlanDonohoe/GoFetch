@@ -75,6 +75,7 @@ public class LinksService {
 		log.info("Entering getLinks");
 		int counter = 0;
 		boolean success = false;
+		String errorMessage = "";
 
 		String response= "";
 		// TODO: replace depreciated method -
@@ -117,47 +118,45 @@ public class LinksService {
 
 		log.info("urlToFetch: " + urlToFetch);
 
+		// repeat until we have got some response or exceeded no of retries
 		while(!success && (counter++ < Constants.HTTP_RETRIES )){
 			log.info("Try no: " + counter);
 			
-			if(counter > 1){
-				try {
-					log.info("Entering Sleep");
-					Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
-					log.info("Exiting Sleep");
-				} catch (InterruptedException e) {}
+			//Sleep: so to stay within free quota limits 
+			try {
+				Thread.sleep(Constants.FREE_API_SEOMOZ_SERVER_DELAY);
+			} catch (InterruptedException e) {
+				// from: http://stackoverflow.com/questions/9139128/a-sleeping-thread-is-getting-interrupted-causing-loss-of-connection-to-db
+				Thread.currentThread().interrupt(); // restore interrupted status
 			}
 
 			try{
 				response = ConnectionUtil.get(urlToFetch);
 				success = true;
 			}catch(Exception e){
-				log.severe(e.getMessage());
+				errorMessage = e.getMessage();
+				log.severe(errorMessage);
 				success = false;
-				// send up stack so that we will NOT set "backlinks_got = true"
-				//throw(e);
-				// new: loop x times, so that we can deal with retrying  
-
 			}
 
 			if(null == response){
-				log.warning("response == null");
+				errorMessage = "response == null";
+				log.warning(errorMessage);
 				success = false;
-				//throw (new Exception("null response from: " + urlToFetch));
 			}
-			
+
 			if(response.isEmpty()){
-				log.warning("response.isEmpty");
+				errorMessage = "response.isEmpty";
+				log.warning(errorMessage);
 				success = false;
 			}
 		}
 		//finally, if the request has failed Constants.HTTP_RETRIES times...
 		if(false == success){
 			AdminEmailHelper emailHelper = new AdminEmailHelper();
-			
 			try {
 				emailHelper.sendWarningEmailToAdministrator("In: " + LinksService.class
-						.getName() + "\n After " +Constants.HTTP_RETRIES + " attempts. Failed to get: " + urlToFetch);
+						.getName() + "\n After " +Constants.HTTP_RETRIES + " attempts. Failed to get: " + urlToFetch + " "+ errorMessage);
 			} catch (Exception emailEx) {}
 		}
 		return response;

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gofetch.GoFetchConstants;
+import com.gofetch.email.AdminEmailHelper;
 import com.gofetch.entities.MiscSocialData;
 import com.gofetch.entities.MiscSocialDataDBService;
 import com.gofetch.entities.URL;
@@ -86,7 +87,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 		MiscSocialDataDBService socialDataDBUnit = null;
 		URLDBService urlDBUnit = null;
 
-		int i = 0;
+		int i = 0, noOfMiscSocialDataStart = 0, noOfMiscSocialDataEnd, noOfSocialURLsStart, noOfSocialURLsEnd;
 
 		String urlAddressNoSlash, urlAddressSlash, urlAddress, noOfSocialURLs = null, urlAddressEncoded;
 
@@ -101,6 +102,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 			// used as the more costly, manual backup social data service	
 			manualSocialData = new ManualSocialDataImpl();
+			
 
 
 			// get urls where get social data = true 
@@ -113,7 +115,9 @@ public class URLsSocialDataCrawl extends HttpServlet {
 			// previous entry... update if true.
 
 			noOfSocialURLs = String.valueOf(urls.size());
-
+			
+			//For testing that we are actually successfully increasing the number of social data entry
+			noOfMiscSocialDataStart = socialDataDBUnit.getNoOfTotalSocialData();
 
 
 		}catch(Exception e){
@@ -149,20 +153,6 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 			}
 
-			// and spaces: - this seems to be breaking Google+ calls
-			if(urlAddress.contains(" ")){
-				log.info("URL contains spaces. Encoding: " + urlAddress);
-//				try {
-//					urlAddress = URLEncoder.encode(urlAddress, "UTF-8");
-//				} catch (UnsupportedEncodingException e1) {
-//
-//					log.warning("Problem encoding: " + urlAddress + "" + e1.getMessage());
-//				}
-//				log.info("Is now: " + urlAddress);
-
-			}
-
-
 			i++;
 
 			log.info(String.valueOf(i) + " of " + noOfSocialURLs + " : " + urlAddress);
@@ -187,11 +177,6 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 
 			} catch (Exception e) {
-				//					String msg = "Manual Implementation Social data for: "
-				//							+ urlAddressSlash + " failed"
-				//							+ ". URLsSocialDataCrawl: getURLSocialData.  \n";
-				//					log.severe(msg + e.getMessage());
-
 				manualSocialDataGot = false;
 			}
 
@@ -240,8 +225,21 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 				log.severe(msg);
 
-
 				// maybe check here for a 404 - and if true - then delete url?
+			}
+		}
+		
+		noOfMiscSocialDataEnd = socialDataDBUnit.getNoOfTotalSocialData();
+		
+		if(noOfMiscSocialDataStart >= noOfMiscSocialDataEnd){
+			
+			AdminEmailHelper emailAdmin = new AdminEmailHelper();
+			
+			try {
+				emailAdmin.sendWarningEmailToAdministrator("URLsSocialCrawl broken: noOfMiscSocialDataStart >= noOfMiscSocialDataEnd \n"
+						+ "noOfMiscSocialDataStart: " + noOfMiscSocialDataStart + " noOfMiscSocialDataEnd: " + noOfMiscSocialDataEnd);
+			} catch (Exception e) {
+				log.warning("Problem Sending email");
 			}
 		}
 	}
@@ -558,9 +556,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 
 		urlDBUnit.updateSocialFrequencyData(currentURL);
 
-
 	}
-
 
 }
 

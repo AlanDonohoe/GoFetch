@@ -167,8 +167,6 @@ public class URLDBService implements Serializable{
 		
 		//return result;
 	
-
-			
 	}
 
 	@SuppressWarnings("unchecked")
@@ -193,7 +191,7 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.warning("No URLs returned");
 		}
-		log.info("Exiting getURLAddresses");
+		
 		return result;
 	}
 
@@ -241,7 +239,6 @@ public class URLDBService implements Serializable{
 		finally {
 			mgr.close();
 		}
-		log.info("Exiting createURL");
 		return urlInDB;
 	}
 
@@ -270,7 +267,6 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.warning("URLDBService: getURL(int id) - No URLs returned, for id:" + id);
 		}
-		log.info("Exiting getURL");
 		return result;
 	}
 
@@ -301,8 +297,6 @@ public class URLDBService implements Serializable{
 		} finally {
 			mgr.close();
 		}
-
-		log.info("Exiting getURL");
 
 		if((null == url) || (url.isEmpty()))
 			return null;
@@ -336,7 +330,7 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.warning("No URLs returned");
 		}
-		log.info("Exiting getURLs");
+		
 		return result;
 	}
 
@@ -365,7 +359,6 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.warning("No URLs returned");
 		}
-		log.info("Exiting getURLs");
 		return result;
 
 	}
@@ -382,8 +375,6 @@ public class URLDBService implements Serializable{
 		Date todaysDate = DateUtil.getTodaysDate();
 
 		result = getURLs(todaysDate);
-
-		log.info("Exiting getTodaysURLs");
 
 		return result;
 
@@ -418,7 +409,6 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.warning("No URLs returned");
 		}
-		log.info("Exiting getYesterdaysURLs");
 		return result;
 	}
 
@@ -434,8 +424,6 @@ public class URLDBService implements Serializable{
 		Date yestDate = DateUtil.getYesterDaysDate();
 
 		result = getURLs(yestDate);
-
-		log.info("Exiting getYesterdaysURLs");
 
 		return result;
 
@@ -472,7 +460,6 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.warning("No URLs returned");
 		}
-		log.info("Exiting getURLsBetween");
 		return result;
 
 	}
@@ -813,7 +800,6 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.warning("No SociallyTracked URLs returned");
 		}
-		log.info("Exiting getSociallyTrackedURLs");
 		return result;
 
 	}
@@ -854,7 +840,6 @@ public class URLDBService implements Serializable{
 			mgr.close();
 		}
 
-		log.info("Exiting getURLsFromIDs");
 		return urls;
 
 	}
@@ -929,9 +914,28 @@ public class URLDBService implements Serializable{
 			mgr.close();
 		}
 
+	}
+	
+	public Integer getNoOfUnProccessedTUrls(){
 
-		log.info("Exiting deleteURL.");
+		log.info("Entering getNoOfUnProccessedTUrls");
 
+		Integer result = null;
+
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+		try {
+			result = ((Number) mgr.createQuery("SELECT COUNT(u) FROM URL u WHERE u.get_backlinks = TRUE and u.backlinks_got = false")
+					.getSingleResult()).intValue();
+		
+		}catch(Exception e){
+			log.severe(e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		return result;
 	}
 
 	/*
@@ -961,7 +965,6 @@ public class URLDBService implements Serializable{
 			mgr.close();
 		}
 
-		log.info("Exiting getUnproccessedTargetURLs");
 		return urls;
 
 	}
@@ -1062,7 +1065,7 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.warning("No URLs returned");
 		}
-		log.info("Exiting getURLs");
+		
 		return result;
 
 	}
@@ -1100,7 +1103,7 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.info("No URLs returned");
 		}
-		log.info("Exiting getURLsOfClientCategory");
+		
 		return result;
 	}
 	
@@ -1140,7 +1143,7 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.info("No URLs returned");
 		}
-		log.info("Exiting getURLsOfClientCategory");
+		
 		return result;
 		
 		
@@ -1231,7 +1234,7 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.warning("No URLs returned");
 		}
-		log.info("Exiting getURLs");
+		
 		return result;
 	}
 
@@ -1331,7 +1334,7 @@ public class URLDBService implements Serializable{
 		if (result == null) {
 			log.info("No URLs with images returned");
 		}
-		log.info("Exiting getURLsWithImage");
+		
 		return result;
 	}
 	
