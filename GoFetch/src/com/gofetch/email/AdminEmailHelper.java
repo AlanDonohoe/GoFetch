@@ -17,7 +17,7 @@ public class AdminEmailHelper extends EmailWrapper{
 	private static Logger log = Logger.getLogger(AdminEmailHelper.class.getName());
 	
 	private String emailInfoTitle = "GoFetch Info Email", emailWarningTitle = "GoFetch Warning Email", emailSevereTitle = "GoFetch Severe Email", 
-			emailFromAddress = "gofetch@gofetchdata.appspotmail.com",fromPersonalName = "GoFetch" ;
+			emailFromAddress = "gofetch@gofetchdata.appspotmail.com",fromPersonalName = "GoFetch";
 	
 	public AdminEmailHelper(){
 		
