@@ -13,6 +13,7 @@ import javax.persistence.Query;
 //import javax.persistence.PersistenceUnit;
 import javax.persistence.TemporalType;
 
+import com.gofetch.GoFetchConstants;
 import com.gofetch.images.ImageConstants;
 import com.gofetch.utils.DateUtil;
 import com.gofetch.utils.TextUtil;
@@ -1227,6 +1228,41 @@ public class URLDBService implements Serializable{
 			String msg = "Exception thrown. URLService: getURLs";
 
 			log.severe(msg + e.getMessage());
+
+		} finally {
+			mgr.close();
+		}
+		if (result == null) {
+			log.warning("No URLs returned");
+		}
+		
+		return result;
+	}
+	
+
+	/**
+	 * 
+	 * @return all URLs that have their social_data date set for today or before, ordered by url_id
+	 * max ever pulled: GoFetchConstants.MAX_NO_OF_SOCIAL_URLS
+	 */
+	@SuppressWarnings("unchecked")
+	public List<URL> getAllTodaysSocialCrawlURLs() {
+		log.info("Entering getTodaysSocialCrawlURLs");
+		List<URL> result = null;
+		Date date = DateUtil.getTodaysDate();
+
+		EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
+		EntityManager mgr = emf.createEntityManager();
+		
+
+		try {
+			result =  (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date ORDER BY u.url_id")
+					.setParameter("date", date, TemporalType.DATE)
+					.setMaxResults(GoFetchConstants.MAX_NO_OF_SOCIAL_URLS)
+					.getResultList();
+
+		}catch(Exception e){
+			log.severe(e.getMessage());
 
 		} finally {
 			mgr.close();

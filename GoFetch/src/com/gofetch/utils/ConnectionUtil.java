@@ -95,7 +95,7 @@ public class ConnectionUtil {
 	 */
 	public static String get(String urlToFetch) throws Exception {
 
-		log.info("Entering get: " + urlToFetch);
+		//log.info("Entering get: " + urlToFetch);
 		
 		String line, responseBody = "";
 		URL url;

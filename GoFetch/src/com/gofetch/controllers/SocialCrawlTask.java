@@ -20,64 +20,90 @@ import com.gofetch.entities.URLDBService;
 import com.gofetch.socialdata.ManualSocialDataImpl;
 import com.gofetch.socialdata.SocialData;
 import com.gofetch.utils.DateUtil;
+import com.gofetch.utils.LogUtils;
+import com.gofetch.utils.PerformanceUtils;
 
-/*
- * 14/1/2013 - moved the social data crawl to this servlet to separate processing new SEOMoz urls and social data crawl.
- * So now either can be called separately.
+/**
+ * Performs the social crawl of URLs, called only from GAE's push queue
+ * @author alandonohoe
+ *
  */
+public class SocialCrawlTask extends HttpServlet {
 
-public class URLsSocialDataCrawl extends HttpServlet {
-
-	private static final long serialVersionUID = 1L; 
-
-	private static Logger log = Logger.getLogger(ProcessNewTargets.class
-			.getName());
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Logger log = Logger.getLogger(SocialCrawlTaskProducer.class.getName());
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
-
-		resp.setContentType("text/plain");
-
-		//TODO: put this in the admin table in DB.
-		int noOfURLsToCheck = 500; //GAE seems to have an issue getting more than 500...
-
-		getURLSocialData(noOfURLsToCheck);
-
-
-		try {
-			getServletContext().getRequestDispatcher("/index.jsf").forward(
-					req, resp);
-		} catch (ServletException e) {
-
-			String msg = "Exception thrown in URLsSocialDataCrawl\n";
-			log.severe(msg + e.getMessage());
-
-		}
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
+
+		log.info("Entering doGet");
+		log.info(LogUtils.listParams(req));
+
+		PerformanceUtils perf = null;// new PerformanceUtils(); // start timer
+		int noOfMiscSocialDataStart = 0, noOfMiscSocialDataEnd = 0;
+		List<Integer> urlIDs = LogUtils.getURLIDs(req); // get URLs ids from req object
+		MiscSocialDataDBService socialDataDBUnit =  new MiscSocialDataDBService();
+
+
+		try{
+			perf = new PerformanceUtils(); // start timer
+
+			urlIDs = LogUtils.getURLIDs(req); // get URLs ids from req object
+			socialDataDBUnit =  new MiscSocialDataDBService();
+
+			//For testing that we are actually successfully increasing the number of social data entry
+			noOfMiscSocialDataStart = socialDataDBUnit.getNoOfTotalSocialData();
+
+			log.info("No of URLs: " + urlIDs.size());
+
+			// get the url ids params and pass into social crawl function:
+			for(Integer urlID : urlIDs){
+				getURLSocialData(urlID);
+			}
+
+			//Test that we have actually decreased the number of social URLs to get data for
+			noOfMiscSocialDataEnd = socialDataDBUnit.getNoOfTotalSocialData();
+
+		}catch(Exception ex){
+			log.severe(ex.getMessage());
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return;
+		}
+
+		if(noOfMiscSocialDataStart >= noOfMiscSocialDataEnd){
+
+			AdminEmailHelper emailAdmin = new AdminEmailHelper();
+
+			try {
+				emailAdmin.sendWarningEmailToAdministrator("URLsSocialCrawl broken: noOfMiscSocialDataStart >= noOfMiscSocialDataEnd \n"
+						+ "noOfMiscSocialDataStart: " + noOfMiscSocialDataStart + " noOfMiscSocialDataEnd: " + noOfMiscSocialDataEnd);
+			} catch (Exception e) {
+				log.warning("Problem Sending email");
+			}
+		}
+
+		log.info("Time Taken to crawl " + urlIDs.size() + ": " + perf.getTime());
+		resp.setStatus(HttpServletResponse.SC_OK);
+
+	}
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		doGet(req, resp);
 	}
 
 
-	/**
-	 * retrieves a list of all urls in DB that have had their get "getSocialData
-	 * checkbox checked then checks each url to see if their current associated
-	 * data (FB & twitter) is different to what is saved previously in the DB.
-	 * If it is different: a new social entry is created with yesterdays date,
-	 * and the url's current data is persisted.
-	 * @param noOfURLsToCheck 
-	 */
-	private void getURLSocialData(int noOfURLsToCheck) {
+	private void getURLSocialData(int url_id) {
 
 		// 1: get list of all urls that have "get_social_data" checked...
 
-		// urls back from DB
-		List<URL> urls = null;
+		// url back from DB
+		URL url = null;
 
 		MiscSocialData socialDataAPINoSlash = null;
 		MiscSocialData socialDataAPISlash = null;
@@ -87,7 +113,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 		MiscSocialDataDBService socialDataDBUnit = null;
 		URLDBService urlDBUnit = null;
 
-		int i = 0, noOfMiscSocialDataStart = 0, noOfMiscSocialDataEnd, noOfSocialURLsStart, noOfSocialURLsEnd;
+		int noOfMiscSocialDataStart = 0, noOfMiscSocialDataEnd, noOfSocialURLsStart, noOfSocialURLsEnd;
 
 		String urlAddressNoSlash, urlAddressSlash, urlAddress, noOfSocialURLs = null, urlAddressEncoded;
 
@@ -107,15 +133,15 @@ public class URLsSocialDataCrawl extends HttpServlet {
 			//	and social data date <= todays date (not just = today's date, in case there was an error with updating the social date some urls would be left behind & lost)
 			// 11-1-13 - changed query so that most out of date urls are at the top of the list - ie: select ..... from url order by social_data_date asc;
 
-			urls = urlDBUnit.getTodaysSocialCrawlURLs(noOfURLsToCheck);
+			url = urlDBUnit.getURL(url_id);
+
 
 			// 2: loop through checking to see if their social data has changed from
 			// previous entry... update if true.
 
-			noOfSocialURLs = String.valueOf(urls.size());
-			
-			//For testing that we are actually successfully increasing the number of social data entry
-			noOfMiscSocialDataStart = socialDataDBUnit.getNoOfTotalSocialData();
+			//noOfSocialURLs = String.valueOf(urls.size());
+
+
 
 
 		}catch(Exception e){
@@ -123,123 +149,106 @@ public class URLsSocialDataCrawl extends HttpServlet {
 			log.severe("Exception: " + e.getMessage());
 		}
 
-		for (URL currentURL : urls) {
+		//for (URL currentURL : urls) {
 
-			// reset on every loop
-			socialDataAPINoSlash = null;
-			socialDataAPISlash = null;
-			assimilatedSocialData = null;
-			boolean manualSocialDataGot = true; 
-			double pcDifferenceBtwnSocialData;
+		// reset on every loop
+		socialDataAPINoSlash = null;
+		socialDataAPISlash = null;
+		assimilatedSocialData = null;
+		boolean manualSocialDataGot = true; 
+		double pcDifferenceBtwnSocialData;
 
-			urlAddress = currentURL.getUrl_address();
+		urlAddress = url.getUrl_address();
 
-			//TODO: there;s some issues with hashtags, and other non-text characters not getting any data back from any of the data providers
-			//	need to : encode: and test.. ex: http://www.visitnorway.com/uk/the-scream/#content - becomes - http%3A%2F%2Fwww.visitnorway.com%2Fuk%2Fthe-scream%2F%23content
-			// 	but still not getting all the data back  - but some - so for now, better than nothing...
+		//TODO: there;s some issues with hashtags, and other non-text characters not getting any data back from any of the data providers
+		//	need to : encode: and test.. ex: http://www.visitnorway.com/uk/the-scream/#content - becomes - http%3A%2F%2Fwww.visitnorway.com%2Fuk%2Fthe-scream%2F%23content
+		// 	but still not getting all the data back  - but some - so for now, better than nothing...
 
-			//TODO: add other chars here we want to encode: " ' " seemed to make subsequent calls to social APIs fail..
-			if(urlAddress.contains("#")){
-				log.info("URL contains #. Encoding: " + urlAddress);
-				try {
-					urlAddress = URLEncoder.encode(urlAddress, "UTF-8");
-				} catch (UnsupportedEncodingException e1) {
-
-					log.warning("Problem encoding: " + urlAddress + "" + e1.getMessage());
-				}
-				log.info("Is now: " + urlAddress);
-
-			}
-
-			i++;
-
-			log.info(String.valueOf(i) + " of " + noOfSocialURLs + " : " + urlAddress);
-
-			// remove final / if present...
-			if(urlAddress.endsWith("/")){
-				urlAddress = urlAddress.substring(0,(urlAddress.length() -1));
-			}
-
-			urlAddressNoSlash = urlAddress;
-			urlAddressSlash = urlAddress + "/";
-
-
-
+		//TODO: add other chars here we want to encode: " ' " seemed to make subsequent calls to social APIs fail..
+		if(urlAddress.contains("#")){
+			log.info("URL contains #. Encoding: " + urlAddress);
 			try {
-				//TODO: need to break calls into respective social services, then if first call to delicious and / or stumbled fails,
-				// 	then we can skip them in the subsequent call using urlAddressNoSlash.
-				//		need to bring up the construction of the miscsocialdata object up to this layer....
-				// actually - might just best to move the call to twitter here - and any other APIS that
-				// 	have the same data for both slashed and non-slashed urls.
-				socialDataAPISlash = manualSocialData.getAllSocialData(urlAddressSlash);
+				urlAddress = URLEncoder.encode(urlAddress, "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
 
-
-			} catch (Exception e) {
-				manualSocialDataGot = false;
+				log.warning("Problem encoding: " + urlAddress + "" + e1.getMessage());
 			}
+			log.info("Is now: " + urlAddress);
 
-			try {
-
-				socialDataAPINoSlash = manualSocialData.getAllSocialData(urlAddressNoSlash);
-
-			} catch (Exception e) {
-				//					String msg = "Manual Implementation Social data for: "
-				//							+ urlAddressNoSlash + " failed"
-				//							+ ". URLsSocialDataCrawl: getURLSocialData. \n";
-				//					log.severe(msg + e.getMessage());
-
-				manualSocialDataGot = false;
-			}
-
-
-			if(manualSocialDataGot){ // this is ONLY false, if all calls to the social APIs have failed - v unlikely..
-
-				//////
-				// assimilate the two collection of Social data metrics (from both url + slash and url no slash)
-				//	
-				assimilatedSocialData = assimilateSocialData(socialDataAPINoSlash, socialDataAPISlash);
-
-				// get most recently persisted social data.....
-				socialDataFromDB = socialDataDBUnit.getMostRecentSocialData(currentURL.getId());
-
-				// if social data from DB, is empty or different from most
-				// recent social data from APIs... then persist new social data
-
-				pcDifferenceBtwnSocialData = persistSocialData(socialDataFromDB, assimilatedSocialData, socialDataDBUnit, currentURL.getId());
-
-				updateSocialCrawlFrequency(currentURL, pcDifferenceBtwnSocialData, urlDBUnit);
-
-				//TODO: here add the code that will check and set the frequency of check_freq: for every url.
-				//	daily = 1, weekly = 2, monthly =3, daily - get all urls that have check_freq < 2, weekly get all urls with check_freq < 3, etc
-				// checkURLsSocialCheckFreq() {update url increase / decrease freq. and email "owner" if there's a spike - or on monthly
-				//	when there's no change from one month to another - email owner - to ask if they want to delete URL}
-
-			} else { // if all calls to the social APIs have failed
-
-				// TODO: record urls and email/ alert user (using their email) /
-				// error screen somehow that of this list.....
-				String msg = "Retrieving social data for: "
-						+ urlAddress + " completely failed.";
-
-				log.severe(msg);
-
-				// maybe check here for a 404 - and if true - then delete url?
-			}
 		}
-		
-		noOfMiscSocialDataEnd = socialDataDBUnit.getNoOfTotalSocialData();
-		
-		if(noOfMiscSocialDataStart >= noOfMiscSocialDataEnd){
-			
-			AdminEmailHelper emailAdmin = new AdminEmailHelper();
-			
-			try {
-				emailAdmin.sendWarningEmailToAdministrator("URLsSocialCrawl broken: noOfMiscSocialDataStart >= noOfMiscSocialDataEnd \n"
-						+ "noOfMiscSocialDataStart: " + noOfMiscSocialDataStart + " noOfMiscSocialDataEnd: " + noOfMiscSocialDataEnd);
-			} catch (Exception e) {
-				log.warning("Problem Sending email");
-			}
+
+		log.info("urlAddress: " +  urlAddress);
+
+		// remove final / if present...
+		if(urlAddress.endsWith("/")){
+			urlAddress = urlAddress.substring(0,(urlAddress.length() -1));
 		}
+
+		urlAddressNoSlash = urlAddress;
+		urlAddressSlash = urlAddress + "/";
+
+		try {
+			//TODO: need to break calls into respective social services, then if first call to delicious and / or stumbled fails,
+			// 	then we can skip them in the subsequent call using urlAddressNoSlash.
+			//		need to bring up the construction of the miscsocialdata object up to this layer....
+			// actually - might just best to move the call to twitter here - and any other APIS that
+			// 	have the same data for both slashed and non-slashed urls.
+			socialDataAPISlash = manualSocialData.getAllSocialData(urlAddressSlash);
+
+
+		} catch (Exception e) {
+			manualSocialDataGot = false;
+		}
+
+		try {
+
+			socialDataAPINoSlash = manualSocialData.getAllSocialData(urlAddressNoSlash);
+
+		} catch (Exception e) {
+			//					String msg = "Manual Implementation Social data for: "
+			//							+ urlAddressNoSlash + " failed"
+			//							+ ". URLsSocialDataCrawl: getURLSocialData. \n";
+			//					log.severe(msg + e.getMessage());
+
+			manualSocialDataGot = false;
+		}
+
+
+		if(manualSocialDataGot){ // this is ONLY false, if all calls to the social APIs have failed - v unlikely..
+
+			//////
+			// assimilate the two collection of Social data metrics (from both url + slash and url no slash)
+			//	
+			assimilatedSocialData = assimilateSocialData(socialDataAPINoSlash, socialDataAPISlash);
+
+			// get most recently persisted social data.....
+			socialDataFromDB = socialDataDBUnit.getMostRecentSocialData(url_id);
+
+			// if social data from DB, is empty or different from most
+			// recent social data from APIs... then persist new social data
+
+			pcDifferenceBtwnSocialData = persistSocialData(socialDataFromDB, assimilatedSocialData, socialDataDBUnit, url_id);
+
+			updateSocialCrawlFrequency(url, pcDifferenceBtwnSocialData, urlDBUnit);
+
+			//TODO: here add the code that will check and set the frequency of check_freq: for every url.
+			//	daily = 1, weekly = 2, monthly =3, daily - get all urls that have check_freq < 2, weekly get all urls with check_freq < 3, etc
+			// checkURLsSocialCheckFreq() {update url increase / decrease freq. and email "owner" if there's a spike - or on monthly
+			//	when there's no change from one month to another - email owner - to ask if they want to delete URL}
+
+		} else { // if all calls to the social APIs have failed
+
+			// TODO: record urls and email/ alert user (using their email) /
+			// error screen somehow that of this list.....
+			String msg = "Retrieving social data for: "
+					+ urlAddress + " completely failed.";
+
+			log.severe(msg);
+
+			// maybe check here for a 404 - and if true - then delete url?
+		}
+		//}
+
 	}
 
 	private MiscSocialData assimilateSocialData(MiscSocialData data1, MiscSocialData data2){
@@ -502,7 +511,7 @@ public class URLsSocialDataCrawl extends HttpServlet {
 	private void updateSocialCrawlFrequency(URL currentURL,
 			double pcDifferenceBtwnSocialData, URLDBService urlDBUnit) {
 
-		//log.info("Entering updateSocialCrawlFrequency");
+		log.info("Entering updateSocialCrawlFrequency");
 
 		int socialFreq = currentURL.getSocial_data_freq();
 
@@ -557,5 +566,3 @@ public class URLsSocialDataCrawl extends HttpServlet {
 	}
 
 }
-
-

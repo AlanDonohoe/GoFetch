@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
-   <cron>
-    <url>/processnewtargets</url>
-    <target>backgroundprocess</target>
-    <description>Check for new Target URLs' back links from SEOMoz server</description>
-    <schedule>every day 12:00</schedule>
-    <timezone>Europe/London</timezone>
-  </cron>  
-  <cron>
-    <url>/urlssocialdatacrawl</url>
-    <target>backgroundprocess</target>
-    <description>Crawl all urls with correct date for new social data - limit of 500</description>
-    <schedule>every 20 minutes </schedule>
-    <timezone>Europe/London</timezone>
-  </cron>
-    <cron>
-    <url>/dashboard.jsf</url>
-    <description>wake up the main app every 5 mins during work hours so there is no start up delay</description>
-    <schedule>every 5 minutes from 09:00 to 18:00</schedule>
-    <timezone>Europe/London</timezone>
-  </cron> 
-  <cron>
-    <url>/authoritycrawl</url>
-    <target>backgroundprocess</target>
-    <description>Crawl all urls for domain and page authority - limit of 100</description>
-    <schedule>every 30 minutes from 00:00 to 11:30</schedule> <!--  as to not interfere with: processnewtargets which runs from 12:00 -->
-    <timezone>Europe/London</timezone>
-  </cron>
-  <cron>
-    <url>/monthlybacklinkupdate</url>
-    <target>backgroundprocess</target>
-    <description>Update all target URLs to have their backlinks_got flag set to false</description>
-    <schedule>1st monday 09:00</schedule>
-    <timezone>Europe/London</timezone>
-  </cron>
+	<cron>
+		<url>/processnewtargets</url>
+		<target>backgroundprocess</target>
+		<description>Check for new Target URLs' back links from SEOMoz server
+		</description>
+		<schedule>every day 12:00</schedule>
+		<timezone>Europe/London</timezone>
+	</cron>
+<!-- 	<cron>
+		<url>/urlssocialdatacrawl</url>
+		<target>backgroundprocess</target>
+		<description>Crawl all urls with correct date for new social data -
+			limit of 500</description>
+		<schedule>every 20 minutes </schedule>
+		<timezone>Europe/London</timezone>
+	</cron> -->
+	<cron>
+		<url>/SocialCrawlTaskProducer</url>
+		<description>Produces the task queue for crawling all urls with correct date for new social data</description>
+		<schedule>every hour</schedule>
+		<timezone>Europe/London</timezone>
+	</cron>
+	<cron>
+		<url>/dashboard.jsf</url>
+		<description>wake up the main app every 5 mins during work hours so
+			there is no start up delay</description>
+		<schedule>every 5 minutes from 09:00 to 18:00</schedule>
+		<timezone>Europe/London</timezone>
+	</cron>
+	<cron>
+		<url>/authoritycrawl</url>
+		<target>backgroundprocess</target>
+		<description>Crawl all urls for domain and page authority - limit of
+			100</description>
+		<schedule>every 30 minutes from 00:00 to 11:30</schedule> <!-- as to not interfere with: processnewtargets which runs from 12:00 -->
+		<timezone>Europe/London</timezone>
+	</cron>
+	<cron>
+		<url>/monthlybacklinkupdate</url>
+		<target>backgroundprocess</target>
+		<description>Update all target URLs to have their backlinks_got flag
+			set to false</description>
+		<schedule>20th every month 09:00</schedule>
+		<timezone>Europe/London</timezone>
+	</cron>
+
 </cronentries>

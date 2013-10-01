@@ -162,6 +162,22 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>MonthlyBackLinkUpdate</servlet-name>
 		<url-pattern>/monthlybacklinkupdate</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>SocialCrawlTaskProducer</servlet-name>
+		<servlet-class>com.gofetch.controllers.SocialCrawlTaskProducer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SocialCrawlTaskProducer</servlet-name>
+		<url-pattern>/socialcrawltaskproducer</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>SocialCrawlTask</servlet-name>
+		<servlet-class>com.gofetch.controllers.SocialCrawlTask</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SocialCrawlTask</servlet-name>
+		<url-pattern>/socialcrawltask</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<!-- <welcome-file>index.jsp</welcome-file> -->
 		<!-- <welcome-file>index.xhtml</welcome-file> -->
