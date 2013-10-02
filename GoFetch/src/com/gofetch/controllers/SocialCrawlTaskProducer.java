@@ -25,7 +25,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
  * 
  * @author alandonohoe
  * This	doGet is called as a cron job to pull all of today's URLs that are to have their social data crawled
- * and then divide them into smaller tasks to be processed on the task queue
+ * and then divide them into smaller tasks to be processed on the task queue, via the controller: SocialCrawlTask
  */
 public class SocialCrawlTaskProducer extends HttpServlet {
 
