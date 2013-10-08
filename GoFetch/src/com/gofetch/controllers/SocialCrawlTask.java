@@ -147,6 +147,11 @@ public class SocialCrawlTask extends HttpServlet {
 		}catch(Exception e){
 
 			log.severe("Exception: " + e.getMessage());
+			
+			//throw up the exception...??? and allow servlet to return with a failure response.
+			// 	- may not be the best idea, as then one bad url will cause whole call to fail
+			// by swallowing exception here, then the url will remain checked as needs to be crawled
+			// and remaining urls will still be crawled...
 		}
 
 		//for (URL currentURL : urls) {

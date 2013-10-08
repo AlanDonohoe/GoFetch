@@ -19,7 +19,7 @@ public class GoFetchConstants {
 	
 	public static final int NO_OF_URLS_TO_PROCESS = 20; // no of urls to process (get backlinks for from SEOMoz) on a daily basis 
 	
-	public static final int MAX_NO_OF_SOCIAL_URLS = 50000; // max no of urls to pull and break into social crawl tasks
+	public static final int MAX_NO_OF_SOCIAL_URLS = 5000; // max no of urls to pull and break into social crawl tasks
 	
 	///////////////////
 	// used when hitting social services for data - url goes in between preEndpoint and postEndPoint

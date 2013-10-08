@@ -432,12 +432,12 @@ address {
     height: 27px;
     margin: 10px 6px 0 0;
 }
-
+/*
 .contact-links li a.linkedin { background:  url(../images/social-menu-linkedin.gif);}
 .contact-links li a.twitter { background:  url(../images/social-menu-twitter.gif);}
 .contact-links li a.flickr { background:  url(../images/social-menu-flickr.gif);}
 .contact-links li a.rss { background:  url(../images/social-menu-rss.gif);}
-.contact-links li a.vimeo { background:  url(../images/social-menu-vimeo.gif);}
+.contact-links li a.vimeo { background:  url(../images/social-menu-vimeo.gif);}*/
 
 .latest-blog-posts {
     border-top:1px solid #3C3437;
@@ -667,7 +667,7 @@ section.video iframe {
     font-size: 1.4em;
     line-height: 1.2em;
     display: block;
-    background: #3C3436 url(../images/brown-bubble-bottom.gif) no-repeat left bottom;
+    /*background: #3C3436 url(../images/brown-bubble-bottom.gif) no-repeat left bottom;*/
     color: #fff;
     padding: 12px 30px 46px 12px;
 }
@@ -784,7 +784,7 @@ a.submit-button {
 
 
 .banner {
-    background: url(../images/banner-bg-top.gif) no-repeat;
+    /*background: url(../images/banner-bg-top.gif) no-repeat;*/
     margin-bottom: 35px;
 }
 
@@ -1276,7 +1276,7 @@ a.submit-button {
 .who-we-are.the-rocketeers.team-member .person .info .contact{
     width: 174px;
     float: right;
-    background: #FFD305 url(../images/contact-links-bg.gif) no-repeat bottom left;
+    /*background: #FFD305 url(../images/contact-links-bg.gif) no-repeat bottom left;*/
     padding: 18px 0px 30px 20px;
     font-weight: bold;
     font-style: normal;
@@ -1530,7 +1530,7 @@ a.submit-button {
 }
 
 .what-we-do.sustained-search-advantage .ssa-chart li.ssa:hover {
-	background:  url(../images/what-we-do/chart-ssa-hover.gif) no-repeat 22px 35px;
+	/*background:  url(../images/what-we-do/chart-ssa-hover.gif) no-repeat 22px 35px;*/
 }
 
 .ie7 .what-we-do.sustained-search-advantage .ssa-chart li.what-google-values 	{ margin-top: -6px; }
@@ -1763,7 +1763,7 @@ a.submit-button {
 /* ABOUT US - WORK WITH US */
 
 .about-us.work-with-us.vacancies .left-column {
-    background: url(../images/about-us/work-with-us-fruit-basket.jpg) no-repeat 387px 0px;
+    /*background: url(../images/about-us/work-with-us-fruit-basket.jpg) no-repeat 387px 0px;*/
     width: 634px;
     padding-right: 30px;
 }
@@ -1976,7 +1976,7 @@ a.submit-button {
     font-weight: normal;
     padding-left: 57px;
     padding-right: 0px;
-    background: url(../images/travel/introtext-cloud.gif) no-repeat;
+    /*background: url(../images/travel/introtext-cloud.gif) no-repeat;*/
     padding-bottom: 20px;
 }
 
@@ -1993,7 +1993,7 @@ clear: left;
 }
 
 .im-in-travel .grey-box {
-    background-image: url(../images/travel/sun.png) ;
+    /*background-image: url(../images/travel/sun.png) ;*/
     background-repeat: no-repeat;
     background-position: 205px 205px;
 }
@@ -2043,7 +2043,7 @@ clear: left;
 }
 
 .im-in-travel .related-case-studies h3.icon-award {
-    background: url(../images/related-case-studies-icon-award.jpg) no-repeat right top;
+    /*background: url(../images/related-case-studies-icon-award.jpg) no-repeat right top;*/
 }
 
 .im-in-travel .related-case-studies p {
@@ -2058,7 +2058,7 @@ clear: left;
 /* I'M IN FASHION */
 
 .im-in-retail #logo {
-    background: url(../images/logo-fashion.gif) no-repeat;
+    /*background: url(../images/logo-fashion.gif) no-repeat;*/
 }
 
 .im-in-retail .left-column {
@@ -2171,7 +2171,7 @@ clear: left;
 /* BLOG */
 
 .blog .box-out span{
-    background:  url(../images/box-out-bottom.gif) no-repeat left bottom;
+    /*background:  url(../images/box-out-bottom.gif) no-repeat left bottom;*/
     padding: 0px 0px 15px 0px;
     display: block;
     margin-bottom: 30px;
@@ -2266,7 +2266,7 @@ clear: left;
 /* LETS TALK */
 
 .lets-talk.introduction .left-column {
-    background: url(../images/lets-talk/doughnuts.jpg) no-repeat 170px 45px;
+    /*background: url(../images/lets-talk/doughnuts.jpg) no-repeat 170px 45px;*/
     width: 634px;
     padding-right: 30px;
     min-height: 500px;
@@ -2382,7 +2382,7 @@ clear: left;
 }
 
 .our-work .clients-menu li a.case-study{
-    background:  url(../images/our-work/icon-small-case-study.png) no-repeat 0px 0px;
+    /*background:  url(../images/our-work/icon-small-case-study.png) no-repeat 0px 0px;*/
     width: 22px;
     height: 28px;
 }
@@ -2414,16 +2414,16 @@ clear: left;
 }
 
 .our-work .box-out p.icon-award {
-    background: url(../images/our-work/our-work-icons-key-award.gif) no-repeat top right;
+    /*background: url(../images/our-work/our-work-icons-key-award.gif) no-repeat top right;*/
 }
 
 .our-work .box-out p.icon-case-study {
-    background: url(../images/our-work/our-work-icons-key-case-study.gif) no-repeat top right;
+    /*background: url(../images/our-work/our-work-icons-key-case-study.gif) no-repeat top right;*/
     padding-top: 0px;
 }
 
 .our-work .box-out p.icon-video {
-    background: url(../images/our-work/our-work-icons-key-video.gif) no-repeat top right;
+    /*background: url(../images/our-work/our-work-icons-key-video.gif) no-repeat top right;*/
 }
 
 .our-work .box-out p strong {
@@ -2696,7 +2696,7 @@ clear: left;
     font-weight: normal;
     font-size: 0.9em;
     line-height: 1.2em;
-    background: url(../images/tiny-bullet.gif) no-repeat 0px 6px;
+    /*background: url(../images/tiny-bullet.gif) no-repeat 0px 6px;*/
     padding-left: 7px;
 }
 

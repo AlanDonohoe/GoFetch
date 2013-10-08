@@ -20,9 +20,9 @@
 	 <cron>
 		<url>/socialcrawltaskproducer</url>
 		<description>Produces the task queue for crawling all urls with correct date for new social data</description>
-		<schedule>every 12 hours from 00:00 to 00:00</schedule>
+		<schedule>every 60 minutes from 00:30 to 00:00</schedule>
 		<timezone>Europe/London</timezone>
-	</cron> 
+	</cron>
 	<cron>
 		<url>/dashboard.jsf</url>
 		<description>wake up the main app every 5 mins during work hours so
@@ -46,5 +46,4 @@
 		<schedule>3rd wednesday 09:00</schedule>
 		<timezone>Europe/London</timezone>
 	</cron>
-
 </cronentries>

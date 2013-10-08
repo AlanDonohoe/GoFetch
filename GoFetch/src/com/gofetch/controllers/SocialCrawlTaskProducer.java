@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.gofetch.entities.URL;
 import com.gofetch.entities.URLDBService;
+import com.gofetch.seomoz.Constants;
 import com.gofetch.utils.DateUtil;
 
 import com.google.appengine.api.backends.BackendServiceFactory;
@@ -20,6 +21,7 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.cloud.sql.jdbc.internal.SQLUnknownConnectionIdException;
 
 /**
  * 
@@ -47,87 +49,100 @@ public class SocialCrawlTaskProducer extends HttpServlet {
 		List<URL> urls = null; // urls back from DB to be socially crawled
 		List<List<URL>> urlSubsets = new ArrayList<List<URL>>(); // list of url lists, each of which will be used per task
 		URLDBService urlDBUnit = null;
-		int noOfTasks, noOfURLs, indexStart, indexEnd;
+		int noOfTasks, noOfURLs, indexStart, indexEnd, counter = 0;
+		boolean success = false;
 		int noOfURLsPerTask = 120; // this should fit into the 10 min time we have for each task to complete  
-									// also anything > 200 urls causes a invalid URL exception 
+		// also anything > 200 urls causes a invalid URL exception 
 		Queue queue = QueueFactory.getQueue("SocialCrawlQueue");
-		
+
 		TaskOptions taskOptions;
 
-		try{
+		while(!success && (counter++ < Constants.DB_CONN_RETRIES )){
 
-			// URL database communication
-			urlDBUnit = new URLDBService();
+			try{
+				// set flag, this is only ever set to false on a connection exception
+				success = true;
+				// URL database communication
+				urlDBUnit = new URLDBService();
 
-			// returns all urls to be crawled ordered by url_id
-			urls = urlDBUnit.getAllTodaysSocialCrawlURLs();
+				// returns all urls to be crawled ordered by url_id
+				urls = urlDBUnit.getAllTodaysSocialCrawlURLs();
 
-			if(null ==urls){
-				log.warning("urlDBUnit.getAllTodaysSocialCrawlURLs(): null == urls");
-				return;
-			}
-
-			noOfURLs = urls.size();
-
-			if(0 ==noOfURLs){
-				log.info("No URLs to socially crawl today");
-				return;
-			}
-
-			// create a new task per 250 urls
-			noOfTasks = noOfURLs/ noOfURLsPerTask;
-
-			// check that no of urls exactly fit into quota:
-			if(0!=noOfURLs % noOfURLsPerTask){
-				noOfTasks++; // add final task to hold the final <250 urls
-			}
-
-			log.info("noOfURLs: " + noOfURLs + " noOfURLsPerTask: " + noOfURLsPerTask + " noOfTasks: " + noOfTasks);
-
-			// divide all urls into 190 long lists of urls
-			for(int i  = 0; i < noOfTasks; i++){
-
-				indexStart = (i  * noOfURLsPerTask); // 		= 0,  250, 500, etc...
-				indexEnd = (((i + 1) * noOfURLsPerTask)); //    = 249,499, 749, etc...
-
-				//check we;re not over the remainders and causing a NPE:
-				if(indexEnd >= noOfURLs)
-					indexEnd = noOfURLs; // this will be the final subset
-
-				urlSubsets.add(urls.subList(indexStart, indexEnd));	
-			}
-
-			// now each subset ==  a task
-
-			// for each task..
-			for(int x = 0; x < urlSubsets.size(); x++){
-
-				int firstURLid, lastURLid, subsetSize;
-				String taskName;
-
-				subsetSize = urlSubsets.get(x).size();
-				
-				// give task unique name: todays date and start and end url ids:
-				firstURLid = urlSubsets.get(x).get(0).getId();
-				lastURLid = urlSubsets.get(x).get((subsetSize -1)).getId();
-				taskName = DateUtil.getTodaysDateAsDDMMYYYY() + "_" + String.valueOf(firstURLid)+ "_" +  String.valueOf(lastURLid);
-				
-				taskOptions = TaskOptions.Builder.withUrl("/socialcrawltask").taskName(taskName).method(Method.GET);
-
-				// add all the urls' ids as params - to each task
-				//for(int i = 0; i < subsetSize ; i++){ //TODO: 250 params - too long: throws invalid URL exception
-				for(int i = 0; i < subsetSize ; i++){
-
-					String name = "id_"+ i;
-					String value = String.valueOf(urlSubsets.get(x).get(i).getId());
-					taskOptions.param(name, value);
+				if(null ==urls){
+					log.warning("urlDBUnit.getAllTodaysSocialCrawlURLs(): null == urls");
+					return;
 				}
-				// finally, add the task to the queue
-				queue.add(taskOptions);
-			} // end of: for(List<URL> urlList : urlSubsets){
 
-		}catch(Exception e){
-			log.severe(e.getMessage());
+				noOfURLs = urls.size();
+
+				if(0 ==noOfURLs){
+					log.info("No URLs to socially crawl today");
+					return;
+				}
+
+				// create a new task per 250 urls
+				noOfTasks = noOfURLs/ noOfURLsPerTask;
+
+				// check that no of urls exactly fit into quota:
+				if(0!=noOfURLs % noOfURLsPerTask){
+					noOfTasks++; // add final task to hold the final <250 urls
+				}
+
+				log.info("noOfURLs: " + noOfURLs + " noOfURLsPerTask: " + noOfURLsPerTask + " noOfTasks: " + noOfTasks);
+
+				// divide all urls into 190 long lists of urls
+				for(int i  = 0; i < noOfTasks; i++){
+
+					indexStart = (i  * noOfURLsPerTask); // 		= 0,  250, 500, etc...
+					indexEnd = (((i + 1) * noOfURLsPerTask)); //    = 249,499, 749, etc...
+
+					//check we;re not over the remainders and causing a NPE:
+					if(indexEnd >= noOfURLs)
+						indexEnd = noOfURLs; // this will be the final subset
+
+					urlSubsets.add(urls.subList(indexStart, indexEnd));	
+				}
+
+				// now each subset ==  a task
+
+				// for each task..
+				for(int x = 0; x < urlSubsets.size(); x++){
+
+					int firstURLid, lastURLid, subsetSize;
+					String taskName;
+
+					subsetSize = urlSubsets.get(x).size();
+
+					// give task unique name: todays date and start and end url ids:
+					firstURLid = urlSubsets.get(x).get(0).getId();
+					lastURLid = urlSubsets.get(x).get((subsetSize -1)).getId();
+					taskName = DateUtil.getTodaysDateAsDDMMYYYY() + "_" + String.valueOf(firstURLid)+ "_" +  String.valueOf(lastURLid);
+
+					taskOptions = TaskOptions.Builder.withUrl("/socialcrawltask").taskName(taskName).method(Method.GET);
+
+					// add all the urls' ids as params - to each task
+					//for(int i = 0; i < subsetSize ; i++){ //TODO: 250 params - too long: throws invalid URL exception
+					for(int i = 0; i < subsetSize ; i++){
+
+						String name = "id_"+ i;
+						String value = String.valueOf(urlSubsets.get(x).get(i).getId());
+						taskOptions.param(name, value);
+					}
+					// finally, add the task to the queue
+					queue.add(taskOptions);
+				} // end of: for(List<URL> urlList : urlSubsets){
+
+			}catch(Exception e){
+
+				if(e instanceof SQLUnknownConnectionIdException){
+					//then problem connecting to DB - set flag to attempt connection again
+					log.warning(e.getMessage());
+					success = false;
+				}else{ // not instanceof SQLUnknownConnectionIdException
+					log.severe(e.getMessage());
+					return;
+				}
+			}
 		}
 
 	}
@@ -147,11 +162,11 @@ public class SocialCrawlTaskProducer extends HttpServlet {
 
 		return "";
 	}
-	
-//	private String getDD_MM_YYDate(Date date){
-//		
-//		String result;
-//		result = String.valueOf(date.()) + String.valueOf(date.getMonth()) + String.valueOf(date.getYear());
-//	}
+
+	//	private String getDD_MM_YYDate(Date date){
+	//		
+	//		String result;
+	//		result = String.valueOf(date.()) + String.valueOf(date.getMonth()) + String.valueOf(date.getYear());
+	//	}
 
 }
