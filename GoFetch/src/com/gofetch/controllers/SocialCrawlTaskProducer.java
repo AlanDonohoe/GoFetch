@@ -158,10 +158,10 @@ public class SocialCrawlTaskProducer extends HttpServlet {
 	 * @param urls -  list of urls
 	 * @return all the urls' id as param string (eg: id1=123&id2=456...etc)
 	 */
-	private String getURLidsAsParam(List<URL> urls){
-
-		return "";
-	}
+//	private String getURLidsAsParam(List<URL> urls){
+//
+//		return "";
+//	}
 
 	//	private String getDD_MM_YYDate(Date date){
 	//		

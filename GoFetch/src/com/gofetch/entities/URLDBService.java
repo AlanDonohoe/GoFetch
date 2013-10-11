@@ -1244,9 +1244,10 @@ public class URLDBService implements Serializable{
 	 * 
 	 * @return all URLs that have their social_data date set for today or before, ordered by url_id
 	 * max ever pulled: GoFetchConstants.MAX_NO_OF_SOCIAL_URLS
+	 * @throws Exception 
 	 */
 	@SuppressWarnings("unchecked")
-	public List<URL> getAllTodaysSocialCrawlURLs() {
+	public List<URL> getAllTodaysSocialCrawlURLs() throws Exception {
 		log.info("Entering getTodaysSocialCrawlURLs");
 		List<URL> result = null;
 		Date date = DateUtil.getTodaysDate();
@@ -1256,13 +1257,16 @@ public class URLDBService implements Serializable{
 		
 
 		try {
+			
 			result =  (List<URL>) mgr.createQuery("SELECT u FROM URL u WHERE u.get_social_data = true AND u.social_data_date <= :date ORDER BY u.url_id")
 					.setParameter("date", date, TemporalType.DATE)
 					.setMaxResults(GoFetchConstants.MAX_NO_OF_SOCIAL_URLS)
 					.getResultList();
 
 		}catch(Exception e){
-			log.severe(e.getMessage());
+			
+			log.severe("Error: getAllTodaysSocialCrawlURLs " + e.getMessage());
+			throw(e);
 
 		} finally {
 			mgr.close();
@@ -1390,7 +1394,7 @@ public class URLDBService implements Serializable{
 			mgr.getTransaction().commit();
 
 		}catch(Exception e){
-			String msg = "Exception thrown: URLService: getImageType";
+			String msg = "Exception thrown: URLService: updateURLImageGot";
 			log.severe(msg + e.getMessage());
 
 		}  finally {
