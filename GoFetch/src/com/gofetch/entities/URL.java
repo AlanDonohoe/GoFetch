@@ -287,8 +287,15 @@ public class URL implements Serializable {
 
 	@Override
 	public String toString() {
+		
+		// was: - without any PA / DA scores...
+		//return String.format("\"URL\":\"%s\"", url_address);
 
-		return String.format("\"URL\":\"%s\"", url_address);	
+		String formatted;
+		formatted = String.format("\"URL\":\"%s\"", url_address);
+		formatted += "," + "\"DA\":" + String.valueOf(domain_authority);
+		formatted += "," + "\"PA\":" + String.valueOf(page_authority);
+		return formatted;	
 
 	}
 

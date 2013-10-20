@@ -42,6 +42,13 @@ public class TextUtil {
 			firstDot = 0;
 
 		firstSlash = url.indexOf('/', firstDot); 
+		
+		// deal with no trailing slash
+		if(-1 == firstSlash){
+			firstSlash = url.length();
+			firstSlash--;
+			
+		}
 
 		return url.substring(firstDot, firstSlash);
 
