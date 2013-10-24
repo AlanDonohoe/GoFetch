@@ -155,7 +155,7 @@ public class ProcessNewTargets extends HttpServlet {
 
 			try {
 				emailAdmin.sendInfoEmailToAdministrator("No Of Unprocessed URLs initial: " + totalUnprocessedURLs
-						+ ". No Of Unprocessed URLs final: " + totalUnprocessedURLsFinal + ". No of processed URLs" + unprocessedURLs);
+						+ ". No Of Unprocessed URLs final: " + totalUnprocessedURLsFinal + ". No of processed URLs" + unprocessedURLs.size());
 			} catch (Exception e) {
 				log.warning("Problem Sending email");
 			}

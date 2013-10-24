@@ -5,7 +5,7 @@
 		<target>backgroundprocess</target>
 		<description>Check for new Target URLs' back links from SEOMoz server
 		</description>
-		<schedule>every day 12:00</schedule>
+		<schedule>every 60 minutes</schedule>
 		<timezone>Europe/London</timezone>
 	</cron>
 	<!-- Either one of the below options should be active, ie: one should be commented out and the other not  -->
