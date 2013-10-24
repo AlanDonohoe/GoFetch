@@ -66,8 +66,9 @@ public class ProcessNewTargets extends HttpServlet {
 		AdminEmailHelper adminEmail = new AdminEmailHelper();
 		List<URLPlusDataPoints> backLinks = null;
 		String currentTargetAddress;
-		int counter = 1, processedURLs =0, totalUnprocessedURLs, totalUnprocessedURLsFinal;
+		int counter = 1, processedURLs =0, totalUnprocessedURLs, totalUnprocessedURLsFinal = 0;
 		boolean firstRun = true; // only here for the free SEOMoz API limiter.
+		AdminEmailHelper emailAdmin = new AdminEmailHelper();
 
 		resp.setContentType("text/plain");
 
@@ -149,6 +150,15 @@ public class ProcessNewTargets extends HttpServlet {
 					}
 				}
 			} // end of: for (URL currentURL : unprocessedURLs)
+			
+			totalUnprocessedURLsFinal = urlDBUnit.getNoOfUnProccessedTUrls();
+
+			try {
+				emailAdmin.sendInfoEmailToAdministrator("No Of Unprocessed URLs initial: " + totalUnprocessedURLs
+						+ ". No Of Unprocessed URLs final: " + totalUnprocessedURLsFinal + ". No of processed URLs" + unprocessedURLs);
+			} catch (Exception e) {
+				log.warning("Problem Sending email");
+			}
 
 		} else {
 			log.info("No Target URLs");
@@ -166,7 +176,8 @@ public class ProcessNewTargets extends HttpServlet {
 		}
 		
 		//2: if there's a discrepancy btwn how many ought to have been updated and the no that actually were in the DB...
-		totalUnprocessedURLsFinal = urlDBUnit.getNoOfUnProccessedTUrls();
+		// moved this up...
+//		totalUnprocessedURLsFinal = urlDBUnit.getNoOfUnProccessedTUrls();
 		log.info("totalUnprocessedURLs: " + totalUnprocessedURLs + " processedURLs: " + processedURLs + " totalUnprocessedURLsFinal: " + totalUnprocessedURLsFinal);
 		if(totalUnprocessedURLsFinal != (totalUnprocessedURLs - processedURLs)){
 			try {
