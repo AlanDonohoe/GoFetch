@@ -232,10 +232,14 @@ public class URLsSocialDataCrawl extends HttpServlet {
 		if(noOfMiscSocialDataStart >= noOfMiscSocialDataEnd){
 			
 			AdminEmailHelper emailAdmin = new AdminEmailHelper();
+			String warningMsg = "URLsSocialCrawl broken: noOfMiscSocialDataStart >= noOfMiscSocialDataEnd \n"
+					+ "noOfMiscSocialDataStart: " + noOfMiscSocialDataStart + " noOfMiscSocialDataEnd: " + noOfMiscSocialDataEnd;
+			
+			log.warning(warningMsg);
 			
 			try {
-				emailAdmin.sendWarningEmailToAdministrator("URLsSocialCrawl broken: noOfMiscSocialDataStart >= noOfMiscSocialDataEnd \n"
-						+ "noOfMiscSocialDataStart: " + noOfMiscSocialDataStart + " noOfMiscSocialDataEnd: " + noOfMiscSocialDataEnd);
+				emailAdmin.sendWarningEmailToAdministrator(warningMsg);
+				
 			} catch (Exception e) {
 				log.warning("Problem Sending email");
 			}
